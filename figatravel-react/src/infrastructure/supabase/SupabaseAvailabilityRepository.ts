@@ -40,7 +40,7 @@ export class SupabaseAvailabilityRepository implements AvailabilityRepository {
       .order('date', { ascending: true })
 
     if (error) {
-      throw new Error('No fue posible cargar la disponibilidad del paquete.')
+      throw new Error('Unable to load package availability.')
     }
 
     return (data as AvailabilityRow[]).map((row) => ({

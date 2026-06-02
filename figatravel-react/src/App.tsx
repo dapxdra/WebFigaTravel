@@ -1,4 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AdminGuard } from './presentation/auth/AdminGuard'
+import { AuthProvider } from './presentation/auth/AuthProvider'
 import { SiteLayout } from './presentation/components/SiteLayout'
 import { AdminPage } from './presentation/pages/AdminPage'
 import { AboutPage } from './presentation/pages/AboutPage'
@@ -11,21 +13,33 @@ import { HomePage } from './presentation/pages/HomePage'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<SiteLayout />} path="/">
-          <Route element={<HomePage />} index />
-          <Route element={<DestinationsPage />} path="destinations" />
-          <Route element={<DestinationDetailPage />} path="destinations/:slug" />
-          <Route element={<BookOnlinePage />} path="book-online" />
-          <Route element={<FaqPage />} path="faq" />
-          <Route element={<AboutPage />} path="about-us" />
-          <Route element={<ContactPage />} path="contact" />
-          <Route element={<AdminPage />} path="admin" />
-          <Route element={<Navigate replace to="/" />} path="*" />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<SiteLayout />} path="/">
+            <Route element={<HomePage />} index />
+            <Route element={<DestinationsPage />} path="destinations" />
+            <Route
+              element={<DestinationDetailPage />}
+              path="destinations/:slug"
+            />
+            <Route element={<BookOnlinePage />} path="book-online" />
+            <Route element={<FaqPage />} path="faq" />
+            <Route element={<AboutPage />} path="about-us" />
+            <Route element={<ContactPage />} path="contact" />
+            <Route
+              element={
+                <AdminGuard>
+                  <AdminPage />
+                </AdminGuard>
+              }
+              path="admin"
+            />
+            <Route element={<Navigate replace to="/" />} path="*" />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 

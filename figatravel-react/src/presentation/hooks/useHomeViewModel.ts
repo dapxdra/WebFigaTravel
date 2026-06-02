@@ -39,7 +39,7 @@ export function useHomeViewModel() {
           setError(
             loadError instanceof Error
               ? loadError.message
-              : 'Error inesperado al cargar paquetes.',
+              : 'Unexpected error while loading packages.',
           )
         }
       } finally {
@@ -70,7 +70,7 @@ export function useHomeViewModel() {
           error:
             submitError instanceof Error
               ? submitError.message
-              : 'No se pudo enviar la solicitud.',
+              : 'Unable to submit the request.',
         })
       }
     },

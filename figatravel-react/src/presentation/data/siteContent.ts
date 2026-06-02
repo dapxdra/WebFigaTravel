@@ -2,10 +2,17 @@ export interface Destination {
   slug: string
   name: string
   image: string
+  cardImage: string
+  heroImage: string
   summary: string
   highlights: string[]
   transferTime: string
   bestFor: string
+  intro: string
+  bookLabel: string
+  attractions: string[]
+  travelTips: string[]
+  gallery: string[]
 }
 
 export interface Priority {
@@ -29,60 +36,197 @@ export const topDestinations: Destination[] = [
     name: 'La Fortuna',
     image:
       'https://static.wixstatic.com/media/3c2b27_a0212ef900a74c5fb1dcd5259297b883~mv2.png/v1/fill/w_600,h_360,al_b,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_a0212ef900a74c5fb1dcd5259297b883~mv2.png',
-    summary: 'Volcan Arenal, aguas termales y senderos de aventura.',
-    highlights: ['Volcan Arenal', 'Aguas termales', 'Puentes colgantes'],
-    transferTime: '3h desde San Jose',
-    bestFor: 'Aventura y naturaleza',
+    cardImage:
+      '/assets/destinations/la-fortuna.png',
+    heroImage:
+      'https://static.wixstatic.com/media/3c2b27_a0212ef900a74c5fb1dcd5259297b883~mv2.png/v1/fill/w_980,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/HEADER%20VOLCANO%20.png',
+    summary: 'Arenal Volcano, hot springs, and adventure trails.',
+    highlights: ['Arenal Volcano', 'Hot springs', 'Hanging bridges'],
+    transferTime: '3h from San Jose',
+    bestFor: 'Adventure and nature',
+    intro:
+      "La Fortuna, nestled in the heart of Costa Rica, is a breathtaking destination known for its lush landscapes and the majestic Arenal Volcano. Visitors flock here to experience the perfect blend of adventure and relaxation.",
+    bookLabel: 'BOOK TRANSPORTATION TO LA FORTUNA',
+    attractions: [
+      "Arenal Volcano: Marvel at the iconic Arenal Volcano, one of the world's most active volcanoes.",
+      'La Fortuna Waterfall: Hike to the stunning La Fortuna Waterfall and take a refreshing swim in its emerald pool.',
+      'Hot Springs: Relax in the natural hot springs, rejuvenating your body with the geothermal warmth.',
+    ],
+    travelTips: [
+      'Best Time to Visit: The dry season, from December to April, offers the most favorable weather.',
+      'Weather: Expect warm days and cooler evenings; pack accordingly.',
+      'Health Precautions: Ensure you have insect repellent and sunscreen for outdoor activities.',
+    ],
+    gallery: [
+      'https://static.wixstatic.com/media/3c2b27_29bd7de853e2410e82cc10bd183871ed~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_29bd7de853e2410e82cc10bd183871ed~mv2.png',
+      'https://static.wixstatic.com/media/3c2b27_04d142ee8d30496683742b84bcd0b41d~mv2.jpg/v1/fill/w_384,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_04d142ee8d30496683742b84bcd0b41d~mv2.jpg',
+      'https://static.wixstatic.com/media/3c2b27_9052e70216f643a182fed2292064a64e~mv2.jpg/v1/fill/w_384,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_9052e70216f643a182fed2292064a64e~mv2.jpg',
+      'https://static.wixstatic.com/media/3c2b27_3044fedf746f4443b29c54697d81b1a6~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_3044fedf746f4443b29c54697d81b1a6~mv2.png',
+    ],
   },
   {
     slug: 'papagayo',
     name: 'Papagayo',
     image:
       'https://static.wixstatic.com/media/3c2b27_8b9eafda785549aca1b4bb40e9bdddca~mv2.jpg/v1/fill/w_600,h_360,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_8b9eafda785549aca1b4bb40e9bdddca~mv2.jpg',
-    summary: 'Playas tranquilas y hoteles premium frente al Pacifico.',
-    highlights: ['Resorts premium', 'Playas serenas', 'Excursiones marinas'],
-    transferTime: '4h 30m desde San Jose',
-    bestFor: 'Relax y lujo',
+    cardImage:
+      '/assets/destinations/papagayo.jpg',
+    heroImage:
+      'https://static.wixstatic.com/media/3c2b27_5ebc8a526e7141d48f1b72efc2e130f2~mv2.png/v1/fill/w_980,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/PAPAGAYO3.png',
+    summary: 'Peaceful beaches and premium resorts on the Pacific coast.',
+    highlights: ['Premium resorts', 'Serene beaches', 'Ocean excursions'],
+    transferTime: '4h 30m from San Jose',
+    bestFor: 'Relaxation and luxury',
+    intro:
+      "Papagayo, located on Costa Rica's Pacific coast, is a luxurious and tranquil destination known for its pristine beaches and upscale resorts. It offers a perfect blend of relaxation and adventure.",
+    bookLabel: 'BOOK TRANSPORTATION TO PAPAGAYO',
+    attractions: [
+      'Playa Hermosa: Enjoy the beauty of Playa Hermosa, a stunning beach known for its calm waters and scenic surroundings.',
+      'Water Sports: Experience thrilling water sports such as snorkeling, scuba diving, and deep-sea fishing.',
+      'Golfing: Tee off at the renowned Papagayo Golf & Country Club for a round of golf in a lush tropical setting.',
+    ],
+    travelTips: [
+      'Best Time to Visit: Plan your trip during the dry season from December to April for the best weather conditions.',
+      'Weather: Expect warm and sunny days; pack beachwear, sunscreen, and sunglasses.',
+    ],
+    gallery: [
+      'https://static.wixstatic.com/media/3c2b27_16e3b73bb1de4722994825eb9e02a555~mv2.png/v1/fill/w_720,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_16e3b73bb1de4722994825eb9e02a555~mv2.png',
+      'https://static.wixstatic.com/media/3c2b27_8a34c988d61448c1b98bcddcce3bb0a7~mv2.png/v1/fill/w_240,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_8a34c988d61448c1b98bcddcce3bb0a7~mv2.png',
+      'https://static.wixstatic.com/media/3c2b27_57c309f9c43e4cc08030b9d28116a065~mv2.png/v1/fill/w_384,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_57c309f9c43e4cc08030b9d28116a065~mv2.png',
+      'https://static.wixstatic.com/media/3c2b27_e4ce3cdad6a042a782556e76831c62dc~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_e4ce3cdad6a042a782556e76831c62dc~mv2.png',
+    ],
   },
   {
     slug: 'puerto-viejo',
     name: 'Puerto Viejo',
     image:
       'https://static.wixstatic.com/media/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg/v1/fill/w_600,h_360,al_b,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg',
-    summary: 'Vibra caribena, cultura afro y naturaleza exuberante.',
-    highlights: ['Cultura local', 'Playa Cocles', 'Gastronomia caribena'],
-    transferTime: '4h 45m desde San Jose',
-    bestFor: 'Cultura y playa',
+    cardImage:
+      '/assets/destinations/puerto-viejo.jpg',
+    heroImage:
+      'https://static.wixstatic.com/media/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg/v1/fill/w_980,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg',
+    summary: 'Caribbean vibe, Afro-Caribbean culture, and lush nature.',
+    highlights: ['Local culture', 'Cocles Beach', 'Caribbean cuisine'],
+    transferTime: '4h 45m from San Jose',
+    bestFor: 'Culture and beach',
+    intro:
+      'Puerto Viejo combines Caribbean rhythm, tropical beaches and vibrant local culture, making it ideal for travelers looking for laid-back adventure.',
+    bookLabel: 'BOOK TRANSPORTATION TO PUERTO VIEJO',
+    attractions: [
+      'Playa Cocles: Crystal-clear waters and long sandy beaches perfect for relaxing days.',
+      'Jaguar Rescue Center: Learn about wildlife conservation and local biodiversity.',
+      'Cahuita National Park: Snorkeling and coastal trails with unique marine life.',
+    ],
+    travelTips: [
+      'Best Time to Visit: September and October usually offer drier conditions in this Caribbean area.',
+      'Weather: Warm and humid weather year-round, bring light clothes and rain protection.',
+      'Transport: Plan transfers in advance because distances from airports are long.',
+    ],
+    gallery: [
+      'https://static.wixstatic.com/media/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg/v1/fill/w_720,h_301,al_b,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg',
+      'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=720&q=80',
+      'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=720&q=80',
+      'https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=720&q=80',
+    ],
   },
   {
     slug: 'manuel-antonio',
     name: 'Manuel Antonio',
     image:
       'https://static.wixstatic.com/media/3c2b27_e22958117a224b66b8f2a460869016a2~mv2.png/v1/fill/w_600,h_360,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_e22958117a224b66b8f2a460869016a2~mv2.png',
-    summary: 'Parque nacional, fauna silvestre y playas espectaculares.',
-    highlights: ['Parque Nacional', 'Monos y perezosos', 'Tours de catamaran'],
-    transferTime: '3h 30m desde San Jose',
-    bestFor: 'Familias y naturaleza',
+    cardImage:
+      '/assets/destinations/manuel-antonio.png',
+    heroImage:
+      'https://static.wixstatic.com/media/3c2b27_e22958117a224b66b8f2a460869016a2~mv2.png/v1/fill/w_980,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/manuel%20antonio.png',
+    summary: 'National park, wildlife, and spectacular beaches.',
+    highlights: ['National Park', 'Monkeys and sloths', 'Catamaran tours'],
+    transferTime: '3h 30m from San Jose',
+    bestFor: 'Families and nature',
+    intro:
+      "Manuel Antonio, located on the Pacific coast of Costa Rica, is a tropical paradise known for its lush rainforests and pristine beaches. It's a haven for nature lovers and adventure seekers alike.",
+    bookLabel: 'BOOK TRANSPORTATION TO MANUEL ANTONIO',
+    attractions: [
+      'Manuel Antonio National Park: Discover the incredible biodiversity of this renowned national park, home to exotic wildlife and pristine beaches.',
+      'Playa Manuel Antonio: Relax on the idyllic Playa Manuel Antonio, where the rainforest meets the sea.',
+      'Canopy Tours: Experience the thrill of ziplining through the rainforest canopy.',
+    ],
+    travelTips: [
+      'Best Time to Visit: Visit during the dry season from December to April for ideal weather.',
+      'Weather: Expect warm, humid conditions; pack light clothing, sunscreen, and insect repellent.',
+      'Park Reservations: Make advance reservations for Manuel Antonio National Park, as daily entry is limited.',
+    ],
+    gallery: [
+      'https://static.wixstatic.com/media/3c2b27_7946e7dba83545bca34600c5bba30235~mv2.png/v1/fill/w_240,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_7946e7dba83545bca34600c5bba30235~mv2.png',
+      'https://static.wixstatic.com/media/3c2b27_359fe4e6755a4c5fa39d6bafac86dec3~mv2.png/v1/fill/w_720,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_359fe4e6755a4c5fa39d6bafac86dec3~mv2.png',
+      'https://static.wixstatic.com/media/3c2b27_5074d08a423f4847bd79ffbe0fd0dc43~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_5074d08a423f4847bd79ffbe0fd0dc43~mv2.png',
+      'https://static.wixstatic.com/media/3c2b27_410bc7faa5934b1e92886b1b2ef2cdc8~mv2.png/v1/fill/w_384,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_410bc7faa5934b1e92886b1b2ef2cdc8~mv2.png',
+    ],
   },
   {
     slug: 'tamarindo',
     name: 'Tamarindo',
     image:
       'https://static.wixstatic.com/media/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg/v1/fill/w_600,h_360,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg',
-    summary: 'Surf, restaurantes y atardeceres inolvidables.',
-    highlights: ['Surf spots', 'Vida nocturna', 'Atardeceres'],
-    transferTime: '4h 40m desde San Jose',
-    bestFor: 'Surf y amigos',
+    cardImage:
+      '/assets/destinations/tamarindo.jpg',
+    heroImage:
+      'https://static.wixstatic.com/media/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg/v1/fill/w_980,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg',
+    summary: 'Surf, restaurants, and unforgettable sunsets.',
+    highlights: ['Surf spots', 'Nightlife', 'Sunsets'],
+    transferTime: '4h 40m from San Jose',
+    bestFor: 'Surf and friends',
+    intro:
+      'Tamarindo is one of the most dynamic beach towns in Costa Rica, famous for surfing, sunsets and a great mix of local and international dining.',
+    bookLabel: 'BOOK TRANSPORTATION TO TAMARINDO',
+    attractions: [
+      'Surfing Lessons: Perfect waves for beginners and experienced surfers.',
+      'Catamaran Tours: Explore the coast and enjoy sunset cruises.',
+      'Nightlife: Restaurants and beach bars with lively atmosphere.',
+    ],
+    travelTips: [
+      'Best Time to Visit: Dry season from December to April has the sunniest days.',
+      'Weather: Hot weather and strong sun, stay hydrated and use sunscreen.',
+      'Transport: Reserve transfers early during high season demand.',
+    ],
+    gallery: [
+      'https://static.wixstatic.com/media/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg/v1/fill/w_720,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg',
+      'https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?auto=format&fit=crop&w=720&q=80',
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=720&q=80',
+      'https://images.unsplash.com/photo-1482192505345-5655af888cc4?auto=format&fit=crop&w=720&q=80',
+    ],
   },
   {
     slug: 'san-jose-city',
     name: 'San Jose City',
     image:
       'https://static.wixstatic.com/media/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg/v1/fill/w_600,h_360,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg',
-    summary: 'Cultura urbana, museos y conexiones a todo el pais.',
-    highlights: ['Museos', 'Mercados locales', 'Vida urbana'],
-    transferTime: 'Traslado interno',
-    bestFor: 'Escapada urbana',
+    cardImage:
+      '/assets/destinations/san-jose-city.jpg',
+    heroImage:
+      'https://static.wixstatic.com/media/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg/v1/fill/w_980,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg',
+    summary: 'Urban culture, museums, and connections across the country.',
+    highlights: ['Museums', 'Local markets', 'City life'],
+    transferTime: 'Local transfer',
+    bestFor: 'Urban getaway',
+    intro:
+      'San Jose City is the cultural and business center of Costa Rica, ideal for travelers who want museums, local food and fast access to national routes.',
+    bookLabel: 'BOOK TRANSPORTATION TO SAN JOSE CITY',
+    attractions: [
+      'National Theatre: A historic landmark in the heart of the capital.',
+      'Central Market: Discover local flavors and artisan products.',
+      'Museums District: Visit museums and galleries with Costa Rican history.',
+    ],
+    travelTips: [
+      'Best Time to Visit: Morning and evening tours are ideal due to lower traffic.',
+      'Weather: Mild temperatures with occasional rain, carry a light jacket.',
+      'Transport: Use private transfers for airport and intercity routes.',
+    ],
+    gallery: [
+      'https://static.wixstatic.com/media/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg/v1/fill/w_720,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg',
+      'https://images.unsplash.com/photo-1543357480-c60d400e2ef9?auto=format&fit=crop&w=720&q=80',
+      'https://images.unsplash.com/photo-1580711668269-c5ef8a0f2424?auto=format&fit=crop&w=720&q=80',
+      'https://images.unsplash.com/photo-1603204077779-bed963ea7f7a?auto=format&fit=crop&w=720&q=80',
+    ],
   },
 ]
 
@@ -94,22 +238,22 @@ export const priorities: Priority[] = [
   {
     title: 'Experienced Drivers',
     description:
-      'Conductores expertos dedicados a brindar traslados seguros y puntuales.',
+      'Experienced drivers dedicated to providing safe and punctual transfers.',
   },
   {
     title: 'Vehicle Maintenance',
     description:
-      'Unidades inspeccionadas para asegurar rendimiento optimo en cada ruta.',
+      'Inspected vehicles to ensure optimal performance on every route.',
   },
   {
     title: 'Insurance Coverage',
     description:
-      'Cobertura integral para proteger cada tramo de tu experiencia.',
+      'Comprehensive coverage to protect every part of your journey.',
   },
   {
     title: 'COVID-19 Measures',
     description:
-      'Sanitizacion reforzada, higiene constante y protocolos de prevencion.',
+      'Enhanced sanitation, consistent hygiene, and preventive protocols.',
   },
 ]
 
@@ -117,44 +261,74 @@ export const testimonials: Testimonial[] = [
   {
     author: 'Sarah Davis',
     quote:
-      'Andreina hizo inolvidable mi viaje. Servicio impecable y gran conocimiento local.',
+      'Andreina made my trip unforgettable. Impeccable service and great local knowledge.',
   },
   {
     author: 'Natalia V',
     quote:
-      'Enrique fue excelente para nuestro viaje familiar. Todo limpio, puntual y comodo.',
+      'Enrique was excellent for our family trip. Everything was clean, punctual, and comfortable.',
   },
   {
     author: 'Emily Martinez',
     quote:
-      'Atencion sobresaliente de inicio a fin. Nos sentimos seguros en todo momento.',
+      'Outstanding attention from start to finish. We felt safe at all times.',
   },
   {
     author: 'David Patel',
     quote:
-      'Traslado sin estres para viaje de trabajo. Volveria a contratar sin dudar.',
+      'Stress-free transfer for a business trip. I would book again without hesitation.',
   },
 ]
 
 export const faqItems: FaqItem[] = [
   {
-    question: 'Como reservo un traslado?',
+    question: 'How can I book transportation services with your company?',
     answer:
-      'Puedes reservar desde Book Online o por WhatsApp con fecha, ruta y numero de pasajeros.',
+      'You can book from Book Online, by WhatsApp, or by sending us a direct message with your route, date, and number of travelers.',
   },
   {
-    question: 'Aceptan pagos en linea?',
+    question: 'Where do you provide transportation services in Costa Rica?',
     answer:
-      'Si, puedes confirmar tu servicio con pago digital y recibir comprobante por correo.',
+      'We provide transfers across Costa Rica, including airport pickups, popular destinations, and custom routes by request.',
   },
   {
-    question: 'Incluye espera en aeropuerto?',
+    question: 'Can I make changes to my booking after it has been confirmed?',
     answer:
-      'Si, monitoreamos vuelos y ajustamos la recogida cuando hay retrasos.',
+      'Yes. Contact us as soon as possible and we will help update your reservation when availability allows.',
   },
   {
-    question: 'Manejan rutas personalizadas?',
+    question: 'What types of vehicles do you use for transportation?',
     answer:
-      'Si, armamos rutas multi-destino segun tu plan de viaje.',
+      'We use comfortable, well-maintained vehicles selected to match the size of your group and the route you need.',
+  },
+  {
+    question: 'Are your drivers licensed and experienced?',
+    answer:
+      'Yes. Our drivers are licensed, experienced, and familiar with Costa Rica routes and travel conditions.',
+  },
+  {
+    question: 'Do you offer transportation to and from the airport?',
+    answer:
+      'Yes. Airport transfers are one of our main services and we track arrival times for smoother pickups.',
+  },
+  {
+    question: 'What safety measures do you have in place?',
+    answer:
+      'We focus on reliable vehicles, careful driving, and clear coordination before every trip.',
+  },
+  {
+    question: 'Do you offer transportation services for large groups or events?',
+    answer:
+      'Yes. We can organize service for families, groups, and event transportation needs.',
+  },
+  {
+    question: 'Can you accommodate special requests, such as child seats or pet-friendly transportation?',
+    answer:
+      'Yes. Let us know your special request in advance and we will do our best to accommodate it.',
+  },
+  {
+    question: 'How far in advance should I book my transportation services?',
+    answer:
+      'Booking in advance is recommended, especially for busy seasons, but we also try to help with last-minute requests.',
   },
 ]

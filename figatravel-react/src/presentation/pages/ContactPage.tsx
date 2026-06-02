@@ -2,40 +2,40 @@ import { LeadForm } from '../components/LeadForm'
 
 export function ContactPage() {
   return (
-    <main>
-      <header className="section page-hero">
+    <main className="info-page contact-page">
+      <header className="section page-hero contact-hero">
         <p className="eyebrow">CONTACT</p>
-        <h1>Estamos listos para ayudarte</h1>
+        <h1>We are ready to help you</h1>
         <p className="hero-copy">
-          Comparte tu idea de viaje y te respondemos con tiempos, ruta y propuesta.
+          Share your travel idea and we will reply with timing, route, and proposal details.
         </p>
       </header>
 
-      <section className="section" aria-labelledby="contact-channels-title">
+      <section className="section contact-details" aria-labelledby="contact-channels-title">
         <div className="section-head">
-          <h2 id="contact-channels-title">Canales directos</h2>
-          <p>Atencion rapida por telefono, correo y WhatsApp.</p>
+          <h2 id="contact-channels-title">Direct channels</h2>
+          <p>Fast support by phone, email, and WhatsApp.</p>
         </div>
 
-        <div className="priority-grid">
+        <div className="priority-grid contact-grid">
           <article className="priority-card">
-            <h3>Telefono</h3>
+            <h3>Address</h3>
+            <p>Los Angeles, La Fortuna, San Carlos, Alajuela, Costa Rica</p>
+          </article>
+          <article className="priority-card">
+            <h3>Phone</h3>
             <p>+506 7139 2747</p>
           </article>
           <article className="priority-card">
             <h3>Email</h3>
             <p>infofigatravel@gmail.com</p>
           </article>
-          <article className="priority-card">
-            <h3>WhatsApp</h3>
-            <p>+506 7227 1058</p>
-          </article>
         </div>
       </section>
 
       <LeadForm
-        title="Formulario de contacto"
-        subtitle="Te ayudamos a planificar tu traslado o itinerario completo."
+        title="Contact form"
+        subtitle="We help you plan your transfer or complete itinerary."
       />
     </main>
   )

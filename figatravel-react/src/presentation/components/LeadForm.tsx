@@ -6,12 +6,14 @@ interface LeadFormProps {
   title: string
   subtitle: string
   showAvailability?: boolean
+  defaultMessage?: string
 }
 
 export function LeadForm({
   title,
   subtitle,
   showAvailability = false,
+  defaultMessage,
 }: LeadFormProps) {
   const {
     packages,
@@ -30,7 +32,7 @@ export function LeadForm({
   const [phone, setPhone] = useState('')
   const [travelDate, setTravelDate] = useState('')
   const [travelers, setTravelers] = useState(2)
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(defaultMessage ?? '')
   const [packageId, setPackageId] = useState('')
   const [availabilitySlotId, setAvailabilitySlotId] = useState('')
 
@@ -79,12 +81,12 @@ export function LeadForm({
         <p>{subtitle}</p>
       </div>
 
-      {loadingPackages ? <p>Cargando paquetes...</p> : null}
+      {loadingPackages ? <p>Loading packages...</p> : null}
       {packagesError ? <p className="error-text">{packagesError}</p> : null}
 
       <form className="lead-form" onSubmit={onSubmit}>
         <label>
-          Nombre completo
+          Full name
           <input
             type="text"
             value={name}
@@ -94,7 +96,7 @@ export function LeadForm({
         </label>
 
         <label>
-          Correo
+          Email
           <input
             type="email"
             value={email}
@@ -104,7 +106,7 @@ export function LeadForm({
         </label>
 
         <label>
-          Telefono
+          Phone
           <input
             type="tel"
             value={phone}
@@ -113,7 +115,7 @@ export function LeadForm({
         </label>
 
         <label>
-          Fecha estimada
+          Estimated date
           <input
             type="date"
             value={travelDate}
@@ -122,7 +124,7 @@ export function LeadForm({
         </label>
 
         <label>
-          Viajeros
+          Travelers
           <input
             type="number"
             value={travelers}
@@ -133,7 +135,7 @@ export function LeadForm({
         </label>
 
         <label>
-          Paquete de interes
+          Package of interest
           <select
             value={packageId}
             onChange={(event) => {
@@ -144,7 +146,7 @@ export function LeadForm({
             }}
             required
           >
-            <option value="">Selecciona una opcion</option>
+            <option value="">Select an option</option>
             {packages.map((travelPackage) => (
               <option key={travelPackage.id} value={travelPackage.id}>
                 {travelPackage.title}
@@ -155,7 +157,7 @@ export function LeadForm({
 
         {showAvailability ? (
           <label>
-            Fecha disponible
+            Available date
             <select
               value={availabilitySlotId}
               onChange={(event) => setAvailabilitySlotId(event.target.value)}
@@ -164,14 +166,14 @@ export function LeadForm({
             >
               <option value="">
                 {!packageId
-                  ? 'Selecciona paquete primero'
+                  ? 'Select a package first'
                   : loadingAvailability
-                    ? 'Cargando disponibilidad...'
-                    : 'Selecciona una fecha'}
+                    ? 'Loading availability...'
+                    : 'Select a date'}
               </option>
               {availability.map((slot) => (
                 <option key={slot.id} value={slot.id}>
-                  {slot.date} - {slot.seatsAvailable} asientos
+                  {slot.date} - {slot.seatsAvailable} seats
                 </option>
               ))}
             </select>
@@ -183,22 +185,22 @@ export function LeadForm({
         ) : null}
 
         <label className="full-width">
-          Mensaje
+          Message
           <textarea
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             rows={4}
-            placeholder="Cuantos dias deseas viajar y desde que ciudad sales"
+            placeholder="How many days do you want to travel and which city are you departing from?"
           />
         </label>
 
         <button disabled={!canSubmit || submitState.loading} type="submit">
-          {submitState.loading ? 'Enviando...' : 'Enviar solicitud'}
+          {submitState.loading ? 'Sending...' : 'Submit request'}
         </button>
 
         {submitState.error ? <p className="error-text">{submitState.error}</p> : null}
         {submitState.success ? (
-          <p className="success-text">Solicitud enviada correctamente.</p>
+          <p className="success-text">Request submitted successfully.</p>
         ) : null}
       </form>
     </section>

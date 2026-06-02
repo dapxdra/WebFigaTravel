@@ -19,7 +19,7 @@ export class SupabaseLeadRepository implements LeadRepository {
   async create(lead: LeadRequest): Promise<void> {
     if (!supabaseClient) {
       throw new Error(
-        'Configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY para enviar solicitudes reales.',
+        'Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to submit real requests.',
       )
     }
 
@@ -35,7 +35,7 @@ export class SupabaseLeadRepository implements LeadRepository {
     })
 
     if (error) {
-      throw new Error('No fue posible enviar la solicitud de viaje.')
+      throw new Error('Unable to submit the travel request.')
     }
   }
 
@@ -53,7 +53,7 @@ export class SupabaseLeadRepository implements LeadRepository {
       .limit(limit)
 
     if (error) {
-      throw new Error('No fue posible cargar los leads recientes.')
+      throw new Error('Unable to load recent leads.')
     }
 
     return (data as LeadRow[]).map((row) => ({

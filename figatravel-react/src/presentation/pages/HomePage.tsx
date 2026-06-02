@@ -1,101 +1,179 @@
 import { Link } from 'react-router-dom'
-import {
-  priorities,
-  testimonials,
-  topDestinations,
-} from '../data/siteContent'
+import { faqItems, priorities, testimonials } from '../data/siteContent'
+
+const featuredDestinations = [
+  {
+    title: 'La Fortuna',
+    image: '/assets/home/dest-la-fortuna.png',
+    to: '/destinations/la-fortuna',
+  },
+  {
+    title: 'Manuel Antonio',
+    image: '/assets/home/dest-manuel-antonio.png',
+    to: '/destinations/manuel-antonio',
+  },
+  {
+    title: 'Papagayo',
+    image: '/assets/home/dest-papagayo.jpg',
+    to: '/destinations/papagayo',
+  },
+  {
+    title: 'Tamarindo',
+    image: '/assets/home/dest-tamarindo.jpg',
+    to: '/destinations/tamarindo',
+  },
+  {
+    title: 'Puerto Viejo',
+    image: '/assets/home/dest-puerto-viejo.jpg',
+    to: '/destinations/puerto-viejo',
+  },
+  {
+    title: 'San Jose City',
+    image: '/assets/home/dest-san-jose-city.jpg',
+    to: '/destinations/san-jose-city',
+  },
+]
+
+const serviceStrip = [
+  {
+    icon: '/assets/home/icon-wifi.png',
+    label: 'WI-FI',
+  },
+  {
+    icon: '/assets/home/icon-customer-service.png',
+    label: 'Customer Service',
+  },
+  {
+    icon: '/assets/home/icon-eco.png',
+    label: 'Eco-conscious',
+  },
+  {
+    icon: '/assets/home/icon-vehicle.png',
+    label: 'Well-maintained vehicles',
+  },
+]
 
 export function HomePage() {
   return (
-    <>
-      <header className="hero">
-        <p className="eyebrow">FIGA TRAVEL AGENCY</p>
-        <h1>Discover the Beauty of Costa Rica with FIGA TRAVEL</h1>
-        <p className="hero-copy">
-          Traslados privados, tours y asesoramiento local para que tu ruta en
-          Costa Rica sea segura, comoda y memorable.
-        </p>
-        <div className="hero-badges">
-          <span>WI-FI</span>
-          <span>Customer Service</span>
-          <span>Eco-conscious</span>
-          <span>Well-maintained vehicles</span>
-        </div>
-        <Link to="/book-online" className="hero-cta">
-          Book now
-        </Link>
-      </header>
+    <main className="home-page">
+      <section className="home-hero" aria-label="Discover the Beauty of Costa Rica">
+        <img
+          src="/assets/home/hero-header.png"
+          alt="Arenal volcano"
+          className="home-hero-image"
+        />
 
-      <main>
-        <section className="section" aria-labelledby="featured-title">
-          <div className="section-head">
-            <h2 id="featured-title">Top Destinations in Costa Rica</h2>
-            <p>Rutas populares para descubrir naturaleza, playa y aventura.</p>
-          </div>
-
-          <div className="destination-grid">
-            {topDestinations.slice(0, 4).map((destination) => (
-              <article key={destination.name} className="destination-card">
-                <img src={destination.image} alt={destination.name} />
-                <h3>{destination.name}</h3>
-              </article>
-            ))}
-          </div>
-
-          <Link to="/destinations" className="hero-cta">
-            Ver todos los destinos
+        <div className="home-hero-overlay">
+          <h1>Discover the Beauty of Costa Rica with FIGA TRAVEL</h1>
+          <Link to="/book-online" className="home-book-now">
+            BOOK NOW
           </Link>
-        </section>
+        </div>
+      </section>
 
-        <section className="section" aria-labelledby="safety-title">
-          <div className="section-head">
-            <h2 id="safety-title">Safety is our top priority</h2>
-            <p>Cuidamos cada detalle operativo para que viajes con confianza.</p>
+      <section className="home-services" aria-label="Service highlights">
+        {serviceStrip.map((service) => (
+          <article key={service.label} className="home-service-item">
+            <img src={service.icon} alt="" aria-hidden="true" />
+            <span>{service.label}</span>
+          </article>
+        ))}
+      </section>
+
+      <section className="home-top-destinations" aria-labelledby="home-destinations-title">
+        <h2 id="home-destinations-title">TOP DESTINATIONS IN COSTA RICA</h2>
+
+        <div className="home-destinations-layout">
+          <div className="home-map-wrap">
+            <img
+              src="/assets/home/mapa-costa-rica.png"
+              alt="Costa Rica destinations map"
+              className="home-map-image"
+            />
           </div>
 
-          <div className="priority-grid">
-            {priorities.map((priority) => (
-              <article key={priority.title} className="priority-card">
-                <h3>{priority.title}</h3>
-                <p>{priority.description}</p>
-              </article>
+          <div className="home-destination-grid">
+            {featuredDestinations.map((destination) => (
+              <Link
+                key={destination.title}
+                to={destination.to}
+                className="home-destination-tile"
+              >
+                <img src={destination.image} alt={destination.title} />
+                <span>{destination.title}</span>
+              </Link>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="section" aria-labelledby="testimonials-title">
-          <div className="section-head">
-            <h2 id="testimonials-title">What our customers are saying</h2>
-            <p>Experiencias reales de viajeros que reservaron con Figa Travel.</p>
-          </div>
+      <section className="home-priority-section" aria-labelledby="home-priority-title">
+        <div className="home-section-head">
+          <p className="eyebrow">Safety is our</p>
+          <h2 id="home-priority-title">TOP PRIORITY</h2>
+        </div>
 
-          <div className="testimonial-grid">
-            {testimonials.map((testimonial) => (
-              <article key={testimonial.author} className="testimonial-card">
-                <h3>{testimonial.author}</h3>
-                <p>{testimonial.quote}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+        <div className="priority-grid home-priority-grid">
+          {priorities.map((priority) => (
+            <article key={priority.title} className="priority-card">
+              <h3>{priority.title}</h3>
+              <p>{priority.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <section className="section" aria-labelledby="promo-title">
-          <div className="section-head">
-            <h2 id="promo-title">Book online with 10% discount</h2>
-            <p>
-              Reserva dos o mas traslados y usa el codigo FIGA10 durante checkout.
-            </p>
-          </div>
-          <div className="faq-cta-row">
-            <Link to="/book-online" className="hero-cta">
-              Ir a reservar
-            </Link>
-            <Link to="/faq" className="hero-cta ghost">
-              Ver FAQ
-            </Link>
-          </div>
-        </section>
-      </main>
-    </>
+      <section className="home-testimonials-section" aria-labelledby="home-testimonials-title">
+        <div className="home-section-head">
+          <p className="eyebrow">This is what our valued customers have shared about their experiences with us</p>
+          <h2 id="home-testimonials-title">Testimonials</h2>
+        </div>
+
+        <div className="testimonial-grid home-testimonial-grid">
+          {testimonials.map((testimonial) => (
+            <article key={testimonial.author} className="testimonial-card">
+              <h3>{testimonial.author}</h3>
+              <p>{testimonial.quote}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-faq-teaser" aria-labelledby="home-faq-title">
+        <div className="home-faq-copy">
+          <p className="eyebrow">Have any questions?</p>
+          <h2 id="home-faq-title">Explore our Frequently Asked Questions section</h2>
+          <p>
+            If you have any other questions, please contact us by WhatsApp, email or our contact form.
+          </p>
+          <Link to="/faq" className="home-inline-link">
+            FAQ
+          </Link>
+        </div>
+
+        <div className="home-faq-preview">
+          {faqItems.slice(0, 3).map((item) => (
+            <article key={item.question} className="faq-item">
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-discount-section" aria-labelledby="home-discount-title">
+        <div>
+          <p className="eyebrow">10% DISCOUNT</p>
+          <h2 id="home-discount-title">Book online and use code FIGA10</h2>
+          <p>
+            Get 10% discount when you book online 2 or more transfers around Costa Rica.
+          </p>
+        </div>
+
+        <Link to="/book-online" className="home-book-now home-discount-link">
+          BOOK NOW
+        </Link>
+      </section>
+    </main>
   )
 }

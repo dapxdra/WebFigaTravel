@@ -11,7 +11,7 @@ export const mockFeaturedPackages: TravelPackage[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
     description:
-      'Hotel 5 estrellas, traslados, tours a Isla Mujeres y concierge en destino.',
+      '5-star hotel, transfers, Isla Mujeres tours, and destination concierge.',
     isFeatured: true,
   },
   {
@@ -24,20 +24,20 @@ export const mockFeaturedPackages: TravelPackage[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1531686264889-56fdcabd163f?auto=format&fit=crop&w=1200&q=80',
     description:
-      'City tour, dinner premium y hospedaje boutique en ciudad amurallada.',
+      'City tour, premium dinner, and boutique stay in the walled city.',
     isFeatured: true,
   },
   {
     id: 'pkg-madrid-paris',
     title: 'Madrid + Paris Signature',
-    destination: 'Espana y Francia',
+    destination: 'Spain and France',
     durationDays: 9,
     price: 34990,
     currency: 'MXN',
     imageUrl:
       'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=1200&q=80',
     description:
-      'Vuelos multicity, tren alta velocidad y experiencias culturales guiadas.',
+      'Multicity flights, high-speed rail, and guided cultural experiences.',
     isFeatured: true,
   },
 ]

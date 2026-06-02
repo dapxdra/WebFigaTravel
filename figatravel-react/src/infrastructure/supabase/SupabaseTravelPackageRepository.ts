@@ -44,7 +44,7 @@ export class SupabaseTravelPackageRepository implements TravelPackageRepository 
       .order('price', { ascending: true })
 
     if (error) {
-      throw new Error('No fue posible cargar los paquetes destacados.')
+      throw new Error('Unable to load featured packages.')
     }
 
     return (data as TravelPackageRow[]).map((row) => mapRow(row))
@@ -63,7 +63,7 @@ export class SupabaseTravelPackageRepository implements TravelPackageRepository 
       .order('title', { ascending: true })
 
     if (error) {
-      throw new Error('No fue posible cargar todos los paquetes.')
+      throw new Error('Unable to load all packages.')
     }
 
     return (data as TravelPackageRow[]).map((row) => mapRow(row))
@@ -80,7 +80,7 @@ export class SupabaseTravelPackageRepository implements TravelPackageRepository 
       .eq('id', packageId)
 
     if (error) {
-      throw new Error('No fue posible actualizar el estado destacado.')
+      throw new Error('Unable to update featured status.')
     }
   }
 }

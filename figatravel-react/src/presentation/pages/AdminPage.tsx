@@ -15,24 +15,24 @@ export function AdminPage() {
     <main>
       <header className="section page-hero">
         <p className="eyebrow">ADMIN PANEL</p>
-        <h1>Gestion basica de paquetes y leads</h1>
+        <h1>Basic package and lead management</h1>
         <p className="hero-copy">
-          Panel operativo inicial para validar contenido destacado y solicitudes.
+          Initial operations panel to validate featured content and requests.
         </p>
       </header>
 
       <section className="section" aria-labelledby="admin-packages-title">
         <div className="section-head admin-head">
           <div>
-            <h2 id="admin-packages-title">Paquetes</h2>
-            <p>Activa o desactiva si un paquete aparece como destacado.</p>
+            <h2 id="admin-packages-title">Packages</h2>
+            <p>Enable or disable whether a package appears as featured.</p>
           </div>
           <button type="button" className="hero-cta admin-refresh" onClick={() => void reload()}>
-            Refrescar
+            Refresh
           </button>
         </div>
 
-        {loading ? <p>Cargando panel...</p> : null}
+        {loading ? <p>Loading dashboard...</p> : null}
         {error ? <p className="error-text">{error}</p> : null}
 
         <div className="admin-grid">
@@ -52,7 +52,7 @@ export function AdminPage() {
                     void toggleFeatured(item.id, event.target.checked)
                   }
                 />
-                Destacado
+                Featured
               </label>
             </article>
           ))}
@@ -61,19 +61,19 @@ export function AdminPage() {
 
       <section className="section" aria-labelledby="admin-leads-title">
         <div className="section-head">
-          <h2 id="admin-leads-title">Leads recientes</h2>
-          <p>Ultimas solicitudes enviadas desde el formulario web.</p>
+          <h2 id="admin-leads-title">Recent leads</h2>
+          <p>Latest requests submitted from the web form.</p>
         </div>
 
         <div className="lead-table-wrap">
           <table className="lead-table">
             <thead>
               <tr>
-                <th>Fecha</th>
-                <th>Nombre</th>
+                <th>Date</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Viajeros</th>
-                <th>Paquete</th>
+                <th>Travelers</th>
+                <th>Package</th>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +88,7 @@ export function AdminPage() {
               ))}
               {!loading && leads.length === 0 ? (
                 <tr>
-                  <td colSpan={5}>No hay leads disponibles.</td>
+                  <td colSpan={5}>No leads available.</td>
                 </tr>
               ) : null}
             </tbody>

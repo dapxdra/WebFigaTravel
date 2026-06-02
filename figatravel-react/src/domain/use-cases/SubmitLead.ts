@@ -10,15 +10,15 @@ export class SubmitLead {
 
   async execute(input: LeadRequest): Promise<void> {
     if (input.name.trim() === '') {
-      throw new Error('El nombre es obligatorio.')
+      throw new Error('Name is required.')
     }
 
     if (input.email.trim() === '') {
-      throw new Error('El correo es obligatorio.')
+      throw new Error('Email is required.')
     }
 
     if (!input.packageId) {
-      throw new Error('Selecciona un paquete para continuar.')
+      throw new Error('Select a package to continue.')
     }
 
     await this.repository.create(input)

@@ -3,19 +3,19 @@ import { faqItems } from '../data/siteContent'
 
 export function FaqPage() {
   return (
-    <main>
-      <header className="section page-hero">
+    <main className="info-page faq-page">
+      <header className="section page-hero faq-hero">
         <p className="eyebrow">HAVE ANY QUESTIONS?</p>
         <h1>FAQ</h1>
         <p className="hero-copy">
-          Respuestas rapidas para que planifiques tu viaje con total claridad.
+          Quick answers to help you plan your trip with complete clarity.
         </p>
       </header>
 
       <section className="section" aria-labelledby="faq-list-title">
         <div className="section-head">
-          <h2 id="faq-list-title">Preguntas frecuentes</h2>
-          <p>Si necesitas algo adicional, contactanos por WhatsApp o formulario.</p>
+          <h2 id="faq-list-title">Frequently Asked Questions</h2>
+          <p>If you need anything else, contact us via WhatsApp, email, or the contact form.</p>
         </div>
 
         <div className="faq-list">
@@ -34,10 +34,10 @@ export function FaqPage() {
             target="_blank"
             rel="noreferrer"
           >
-            Hablar por WhatsApp
+            Chat on WhatsApp
           </a>
           <Link to="/contact" className="hero-cta ghost">
-            Ir a contacto
+            Go to contact
           </Link>
         </div>
       </section>

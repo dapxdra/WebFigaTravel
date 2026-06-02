@@ -44,7 +44,7 @@ export function useBookingFormViewModel() {
           setPackagesError(
             error instanceof Error
               ? error.message
-              : 'No fue posible cargar paquetes.',
+              : 'Unable to load packages.',
           )
         }
       } finally {
@@ -79,7 +79,7 @@ export function useBookingFormViewModel() {
         setAvailabilityError(
           error instanceof Error
             ? error.message
-            : 'No fue posible cargar disponibilidad.',
+            : 'Unable to load availability.',
         )
         setAvailability([])
       } finally {
@@ -103,7 +103,7 @@ export function useBookingFormViewModel() {
           error:
             error instanceof Error
               ? error.message
-              : 'No se pudo enviar la solicitud.',
+              : 'Unable to submit the request.',
         })
       }
     },

@@ -28,7 +28,7 @@ export function useAdminDashboardViewModel() {
       setError(
         loadError instanceof Error
           ? loadError.message
-          : 'No fue posible cargar el panel admin.',
+          : 'Unable to load the admin dashboard.',
       )
     } finally {
       setLoading(false)
@@ -57,7 +57,7 @@ export function useAdminDashboardViewModel() {
           setError(
             loadError instanceof Error
               ? loadError.message
-              : 'No fue posible cargar el panel admin.',
+              : 'Unable to load the admin dashboard.',
           )
         }
       } finally {
@@ -90,7 +90,7 @@ export function useAdminDashboardViewModel() {
         setError(
           updateError instanceof Error
             ? updateError.message
-            : 'No fue posible actualizar el paquete.',
+            : 'Unable to update the package.',
         )
       } finally {
         setUpdatingId(null)

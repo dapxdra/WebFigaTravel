@@ -3,31 +3,22 @@ import { topDestinations } from '../data/siteContent'
 
 export function DestinationsPage() {
   return (
-    <main>
-      <header className="section page-hero">
-        <p className="eyebrow">TOP DESTINATIONS IN COSTA RICA</p>
-        <h1>Destinations</h1>
-        <p className="hero-copy">
-          Descubre los destinos mas solicitados y disena una ruta a tu medida.
-        </p>
+    <main className="destinations-page">
+      <header className="destinations-header">
+        <h1>DESTINATIONS</h1>
+        <p>Check out our most popular destinations in Costa Rica</p>
       </header>
 
-      <section className="section" aria-labelledby="destination-list-title">
-        <div className="section-head">
-          <h2 id="destination-list-title">Selecciona tu proximo destino</h2>
-          <p>
-            Desde playas del Pacifico hasta volcanes y rutas urbanas en San Jose.
-          </p>
-        </div>
-
-        <div className="destination-grid">
+      <section className="destinations-catalog" aria-labelledby="destination-list-title">
+        <h2 id="destination-list-title" className="sr-only">
+          Destinations catalog
+        </h2>
+        <div className="destinations-catalog-grid">
           {topDestinations.map((destination) => (
-            <article key={destination.name} className="destination-card">
-              <img src={destination.image} alt={destination.name} />
-              <h3>{destination.name}</h3>
-              <p className="destination-summary">{destination.summary}</p>
-              <Link to={`/destinations/${destination.slug}`} className="card-link">
-                Ver detalle
+            <article key={destination.slug} className="destinations-catalog-card">
+              <img src={destination.cardImage} alt={destination.name} />
+              <Link to={`/destinations/${destination.slug}`} className="destinations-card-link">
+                {destination.name}
               </Link>
             </article>
           ))}
