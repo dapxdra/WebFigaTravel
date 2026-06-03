@@ -66,3 +66,14 @@ If a change is scoped to one feature, still ensure these two commands pass befor
 - Project setup, routes, SQL, and policies: [README.md](README.md)
 - Tooling scripts and dependencies: [package.json](package.json)
 - Vite config entry: [vite.config.ts](vite.config.ts)
+
+## Specialized Instructions
+- Frontend UI and presentation-layer guidance: [.github/instructions/frontend.instructions.md](.github/instructions/frontend.instructions.md)
+- Supabase repository and auth guidance: [.github/instructions/supabase.instructions.md](.github/instructions/supabase.instructions.md)
+
+Load those file-scoped instructions when working in the matching folders instead of repeating the same rules in task responses.
+
+## Related Customizations
+- Predeploy prompt: [.github/prompts/vercel-check.prompt.md](.github/prompts/vercel-check.prompt.md)
+- Chat recap prompt: [.github/prompts/chat-recap.prompt.md](.github/prompts/chat-recap.prompt.md)
+- Release/deploy agent: [.github/agents/release.agent.md](.github/agents/release.agent.md)
