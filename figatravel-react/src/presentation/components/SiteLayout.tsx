@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
 
@@ -11,6 +12,7 @@ const navItems = [
 ]
 
 export function SiteLayout() {
+  const [isNavOpen, setIsNavOpen] = useState(false)
   const { isAuthenticated, session, signInWithGoogle, signOut, authError } =
     useAuth()
 
@@ -18,6 +20,10 @@ export function SiteLayout() {
 
   return (
     <div className="page-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
+
       <nav className="top-nav" aria-label="Principal">
         <div className="home-logo-wrap">
           <NavLink to="/" className="logo-link" aria-label="Figa Travel Home">
@@ -25,8 +31,20 @@ export function SiteLayout() {
           </NavLink>
         </div>
 
-        <div className="nav-right home-nav-right">
-          <ul>
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-expanded={isNavOpen}
+          aria-controls="main-nav-list"
+          onClick={() => {
+            setIsNavOpen((previous) => !previous)
+          }}
+        >
+          Menu
+        </button>
+
+        <div className={isNavOpen ? 'nav-right home-nav-right open' : 'nav-right home-nav-right'}>
+          <ul id="main-nav-list">
             {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink
@@ -34,6 +52,9 @@ export function SiteLayout() {
                   className={({ isActive }) =>
                     isActive ? 'nav-link active' : 'nav-link'
                   }
+                  onClick={() => {
+                    setIsNavOpen(false)
+                  }}
                 >
                   {item.label}
                 </NavLink>
@@ -46,6 +67,9 @@ export function SiteLayout() {
                   className={({ isActive }) =>
                     isActive ? 'nav-link active' : 'nav-link'
                   }
+                  onClick={() => {
+                    setIsNavOpen(false)
+                  }}
                 >
                   Admin
                 </NavLink>
@@ -54,12 +78,14 @@ export function SiteLayout() {
           </ul>
 
           <div className="auth-block home-auth-block">
-            <input
-              type="search"
-              placeholder="Search..."
-              className="home-search-input"
-              aria-label="Search"
-            />
+            <a
+              href="https://api.whatsapp.com/send/?phone=%2B50672271058&text=Hello%20Figa%20Travel%2C%20I%20want%20to%20book%20a%20transfer&type=phone_number&app_absent=0"
+              className="quick-whatsapp"
+              target="_blank"
+              rel="noreferrer"
+            >
+              WhatsApp
+            </a>
 
             {isAuthenticated ? (
               <>
@@ -92,7 +118,9 @@ export function SiteLayout() {
 
       {authError ? <p className="error-text auth-error-bar">{authError}</p> : null}
 
-      <Outlet />
+      <div id="main-content">
+        <Outlet />
+      </div>
 
       <footer className="site-footer" aria-label="Footer">
         <div className="footer-grid">

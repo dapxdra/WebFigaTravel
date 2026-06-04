@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useBookingFormViewModel } from '../hooks/useBookingFormViewModel'
 import { LeadForm } from '../components/LeadForm'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 interface TransferOption {
   id: string
@@ -32,6 +33,11 @@ const transferOptions: TransferOption[] = [
 ]
 
 export function BookOnlinePage() {
+  usePageMeta(
+    'Book Online',
+    'Book private transportation routes across Costa Rica with real pricing and quick request forms.',
+  )
+
   const { loadingPackages, packagesError } = useBookingFormViewModel()
   const [selectedRoute, setSelectedRoute] = useState<TransferOption | null>(null)
 

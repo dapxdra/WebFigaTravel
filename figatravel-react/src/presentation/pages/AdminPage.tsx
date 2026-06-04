@@ -1,6 +1,12 @@
 import { useAdminDashboardViewModel } from '../hooks/useAdminDashboardViewModel'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function AdminPage() {
+  usePageMeta(
+    'Admin Dashboard',
+    'Manage featured travel packages and review incoming leads from the website.',
+  )
+
   const {
     packages,
     leads,

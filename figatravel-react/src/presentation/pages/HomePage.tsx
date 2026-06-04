@@ -1,5 +1,8 @@
+import type { SyntheticEvent } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { faqItems, priorities, testimonials } from '../data/siteContent'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 const featuredDestinations = [
   {
@@ -54,6 +57,78 @@ const serviceStrip = [
 ]
 
 export function HomePage() {
+  const handleAccordionToggle = (event: SyntheticEvent<HTMLDetailsElement>) => {
+    const currentItem = event.currentTarget
+
+    if (!currentItem.open) {
+      return
+    }
+
+    const listContainer = currentItem.parentElement
+
+    if (!listContainer) {
+      return
+    }
+
+    listContainer.querySelectorAll('details[open]').forEach((item) => {
+      if (item !== currentItem) {
+        ;(item as HTMLDetailsElement).open = false
+      }
+    })
+
+    if (window.innerWidth <= 840) {
+      const { top, bottom } = currentItem.getBoundingClientRect()
+      const isOutsideViewport = top < 96 || bottom > window.innerHeight
+
+      if (isOutsideViewport) {
+        window.requestAnimationFrame(() => {
+          currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        })
+      }
+    }
+  }
+
+  usePageMeta(
+    'Private Transfers in Costa Rica',
+    'Discover Costa Rica with premium private transportation, top destinations, and flexible booking with Figa Travel.',
+  )
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (window.innerWidth > 840) {
+        return
+      }
+
+      const target = event.target
+
+      if (!(target instanceof Element)) {
+        return
+      }
+
+      const clickedOnAccordion = target.closest('.home-faq-preview .faq-accordion-item')
+
+      if (clickedOnAccordion) {
+        return
+      }
+
+      const homeFaqPreview = document.querySelector('.home-faq-preview')
+
+      if (!homeFaqPreview) {
+        return
+      }
+
+      homeFaqPreview.querySelectorAll('details[open]').forEach((item) => {
+        ;(item as HTMLDetailsElement).open = false
+      })
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [])
+
   return (
     <main className="home-page">
       <section className="home-hero" aria-label="Discover the Beauty of Costa Rica">
@@ -65,16 +140,44 @@ export function HomePage() {
 
         <div className="home-hero-overlay">
           <h1>Discover the Beauty of Costa Rica with FIGA TRAVEL</h1>
-          <Link to="/book-online" className="home-book-now">
-            BOOK NOW
-          </Link>
+          <p className="home-hero-subtitle">
+            Private transfers, local guidance, and curated routes from volcanoes to beaches.
+          </p>
+          <div className="home-hero-actions">
+            <Link to="/book-online" className="home-book-now">
+              BOOK NOW
+            </Link>
+            <a
+              href="https://api.whatsapp.com/send/?phone=%2B50672271058&text=Hello%20Figa%20Travel%2C%20I%20want%20help%20planning%20my%20trip&type=phone_number&app_absent=0"
+              className="hero-cta ghost home-hero-secondary"
+              target="_blank"
+              rel="noreferrer"
+            >
+              WhatsApp Concierge
+            </a>
+          </div>
         </div>
+      </section>
+
+      <section className="home-trust-strip" aria-label="Trust indicators">
+        <article>
+          <h2>500+</h2>
+          <p>successful transfers every season</p>
+        </article>
+        <article>
+          <h2>24/7</h2>
+          <p>trip support by WhatsApp and email</p>
+        </article>
+        <article>
+          <h2>4.9/5</h2>
+          <p>average traveler satisfaction score</p>
+        </article>
       </section>
 
       <section className="home-services" aria-label="Service highlights">
         {serviceStrip.map((service) => (
           <article key={service.label} className="home-service-item">
-            <img src={service.icon} alt="" aria-hidden="true" />
+            <img src={service.icon} alt="" aria-hidden="true" loading="lazy" />
             <span>{service.label}</span>
           </article>
         ))}
@@ -89,6 +192,7 @@ export function HomePage() {
               src="/assets/home/mapa-costa-rica.png"
               alt="Costa Rica destinations map"
               className="home-map-image"
+              loading="lazy"
             />
           </div>
 
@@ -99,7 +203,7 @@ export function HomePage() {
                 to={destination.to}
                 className="home-destination-tile"
               >
-                <img src={destination.image} alt={destination.title} />
+                <img src={destination.image} alt={destination.title} loading="lazy" />
                 <span>{destination.title}</span>
               </Link>
             ))}
@@ -152,11 +256,25 @@ export function HomePage() {
         </div>
 
         <div className="home-faq-preview">
-          {faqItems.slice(0, 3).map((item) => (
-            <article key={item.question} className="faq-item">
-              <h3>{item.question}</h3>
-              <p>{item.answer}</p>
-            </article>
+          <div className="home-faq-preview-head">
+            <h3>Top Questions</h3>
+            <Link to="/faq" className="home-inline-link home-faq-preview-link">
+              View all
+            </Link>
+          </div>
+
+          {faqItems.slice(0, 3).map((item, index) => (
+            <details
+              key={item.question}
+              className="faq-item faq-accordion-item"
+              onToggle={handleAccordionToggle}
+              open={index === 0}
+            >
+              <summary className="faq-question">{item.question}</summary>
+              <div className="faq-answer">
+                <p>{item.answer}</p>
+              </div>
+            </details>
           ))}
         </div>
       </section>

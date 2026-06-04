@@ -1,7 +1,13 @@
 import { Link } from 'react-router-dom'
 import { topDestinations } from '../data/siteContent'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function DestinationsPage() {
+  usePageMeta(
+    'Top Destinations',
+    'Explore Costa Rica destinations including La Fortuna, Manuel Antonio, Tamarindo, and more with Figa Travel.',
+  )
+
   return (
     <main className="destinations-page">
       <header className="destinations-header">
@@ -16,7 +22,7 @@ export function DestinationsPage() {
         <div className="destinations-catalog-grid">
           {topDestinations.map((destination) => (
             <article key={destination.slug} className="destinations-catalog-card">
-              <img src={destination.cardImage} alt={destination.name} />
+              <img src={destination.cardImage} alt={destination.name} loading="lazy" />
               <Link to={`/destinations/${destination.slug}`} className="destinations-card-link">
                 {destination.name}
               </Link>

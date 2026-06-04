@@ -1,9 +1,17 @@
 import { Link, useParams } from 'react-router-dom'
 import { findDestinationBySlug } from '../data/siteContent'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function DestinationDetailPage() {
   const { slug } = useParams()
   const destination = slug ? findDestinationBySlug(slug) : undefined
+
+  usePageMeta(
+    destination ? destination.name : 'Destination Not Found',
+    destination
+      ? `${destination.name} travel guide, attractions, and tips for your Costa Rica itinerary.`
+      : 'The destination you requested is not available in our Costa Rica catalog.',
+  )
 
   if (!destination) {
     return (
@@ -36,6 +44,7 @@ export function DestinationDetailPage() {
           src={destination.heroImage}
           alt={destination.name}
           className="destination-hero-main"
+          loading="eager"
         />
       </section>
 
@@ -46,6 +55,7 @@ export function DestinationDetailPage() {
             src={item}
             alt={destination.name}
             className="destination-gallery-item"
+            loading="lazy"
           />
         ))}
       </section>
