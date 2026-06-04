@@ -675,7 +675,7 @@ h3 {
 }
 
 .faq-question::after {
-  content: '';
+  content: '+';
   position: absolute;
   right: 0;
   top: 50%;
@@ -683,34 +683,27 @@ h3 {
   width: 32px;
   height: 32px;
   border-radius: 999px;
-  background:
-    linear-gradient(var(--forest), var(--forest)) center / 12px 2px no-repeat,
-    var(--forest-soft);
-  transition: transform 0.24s ease, background-color 0.24s ease;
+  background: var(--forest-soft);
+  color: var(--forest);
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: background-color 0.24s ease, color 0.24s ease;
 }
 
 .faq-question::before {
-  content: '';
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  width: 2px;
-  height: 12px;
-  background: var(--forest);
-  transform: translateY(-50%) scaleY(1);
-  transition: transform 0.22s ease, opacity 0.2s ease;
+  content: none;
 }
 
 .faq-accordion-item[open] .faq-question::after {
-  transform: translateY(-50%) rotate(90deg);
-  background:
-    linear-gradient(var(--forest), var(--forest)) center / 12px 2px no-repeat,
-    #d6efe3;
+  content: '-';
+  background: #d6efe3;
 }
 
 .faq-accordion-item[open] .faq-question::before {
-  transform: translateY(-50%) scaleY(0);
-  opacity: 0;
+  content: none;
 }
 
 .faq-answer {
