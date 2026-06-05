@@ -19,12 +19,12 @@ export function SiteLayout() {
   const footerLinks = navItems
 
   return (
-    <div className="page-shell">
+    <div className="page-shell min-h-screen flex flex-col">
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
 
-      <nav className="top-nav" aria-label="Principal">
+      <nav className="top-nav w-full" aria-label="Principal">
         <div className="home-logo-wrap">
           <NavLink to="/" className="logo-link" aria-label="Figa Travel Home">
             <img src="/assets/home/logo-figa.png" alt="Figa Travel Costa Rica" className="home-logo" />
@@ -43,7 +43,13 @@ export function SiteLayout() {
           Menu
         </button>
 
-        <div className={isNavOpen ? 'nav-right home-nav-right open' : 'nav-right home-nav-right'}>
+        <div
+          className={
+            isNavOpen
+              ? 'nav-right home-nav-right open'
+              : 'nav-right home-nav-right'
+          }
+        >
           <ul id="main-nav-list">
             {navItems.map((item) => (
               <li key={item.to}>
@@ -118,11 +124,11 @@ export function SiteLayout() {
 
       {authError ? <p className="error-text auth-error-bar">{authError}</p> : null}
 
-      <div id="main-content">
+      <div id="main-content" className="flex-1 w-full">
         <Outlet />
       </div>
 
-      <footer className="site-footer" aria-label="Footer">
+      <footer className="site-footer w-full" aria-label="Footer">
         <div className="footer-grid">
           <section className="footer-block">
             <h2>Additional Links</h2>

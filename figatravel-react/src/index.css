@@ -1,6 +1,8 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
 
 :root {
+  --content-max: 1120px;
   --bg: #f4f8f5;
   --paper: #ffffff;
   --paper-soft: #f9fcfa;
@@ -89,6 +91,8 @@ h3 {
   position: sticky;
   top: 0;
   z-index: 50;
+  width: min(var(--content-max), 100%);
+  margin-inline: auto;
   margin-top: 18px;
   min-height: 84px;
   border: 1px solid rgba(16, 59, 44, 0.15);
@@ -271,7 +275,7 @@ h3 {
 }
 
 .home-page {
-  --home-max: 1120px;
+  --home-max: var(--content-max);
   --home-gap: 24px;
   --home-card-pad: clamp(16px, 2vw, 24px);
   margin-top: 16px;
@@ -458,7 +462,7 @@ h3 {
 .destination-detail-page,
 .book-page,
 .info-page {
-  max-width: 1120px;
+  max-width: var(--content-max);
   margin: 0 auto 30px;
 }
 
@@ -496,15 +500,17 @@ h3 {
   border-radius: 18px;
   background: linear-gradient(165deg, #eaf7ef, #f3fdf9);
   border: 1px solid var(--line);
-  padding: 14px;
-  display: grid;
-  place-items: center;
+  overflow: hidden;
+  min-height: 100%;
 }
 
 .home-map-image {
   width: 100%;
-  max-width: 380px;
-  height: auto;
+  height: 100%;
+  min-height: 320px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
 }
 
 .home-destination-grid {
@@ -1121,6 +1127,8 @@ h3 {
 }
 
 .site-footer {
+  width: min(var(--content-max), 100%);
+  margin-inline: auto;
   margin-top: 12px;
   border: 1px solid rgba(20, 67, 51, 0.18);
   border-radius: 20px;
@@ -1296,7 +1304,7 @@ h3 {
   }
 
   .home-map-image {
-    max-width: 320px;
+    min-height: 280px;
   }
 
   .destinations-catalog-grid {

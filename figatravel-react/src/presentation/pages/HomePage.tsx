@@ -1,137 +1,142 @@
-import type { SyntheticEvent } from 'react'
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { faqItems, priorities, testimonials } from '../data/siteContent'
-import { usePageMeta } from '../hooks/usePageMeta'
+import type { SyntheticEvent } from "react";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { faqItems, priorities, testimonials } from "../data/siteContent";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 const featuredDestinations = [
   {
-    title: 'La Fortuna',
-    image: '/assets/home/dest-la-fortuna.png',
-    to: '/destinations/la-fortuna',
+    title: "La Fortuna",
+    image: "/assets/home/dest-la-fortuna.png",
+    to: "/destinations/la-fortuna",
   },
   {
-    title: 'Manuel Antonio',
-    image: '/assets/home/dest-manuel-antonio.png',
-    to: '/destinations/manuel-antonio',
+    title: "Manuel Antonio",
+    image: "/assets/home/dest-manuel-antonio.png",
+    to: "/destinations/manuel-antonio",
   },
   {
-    title: 'Papagayo',
-    image: '/assets/home/dest-papagayo.jpg',
-    to: '/destinations/papagayo',
+    title: "Papagayo",
+    image: "/assets/home/dest-papagayo.jpg",
+    to: "/destinations/papagayo",
   },
   {
-    title: 'Tamarindo',
-    image: '/assets/home/dest-tamarindo.jpg',
-    to: '/destinations/tamarindo',
+    title: "Tamarindo",
+    image: "/assets/home/dest-tamarindo.jpg",
+    to: "/destinations/tamarindo",
   },
   {
-    title: 'Puerto Viejo',
-    image: '/assets/home/dest-puerto-viejo.jpg',
-    to: '/destinations/puerto-viejo',
+    title: "Puerto Viejo",
+    image: "/assets/home/dest-puerto-viejo.jpg",
+    to: "/destinations/puerto-viejo",
   },
   {
-    title: 'San Jose City',
-    image: '/assets/home/dest-san-jose-city.jpg',
-    to: '/destinations/san-jose-city',
+    title: "San Jose City",
+    image: "/assets/home/dest-san-jose-city.jpg",
+    to: "/destinations/san-jose-city",
   },
-]
+];
 
 const serviceStrip = [
   {
-    icon: '/assets/home/icon-wifi.png',
-    label: 'WI-FI',
+    icon: "/assets/home/icon-wifi.png",
+    label: "WI-FI",
   },
   {
-    icon: '/assets/home/icon-customer-service.png',
-    label: 'Customer Service',
+    icon: "/assets/home/icon-customer-service.png",
+    label: "Customer Service",
   },
   {
-    icon: '/assets/home/icon-eco.png',
-    label: 'Eco-conscious',
+    icon: "/assets/home/icon-eco.png",
+    label: "Eco-conscious",
   },
   {
-    icon: '/assets/home/icon-vehicle.png',
-    label: 'Well-maintained vehicles',
+    icon: "/assets/home/icon-vehicle.png",
+    label: "Well-maintained vehicles",
   },
-]
+];
 
 export function HomePage() {
   const handleAccordionToggle = (event: SyntheticEvent<HTMLDetailsElement>) => {
-    const currentItem = event.currentTarget
+    const currentItem = event.currentTarget;
 
     if (!currentItem.open) {
-      return
+      return;
     }
 
-    const listContainer = currentItem.parentElement
+    const listContainer = currentItem.parentElement;
 
     if (!listContainer) {
-      return
+      return;
     }
 
-    listContainer.querySelectorAll('details[open]').forEach((item) => {
+    listContainer.querySelectorAll("details[open]").forEach((item) => {
       if (item !== currentItem) {
-        ;(item as HTMLDetailsElement).open = false
+        (item as HTMLDetailsElement).open = false;
       }
-    })
+    });
 
     if (window.innerWidth <= 840) {
-      const { top, bottom } = currentItem.getBoundingClientRect()
-      const isOutsideViewport = top < 96 || bottom > window.innerHeight
+      const { top, bottom } = currentItem.getBoundingClientRect();
+      const isOutsideViewport = top < 96 || bottom > window.innerHeight;
 
       if (isOutsideViewport) {
         window.requestAnimationFrame(() => {
-          currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-        })
+          currentItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
       }
     }
-  }
+  };
 
   usePageMeta(
-    'Private Transfers in Costa Rica',
-    'Discover Costa Rica with premium private transportation, top destinations, and flexible booking with Figa Travel.',
-  )
+    "Private Transfers in Costa Rica",
+    "Discover Costa Rica with premium private transportation, top destinations, and flexible booking with Figa Travel.",
+  );
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
       if (window.innerWidth > 840) {
-        return
+        return;
       }
 
-      const target = event.target
+      const target = event.target;
 
       if (!(target instanceof Element)) {
-        return
+        return;
       }
 
-      const clickedOnAccordion = target.closest('.home-faq-preview .faq-accordion-item')
+      const clickedOnAccordion = target.closest(
+        ".home-faq-preview .faq-accordion-item",
+      );
 
       if (clickedOnAccordion) {
-        return
+        return;
       }
 
-      const homeFaqPreview = document.querySelector('.home-faq-preview')
+      const homeFaqPreview = document.querySelector(".home-faq-preview");
 
       if (!homeFaqPreview) {
-        return
+        return;
       }
 
-      homeFaqPreview.querySelectorAll('details[open]').forEach((item) => {
-        ;(item as HTMLDetailsElement).open = false
-      })
-    }
+      homeFaqPreview.querySelectorAll("details[open]").forEach((item) => {
+        (item as HTMLDetailsElement).open = false;
+      });
+    };
 
-    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener("pointerdown", handlePointerDown);
 
     return () => {
-      document.removeEventListener('pointerdown', handlePointerDown)
-    }
-  }, [])
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
 
   return (
     <main className="home-page">
-      <section className="home-hero" aria-label="Discover the Beauty of Costa Rica">
+      <section
+        className="home-hero"
+        aria-label="Discover the Beauty of Costa Rica"
+      >
         <img
           src="/assets/home/hero-header.png"
           alt="Arenal volcano"
@@ -141,7 +146,8 @@ export function HomePage() {
         <div className="home-hero-overlay">
           <h1>Discover the Beauty of Costa Rica with FIGA TRAVEL</h1>
           <p className="home-hero-subtitle">
-            Private transfers, local guidance, and curated routes from volcanoes to beaches.
+            Private transfers, local guidance, and curated routes from volcanoes
+            to beaches.
           </p>
           <div className="home-hero-actions">
             <Link to="/book-online" className="home-book-now">
@@ -183,7 +189,10 @@ export function HomePage() {
         ))}
       </section>
 
-      <section className="home-top-destinations" aria-labelledby="home-destinations-title">
+      <section
+        className="home-top-destinations"
+        aria-labelledby="home-destinations-title"
+      >
         <h2 id="home-destinations-title">TOP DESTINATIONS IN COSTA RICA</h2>
 
         <div className="home-destinations-layout">
@@ -203,7 +212,11 @@ export function HomePage() {
                 to={destination.to}
                 className="home-destination-tile"
               >
-                <img src={destination.image} alt={destination.title} loading="lazy" />
+                <img
+                  src={destination.image}
+                  alt={destination.title}
+                  loading="lazy"
+                />
                 <span>{destination.title}</span>
               </Link>
             ))}
@@ -211,7 +224,10 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-priority-section" aria-labelledby="home-priority-title">
+      <section
+        className="home-priority-section"
+        aria-labelledby="home-priority-title"
+      >
         <div className="home-section-head">
           <p className="eyebrow">Safety is our</p>
           <h2 id="home-priority-title">TOP PRIORITY</h2>
@@ -227,9 +243,15 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-testimonials-section" aria-labelledby="home-testimonials-title">
+      <section
+        className="home-testimonials-section"
+        aria-labelledby="home-testimonials-title"
+      >
         <div className="home-section-head">
-          <p className="eyebrow">This is what our valued customers have shared about their experiences with us</p>
+          <p className="eyebrow">
+            This is what our valued customers have shared about their
+            experiences with us
+          </p>
           <h2 id="home-testimonials-title">Testimonials</h2>
         </div>
 
@@ -246,13 +268,14 @@ export function HomePage() {
       <section className="home-faq-teaser" aria-labelledby="home-faq-title">
         <div className="home-faq-copy">
           <p className="eyebrow">Have any questions?</p>
-          <h2 id="home-faq-title">Explore our Frequently Asked Questions section</h2>
+          <h2 id="home-faq-title">Frequently Asked Questions section</h2>
           <p>
-            If you have any other questions, please contact us by WhatsApp, email or our contact form.
+            If you have any other questions, please contact us by WhatsApp,
+            email or our contact form. Or check out our{" "}
+            <Link to="/faq" className="home-inline-link">
+              FAQ
+            </Link>
           </p>
-          <Link to="/faq" className="home-inline-link">
-            FAQ
-          </Link>
         </div>
 
         <div className="home-faq-preview">
@@ -279,12 +302,16 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-discount-section" aria-labelledby="home-discount-title">
+      <section
+        className="home-discount-section"
+        aria-labelledby="home-discount-title"
+      >
         <div>
           <p className="eyebrow">10% DISCOUNT</p>
           <h2 id="home-discount-title">Book online and use code FIGA10</h2>
           <p>
-            Get 10% discount when you book online 2 or more transfers around Costa Rica.
+            Get 10% discount when you book online 2 or more transfers around
+            Costa Rica.
           </p>
         </div>
 
@@ -293,5 +320,5 @@ export function HomePage() {
         </Link>
       </section>
     </main>
-  )
+  );
 }
