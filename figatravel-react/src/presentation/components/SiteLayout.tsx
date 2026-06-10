@@ -151,12 +151,12 @@ export function SiteLayout() {
           <section className="footer-block">
             <h2>Social</h2>
             <p>
-              <a href="https://instagram.com/figatravel?igshid=NjIwNzIyMDk2Mg==" target="_blank" rel="noreferrer">
+              <a href="https://www.instagram.com/figatravelcr/" target="_blank" rel="noreferrer">
                 Instagram
               </a>
             </p>
             <p>
-              <a href="https://www.facebook.com/profile.php?id=100064039205150" target="_blank" rel="noreferrer">
+              <a href="https://www.facebook.com/profile.php?id=100067353755078" target="_blank" rel="noreferrer">
                 Facebook
               </a>
             </p>

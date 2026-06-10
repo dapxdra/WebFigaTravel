@@ -25,6 +25,8 @@ export interface Testimonial {
   quote: string
 }
 
+import { getDestinationGallery } from './destinationGalleries'
+
 export interface FaqItem {
   question: string
   answer: string
@@ -57,12 +59,7 @@ export const topDestinations: Destination[] = [
       'Weather: Expect warm days and cooler evenings; pack accordingly.',
       'Health Precautions: Ensure you have insect repellent and sunscreen for outdoor activities.',
     ],
-    gallery: [
-      'https://static.wixstatic.com/media/3c2b27_29bd7de853e2410e82cc10bd183871ed~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_29bd7de853e2410e82cc10bd183871ed~mv2.png',
-      'https://static.wixstatic.com/media/3c2b27_04d142ee8d30496683742b84bcd0b41d~mv2.jpg/v1/fill/w_384,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_04d142ee8d30496683742b84bcd0b41d~mv2.jpg',
-      'https://static.wixstatic.com/media/3c2b27_9052e70216f643a182fed2292064a64e~mv2.jpg/v1/fill/w_384,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_9052e70216f643a182fed2292064a64e~mv2.jpg',
-      'https://static.wixstatic.com/media/3c2b27_3044fedf746f4443b29c54697d81b1a6~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_3044fedf746f4443b29c54697d81b1a6~mv2.png',
-    ],
+    gallery: getDestinationGallery('la-fortuna'),
   },
   {
     slug: 'papagayo',
@@ -89,12 +86,7 @@ export const topDestinations: Destination[] = [
       'Best Time to Visit: Plan your trip during the dry season from December to April for the best weather conditions.',
       'Weather: Expect warm and sunny days; pack beachwear, sunscreen, and sunglasses.',
     ],
-    gallery: [
-      'https://static.wixstatic.com/media/3c2b27_16e3b73bb1de4722994825eb9e02a555~mv2.png/v1/fill/w_720,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_16e3b73bb1de4722994825eb9e02a555~mv2.png',
-      'https://static.wixstatic.com/media/3c2b27_8a34c988d61448c1b98bcddcce3bb0a7~mv2.png/v1/fill/w_240,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_8a34c988d61448c1b98bcddcce3bb0a7~mv2.png',
-      'https://static.wixstatic.com/media/3c2b27_57c309f9c43e4cc08030b9d28116a065~mv2.png/v1/fill/w_384,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_57c309f9c43e4cc08030b9d28116a065~mv2.png',
-      'https://static.wixstatic.com/media/3c2b27_e4ce3cdad6a042a782556e76831c62dc~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_e4ce3cdad6a042a782556e76831c62dc~mv2.png',
-    ],
+    gallery: getDestinationGallery('papagayo'),
   },
   {
     slug: 'puerto-viejo',
@@ -122,12 +114,7 @@ export const topDestinations: Destination[] = [
       'Weather: Warm and humid weather year-round, bring light clothes and rain protection.',
       'Transport: Plan transfers in advance because distances from airports are long.',
     ],
-    gallery: [
-      'https://static.wixstatic.com/media/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg/v1/fill/w_720,h_301,al_b,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2a4fde24433147dd9a427265f0089b9b~mv2.jpg',
-      'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=720&q=80',
-      'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=720&q=80',
-      'https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=720&q=80',
-    ],
+    gallery: getDestinationGallery('puerto-viejo'),
   },
   {
     slug: 'manuel-antonio',
@@ -155,12 +142,7 @@ export const topDestinations: Destination[] = [
       'Weather: Expect warm, humid conditions; pack light clothing, sunscreen, and insect repellent.',
       'Park Reservations: Make advance reservations for Manuel Antonio National Park, as daily entry is limited.',
     ],
-    gallery: [
-      'https://static.wixstatic.com/media/3c2b27_7946e7dba83545bca34600c5bba30235~mv2.png/v1/fill/w_240,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_7946e7dba83545bca34600c5bba30235~mv2.png',
-      'https://static.wixstatic.com/media/3c2b27_359fe4e6755a4c5fa39d6bafac86dec3~mv2.png/v1/fill/w_720,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_359fe4e6755a4c5fa39d6bafac86dec3~mv2.png',
-      'https://static.wixstatic.com/media/3c2b27_5074d08a423f4847bd79ffbe0fd0dc43~mv2.png/v1/fill/w_576,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_5074d08a423f4847bd79ffbe0fd0dc43~mv2.png',
-      'https://static.wixstatic.com/media/3c2b27_410bc7faa5934b1e92886b1b2ef2cdc8~mv2.png/v1/fill/w_384,h_301,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_410bc7faa5934b1e92886b1b2ef2cdc8~mv2.png',
-    ],
+    gallery: getDestinationGallery('manuel-antonio'),
   },
   {
     slug: 'tamarindo',
@@ -188,12 +170,7 @@ export const topDestinations: Destination[] = [
       'Weather: Hot weather and strong sun, stay hydrated and use sunscreen.',
       'Transport: Reserve transfers early during high season demand.',
     ],
-    gallery: [
-      'https://static.wixstatic.com/media/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg/v1/fill/w_720,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2b4615b6fd4740d0b218fdf716ccebcc~mv2.jpg',
-      'https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?auto=format&fit=crop&w=720&q=80',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=720&q=80',
-      'https://images.unsplash.com/photo-1482192505345-5655af888cc4?auto=format&fit=crop&w=720&q=80',
-    ],
+    gallery: getDestinationGallery('tamarindo'),
   },
   {
     slug: 'san-jose-city',
@@ -221,12 +198,7 @@ export const topDestinations: Destination[] = [
       'Weather: Mild temperatures with occasional rain, carry a light jacket.',
       'Transport: Use private transfers for airport and intercity routes.',
     ],
-    gallery: [
-      'https://static.wixstatic.com/media/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg/v1/fill/w_720,h_301,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3c2b27_2bacbeda9fd54ad4b1acd7106747e49b~mv2.jpg',
-      'https://images.unsplash.com/photo-1543357480-c60d400e2ef9?auto=format&fit=crop&w=720&q=80',
-      'https://images.unsplash.com/photo-1580711668269-c5ef8a0f2424?auto=format&fit=crop&w=720&q=80',
-      'https://images.unsplash.com/photo-1603204077779-bed963ea7f7a?auto=format&fit=crop&w=720&q=80',
-    ],
+    gallery: getDestinationGallery('san-jose-city'),
   },
 ]
 
