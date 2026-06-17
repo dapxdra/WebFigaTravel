@@ -1,8 +1,22 @@
 import type { SyntheticEvent } from "react";
 import { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { faqItems, priorities, testimonials } from "../data/siteContent";
 import { usePageMeta } from "../hooks/usePageMeta";
+
+const HERO_STATIC_FALLBACK = "/assets/home/hero-header.png";
+const HERO_MEDIA_CANDIDATES = [
+  "/assets/home/portada-mar.gif",
+  "/assets/home/portada-mar.webp",
+  "/assets/home/portada-mar.jpg",
+  "/assets/home/portada-mar.png",
+  "/assets/home/home-hero.gif",
+  "/assets/home/home-hero.webp",
+  "/assets/home/home-hero.jpg",
+  "/assets/home/home-hero.png",
+  HERO_STATIC_FALLBACK,
+];
 
 const featuredDestinations = [
   {
@@ -93,6 +107,9 @@ export function HomePage() {
     "Discover Costa Rica with premium private transportation, top destinations, and flexible booking with Figa Travel.",
   );
 
+  const [heroMediaIndex, setHeroMediaIndex] = useState(0);
+  const heroMediaSrc = HERO_MEDIA_CANDIDATES[Math.min(heroMediaIndex, HERO_MEDIA_CANDIDATES.length - 1)];
+
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
       if (window.innerWidth > 840) {
@@ -138,9 +155,15 @@ export function HomePage() {
         aria-label="Discover the Beauty of Costa Rica"
       >
         <img
-          src="/assets/home/hero-header.png"
-          alt="Arenal volcano"
+          src={heroMediaSrc}
+          alt="Costa Rica coast"
           className="home-hero-image"
+          loading="eager"
+          onError={() => {
+            setHeroMediaIndex((current) =>
+              current < HERO_MEDIA_CANDIDATES.length - 1 ? current + 1 : current,
+            );
+          }}
         />
 
         <div className="home-hero-overlay">
@@ -224,46 +247,48 @@ export function HomePage() {
         </div>
       </section>
 
-      <section
-        className="home-priority-section"
-        aria-labelledby="home-priority-title"
-      >
-        <div className="home-section-head">
-          <p className="eyebrow">Safety is our</p>
-          <h2 id="home-priority-title">TOP PRIORITY</h2>
-        </div>
+      <div className="home-highlight-band">
+        <section
+          className="home-priority-section"
+          aria-labelledby="home-priority-title"
+        >
+          <div className="home-section-head">
+            <p className="eyebrow">Safety is our</p>
+            <h2 id="home-priority-title">TOP PRIORITY</h2>
+          </div>
 
-        <div className="priority-grid home-priority-grid">
-          {priorities.map((priority) => (
-            <article key={priority.title} className="priority-card">
-              <h3>{priority.title}</h3>
-              <p>{priority.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+          <div className="priority-grid home-priority-grid">
+            {priorities.map((priority) => (
+              <article key={priority.title} className="priority-card">
+                <h3>{priority.title}</h3>
+                <p>{priority.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
-      <section
-        className="home-testimonials-section"
-        aria-labelledby="home-testimonials-title"
-      >
-        <div className="home-section-head">
-          <p className="eyebrow">
-            This is what our valued customers have shared about their
-            experiences with us
-          </p>
-          <h2 id="home-testimonials-title">Testimonials</h2>
-        </div>
+        <section
+          className="home-testimonials-section"
+          aria-labelledby="home-testimonials-title"
+        >
+          <div className="home-section-head">
+            <p className="eyebrow">
+              This is what our valued customers have shared about their
+              experiences with us
+            </p>
+            <h2 id="home-testimonials-title">Testimonials</h2>
+          </div>
 
-        <div className="testimonial-grid home-testimonial-grid">
-          {testimonials.map((testimonial) => (
-            <article key={testimonial.author} className="testimonial-card">
-              <h3>{testimonial.author}</h3>
-              <p>{testimonial.quote}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+          <div className="testimonial-grid home-testimonial-grid">
+            {testimonials.map((testimonial) => (
+              <article key={testimonial.author} className="testimonial-card">
+                <h3>{testimonial.author}</h3>
+                <p>{testimonial.quote}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
 
       <section className="home-faq-teaser" aria-labelledby="home-faq-title">
         <div className="home-faq-copy">

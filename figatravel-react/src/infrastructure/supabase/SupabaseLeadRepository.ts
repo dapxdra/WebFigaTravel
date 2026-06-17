@@ -4,7 +4,7 @@ import type { LeadRepository } from '../../domain/repositories/LeadRepository'
 import { supabaseClient } from './supabaseClient'
 
 interface LeadRow {
-  id: string
+  id: string | number
   name: string
   email: string
   phone: string | null
@@ -35,7 +35,7 @@ export class SupabaseLeadRepository implements LeadRepository {
     })
 
     if (error) {
-      throw new Error('Unable to submit the travel request.')
+      throw new Error(`Unable to submit the travel request: ${error.message}`)
     }
   }
 
@@ -53,11 +53,11 @@ export class SupabaseLeadRepository implements LeadRepository {
       .limit(limit)
 
     if (error) {
-      throw new Error('Unable to load recent leads.')
+      throw new Error(`Unable to load recent leads: ${error.message}`)
     }
 
     return (data as LeadRow[]).map((row) => ({
-      id: row.id,
+      id: String(row.id),
       name: row.name,
       email: row.email,
       phone: row.phone ?? undefined,

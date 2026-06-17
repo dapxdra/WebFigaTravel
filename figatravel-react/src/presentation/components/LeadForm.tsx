@@ -53,7 +53,7 @@ export function LeadForm({
       return
     }
 
-    await submitLead({
+    const submitted = await submitLead({
       name,
       email,
       phone: phone || undefined,
@@ -63,6 +63,10 @@ export function LeadForm({
       packageId,
       availabilitySlotId: availabilitySlotId || undefined,
     })
+
+    if (!submitted) {
+      return
+    }
 
     setName('')
     setEmail('')
