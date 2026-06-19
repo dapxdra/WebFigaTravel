@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
 
@@ -13,8 +13,22 @@ const navItems = [
 
 export function SiteLayout() {
   const [isNavOpen, setIsNavOpen] = useState(false)
+  const [isNavScrolled, setIsNavScrolled] = useState(false)
   const { isAuthenticated, session, signInWithGoogle, signOut, authError } =
     useAuth()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsNavScrolled(window.scrollY > 16)
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   const footerLinks = navItems
 
@@ -24,7 +38,10 @@ export function SiteLayout() {
         Skip to main content
       </a>
 
-      <nav className="top-nav w-full" aria-label="Principal">
+      <nav
+        className={isNavScrolled ? 'top-nav top-nav-scrolled w-full' : 'top-nav w-full'}
+        aria-label="Principal"
+      >
         <div className="home-logo-wrap">
           <NavLink to="/" className="logo-link" aria-label="Figa Travel Home">
             <img src="/assets/home/logo-figa.png" alt="Figa Travel Costa Rica" className="home-logo" />

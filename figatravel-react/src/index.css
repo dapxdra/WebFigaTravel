@@ -104,6 +104,12 @@ h3 {
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-soft);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.top-nav-scrolled {
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 24px rgba(16, 59, 44, 0.1);
 }
 
 .logo-link {
