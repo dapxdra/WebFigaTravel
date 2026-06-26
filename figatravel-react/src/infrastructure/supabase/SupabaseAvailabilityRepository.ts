@@ -13,7 +13,7 @@ interface AvailabilityRow {
 function buildMock(packageId: string): AvailabilitySlot[] {
   const today = new Date()
 
-  return Array.from({ length: 10 }).map((_, index) => {
+  return Array.from({ length: 14 }).map((_, index) => {
     const date = new Date(today)
     date.setDate(today.getDate() + index + 1)
 
@@ -21,7 +21,7 @@ function buildMock(packageId: string): AvailabilitySlot[] {
       id: `mock-${packageId}-${index + 1}`,
       packageId,
       date: date.toISOString().slice(0, 10),
-      seatsAvailable: 2 + (index % 5),
+      seatsAvailable: 6,
     }
   })
 }
