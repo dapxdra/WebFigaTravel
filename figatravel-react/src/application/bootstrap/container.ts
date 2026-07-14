@@ -4,6 +4,7 @@ import { GetFeaturedPackages } from '../../domain/use-cases/GetFeaturedPackages'
 import { GetRecentLeads } from '../../domain/use-cases/GetRecentLeads'
 import { SubmitLead } from '../../domain/use-cases/SubmitLead'
 import { UpdatePackageFeatured } from '../../domain/use-cases/UpdatePackageFeatured'
+import { UpdatePackagePrice } from '../../domain/use-cases/UpdatePackagePrice'
 import { SupabaseAvailabilityRepository } from '../../infrastructure/supabase/SupabaseAvailabilityRepository'
 import { SupabaseLeadRepository } from '../../infrastructure/supabase/SupabaseLeadRepository'
 import { SupabaseTravelPackageRepository } from '../../infrastructure/supabase/SupabaseTravelPackageRepository'
@@ -19,6 +20,7 @@ export function buildContainer() {
     getAvailabilityByPackage: new GetAvailabilityByPackage(availabilityRepository),
     getRecentLeads: new GetRecentLeads(leadRepository),
     updatePackageFeatured: new UpdatePackageFeatured(travelPackageRepository),
+    updatePackagePrice: new UpdatePackagePrice(travelPackageRepository),
     submitLead: new SubmitLead(leadRepository),
   }
 }

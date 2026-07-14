@@ -1,6 +1,12 @@
 import { priorities } from '../data/siteContent'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function AboutPage() {
+  usePageMeta(
+    'About Us',
+    'Learn about Figa Travel, our mission, and our commitment to safe and memorable transportation across Costa Rica.',
+  )
+
   return (
     <main className="info-page about-page">
       <header className="section page-hero about-hero">
@@ -8,6 +14,7 @@ export function AboutPage() {
           src="/assets/home/hero-header.png"
           alt="Costa Rica volcano landscape"
           className="page-hero-image"
+          loading="lazy"
         />
 
         <div className="page-hero-copy">

@@ -1,18 +1,27 @@
 import { useAdminDashboardViewModel } from '../hooks/useAdminDashboardViewModel'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function AdminPage() {
+  usePageMeta(
+    'Admin Dashboard',
+    'Manage featured travel packages and review incoming leads from the website.',
+  )
+
   const {
     packages,
     leads,
+    priceDrafts,
     loading,
     error,
     updatingId,
     toggleFeatured,
+    setPriceDraft,
+    savePrice,
     reload,
   } = useAdminDashboardViewModel()
 
   return (
-    <main>
+    <main className="admin-page">
       <header className="section page-hero">
         <p className="eyebrow">ADMIN PANEL</p>
         <h1>Basic package and lead management</h1>
@@ -43,6 +52,34 @@ export function AdminPage() {
               <p>
                 {item.currency} {item.price.toFixed(2)}
               </p>
+
+              <form
+                className="admin-price-form"
+                onSubmit={(event) => {
+                  event.preventDefault()
+                  void savePrice(item.id)
+                }}
+              >
+                <label>
+                  Price
+                  <input
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={priceDrafts[item.id] ?? ''}
+                    onChange={(event) => setPriceDraft(item.id, event.target.value)}
+                    disabled={updatingId === item.id}
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="admin-save-price"
+                  disabled={updatingId === item.id}
+                >
+                  {updatingId === item.id ? 'Saving...' : 'Save price'}
+                </button>
+              </form>
+
               <label className="toggle-row">
                 <input
                   type="checkbox"
@@ -70,25 +107,45 @@ export function AdminPage() {
             <thead>
               <tr>
                 <th>Date</th>
+                <th>Estimated date</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Travelers</th>
                 <th>Package</th>
+                <th>Message</th>
               </tr>
             </thead>
             <tbody>
               {leads.map((lead) => (
                 <tr key={lead.id}>
                   <td>{lead.createdAt.slice(0, 10)}</td>
+                  <td>{lead.travelDate ?? 'Not specified'}</td>
                   <td>{lead.name}</td>
                   <td>{lead.email}</td>
                   <td>{lead.travelers}</td>
                   <td>{lead.packageId}</td>
+                  <td className="lead-message-cell">
+                    {lead.message?.trim() ? (
+                      lead.message.length > 120 ? (
+                        <details className="lead-message-details">
+                          <summary>
+                            {lead.message.slice(0, 120)}...
+                            <span className="lead-message-more"> Ver mas</span>
+                          </summary>
+                          <p>{lead.message}</p>
+                        </details>
+                      ) : (
+                        lead.message
+                      )
+                    ) : (
+                      'No message'
+                    )}
+                  </td>
                 </tr>
               ))}
               {!loading && leads.length === 0 ? (
                 <tr>
-                  <td colSpan={5}>No leads available.</td>
+                  <td colSpan={7}>No leads available.</td>
                 </tr>
               ) : null}
             </tbody>

@@ -90,12 +90,13 @@ export function useBookingFormViewModel() {
   )
 
   const submitLead = useCallback(
-    async (leadRequest: LeadRequest) => {
+    async (leadRequest: LeadRequest): Promise<boolean> => {
       setSubmitState({ loading: true, success: false, error: null })
 
       try {
         await container.submitLead.execute(leadRequest)
         setSubmitState({ loading: false, success: true, error: null })
+        return true
       } catch (error) {
         setSubmitState({
           loading: false,
@@ -105,6 +106,7 @@ export function useBookingFormViewModel() {
               ? error.message
               : 'Unable to submit the request.',
         })
+        return false
       }
     },
     [container],

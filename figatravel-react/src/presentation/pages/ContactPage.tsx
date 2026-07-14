@@ -1,6 +1,12 @@
 import { LeadForm } from '../components/LeadForm'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function ContactPage() {
+  usePageMeta(
+    'Contact',
+    'Contact Figa Travel for private transportation in Costa Rica. Reach us by phone, email, WhatsApp, or contact form.',
+  )
+
   return (
     <main className="info-page contact-page">
       <header className="section page-hero contact-hero">

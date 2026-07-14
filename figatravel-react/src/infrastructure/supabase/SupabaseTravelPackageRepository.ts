@@ -44,7 +44,7 @@ export class SupabaseTravelPackageRepository implements TravelPackageRepository 
       .order('price', { ascending: true })
 
     if (error) {
-      throw new Error('Unable to load featured packages.')
+      throw new Error(`Unable to load featured packages: ${error.message}`)
     }
 
     return (data as TravelPackageRow[]).map((row) => mapRow(row))
@@ -63,7 +63,19 @@ export class SupabaseTravelPackageRepository implements TravelPackageRepository 
       .order('title', { ascending: true })
 
     if (error) {
-      throw new Error('Unable to load all packages.')
+      const message = error.message.toLowerCase()
+      const isRlsError =
+        error.code === '42501' ||
+        message.includes('row-level security') ||
+        message.includes('permission denied')
+
+      if (isRlsError) {
+        throw new Error(
+          'Admin cannot read travel_packages due to RLS. Add a SELECT policy for authenticated users on public.travel_packages.',
+        )
+      }
+
+      throw new Error(`Unable to load all packages: ${error.message}`)
     }
 
     return (data as TravelPackageRow[]).map((row) => mapRow(row))
@@ -80,7 +92,22 @@ export class SupabaseTravelPackageRepository implements TravelPackageRepository 
       .eq('id', packageId)
 
     if (error) {
-      throw new Error('Unable to update featured status.')
+      throw new Error(`Unable to update featured status: ${error.message}`)
+    }
+  }
+
+  async updatePrice(packageId: string, price: number): Promise<void> {
+    if (!supabaseClient) {
+      return
+    }
+
+    const { error } = await supabaseClient
+      .from('travel_packages')
+      .update({ price })
+      .eq('id', packageId)
+
+    if (error) {
+      throw new Error(`Unable to update package price: ${error.message}`)
     }
   }
 }
