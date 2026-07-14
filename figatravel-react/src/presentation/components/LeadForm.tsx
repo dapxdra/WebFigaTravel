@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
+import { useAuth } from '../auth/useAuth'
 import { useBookingFormViewModel } from '../hooks/useBookingFormViewModel'
 
 // 48 half-hour slots: 00:00 to 23:30
@@ -23,6 +24,7 @@ export function LeadForm({
   defaultMessage,
 }: LeadFormProps) {
   const todayIso = new Date().toISOString().slice(0, 10)
+  const { isAuthenticated, session } = useAuth()
 
   const {
     packages,
@@ -39,6 +41,9 @@ export function LeadForm({
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [nameTouched, setNameTouched] = useState(false)
+  const [emailTouched, setEmailTouched] = useState(false)
+  const [phoneTouched, setPhoneTouched] = useState(false)
   const [travelDate, setTravelDate] = useState('')
   const [travelers, setTravelers] = useState(2)
   const [message, setMessage] = useState(defaultMessage ?? '')
@@ -60,6 +65,53 @@ export function LeadForm({
     () => Array.from(availableDates).sort((a, b) => a.localeCompare(b)),
     [availableDates],
   )
+
+  const authName = useMemo(() => {
+    const metadata = session?.user.user_metadata as
+      | { full_name?: string; name?: string }
+      | undefined
+
+    return metadata?.full_name ?? metadata?.name ?? ''
+  }, [session])
+
+  const authEmail = useMemo(() => session?.user.email ?? '', [session])
+
+  const authPhone = useMemo(() => {
+    const metadata = session?.user.user_metadata as
+      | { phone?: string; phone_number?: string }
+      | undefined
+
+    return session?.user.phone ?? metadata?.phone ?? metadata?.phone_number ?? ''
+  }, [session])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return
+    }
+
+    if (!nameTouched && name.trim() === '' && authName !== '') {
+      setName(authName)
+    }
+
+    if (!emailTouched && email.trim() === '' && authEmail !== '') {
+      setEmail(authEmail)
+    }
+
+    if (!phoneTouched && phone.trim() === '' && authPhone !== '') {
+      setPhone(authPhone)
+    }
+  }, [
+    authEmail,
+    authName,
+    authPhone,
+    email,
+    emailTouched,
+    isAuthenticated,
+    name,
+    nameTouched,
+    phone,
+    phoneTouched,
+  ])
 
   // Auto-select first available date when package loads and no date is selected yet
   useEffect(() => {
@@ -131,6 +183,7 @@ export function LeadForm({
       name,
       email,
       phone: phone || undefined,
+      userId: isAuthenticated ? session?.user.id : undefined,
       travelDate: travelDate || undefined,
       travelers,
       message: messageWithTime || undefined,
@@ -142,9 +195,12 @@ export function LeadForm({
       return
     }
 
-    setName('')
-    setEmail('')
-    setPhone('')
+    setName(isAuthenticated ? authName : '')
+    setEmail(isAuthenticated ? authEmail : '')
+    setPhone(isAuthenticated ? authPhone : '')
+    setNameTouched(false)
+    setEmailTouched(false)
+    setPhoneTouched(false)
     setTravelDate('')
     setTravelers(2)
     setMessage('')
@@ -169,7 +225,10 @@ export function LeadForm({
           <input
             type="text"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => {
+              setNameTouched(true)
+              setName(event.target.value)
+            }}
             required
           />
         </label>
@@ -179,7 +238,10 @@ export function LeadForm({
           <input
             type="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+              setEmailTouched(true)
+              setEmail(event.target.value)
+            }}
             required
           />
         </label>
@@ -189,7 +251,10 @@ export function LeadForm({
           <input
             type="tel"
             value={phone}
-            onChange={(event) => setPhone(event.target.value)}
+            onChange={(event) => {
+              setPhoneTouched(true)
+              setPhone(event.target.value)
+            }}
           />
         </label>
 

@@ -276,6 +276,100 @@ h3 {
   margin: 12px auto 0;
 }
 
+.auth-access-section {
+  max-width: 560px;
+  display: grid;
+  gap: 14px;
+  margin-inline: auto;
+}
+
+.auth-mode-switch {
+  display: inline-flex;
+  gap: 8px;
+  background: rgba(31, 106, 79, 0.08);
+  border: 1px solid rgba(31, 106, 79, 0.16);
+  border-radius: 999px;
+  padding: 4px;
+  margin-inline: auto;
+}
+
+.auth-mode-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2c4e42;
+  background: transparent;
+  cursor: pointer;
+}
+
+.auth-mode-button.active {
+  background: var(--forest);
+  color: #fff;
+}
+
+.auth-local-form {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  max-width: 460px;
+  margin-inline: auto;
+}
+
+.auth-local-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #2b4a3f;
+}
+
+.auth-local-form input {
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  padding: 0 12px;
+  color: var(--text);
+}
+
+.auth-form-note {
+  margin: 2px 0 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.auth-divider {
+  width: 100%;
+  max-width: 460px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-inline: auto;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  height: 1px;
+  background: var(--line);
+}
+
+.auth-google-button {
+  max-width: 460px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.auth-error-inline {
+  max-width: 460px;
+  margin-inline: auto;
+}
+
 .brand {
   display: none;
 }
@@ -1399,6 +1493,33 @@ h3 {
   color: #557268;
 }
 
+.admin-page .page-hero,
+.admin-page .section {
+  width: min(var(--content-max), 100%);
+  margin-inline: auto;
+}
+
+.admin-page .page-hero {
+  text-align: center;
+}
+
+.admin-page .section-head,
+.admin-page .lead-table-wrap,
+.admin-page .admin-grid,
+.admin-page .error-text,
+.admin-page .success-text {
+  max-width: 1080px;
+  margin-inline: auto;
+}
+
+.admin-page .admin-grid {
+  justify-content: center;
+}
+
+.admin-page .priority-card {
+  text-align: center;
+}
+
 .admin-head {
   display: flex;
   justify-content: space-between;
@@ -1411,6 +1532,48 @@ h3 {
   gap: 8px;
   align-items: center;
   margin-top: 10px;
+  justify-content: center;
+}
+
+.admin-price-form {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+.admin-price-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.admin-price-form input {
+  width: 140px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-soft);
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.admin-save-price {
+  border: 1px solid rgba(26, 97, 70, 0.24);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+.admin-save-price:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .lead-table-wrap {

@@ -4,4 +4,5 @@ export interface TravelPackageRepository {
   getFeatured(): Promise<TravelPackage[]>
   getAll(): Promise<TravelPackage[]>
   updateFeatured(packageId: string, isFeatured: boolean): Promise<void>
+  updatePrice(packageId: string, price: number): Promise<void>
 }

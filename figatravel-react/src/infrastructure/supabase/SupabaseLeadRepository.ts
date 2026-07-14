@@ -15,6 +15,15 @@ interface LeadRow {
   created_at: string
 }
 
+function isMissingUserIdColumn(error: { code?: string; message?: string } | null) {
+  if (!error) {
+    return false
+  }
+
+  const message = error.message?.toLowerCase() ?? ''
+  return error.code === 'PGRST204' || message.includes('user_id')
+}
+
 export class SupabaseLeadRepository implements LeadRepository {
   async create(lead: LeadRequest): Promise<void> {
     if (!supabaseClient) {
@@ -23,16 +32,32 @@ export class SupabaseLeadRepository implements LeadRepository {
       )
     }
 
-    const { error } = await supabaseClient.from('lead_requests').insert({
+    const payload = {
       name: lead.name,
       email: lead.email,
       phone: lead.phone ?? null,
+      user_id: lead.userId ?? null,
       travel_date: lead.travelDate ?? null,
       travelers: lead.travelers,
       message: lead.message ?? null,
       package_id: lead.packageId,
       availability_slot_id: lead.availabilitySlotId ?? null,
-    })
+    }
+
+    const { error } = await supabaseClient.from('lead_requests').insert(payload)
+
+    if (error && lead.userId && isMissingUserIdColumn(error)) {
+      const { user_id, ...legacyPayload } = payload
+      const { error: retryError } = await supabaseClient
+        .from('lead_requests')
+        .insert(legacyPayload)
+
+      if (retryError) {
+        throw new Error(`Unable to submit the travel request: ${retryError.message}`)
+      }
+
+      return
+    }
 
     if (error) {
       throw new Error(`Unable to submit the travel request: ${error.message}`)

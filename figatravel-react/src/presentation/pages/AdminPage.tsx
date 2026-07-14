@@ -10,15 +10,18 @@ export function AdminPage() {
   const {
     packages,
     leads,
+    priceDrafts,
     loading,
     error,
     updatingId,
     toggleFeatured,
+    setPriceDraft,
+    savePrice,
     reload,
   } = useAdminDashboardViewModel()
 
   return (
-    <main>
+    <main className="admin-page">
       <header className="section page-hero">
         <p className="eyebrow">ADMIN PANEL</p>
         <h1>Basic package and lead management</h1>
@@ -49,6 +52,34 @@ export function AdminPage() {
               <p>
                 {item.currency} {item.price.toFixed(2)}
               </p>
+
+              <form
+                className="admin-price-form"
+                onSubmit={(event) => {
+                  event.preventDefault()
+                  void savePrice(item.id)
+                }}
+              >
+                <label>
+                  Price
+                  <input
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={priceDrafts[item.id] ?? ''}
+                    onChange={(event) => setPriceDraft(item.id, event.target.value)}
+                    disabled={updatingId === item.id}
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="admin-save-price"
+                  disabled={updatingId === item.id}
+                >
+                  {updatingId === item.id ? 'Saving...' : 'Save price'}
+                </button>
+              </form>
+
               <label className="toggle-row">
                 <input
                   type="checkbox"

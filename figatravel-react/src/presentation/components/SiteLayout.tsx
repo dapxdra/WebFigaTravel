@@ -14,7 +14,7 @@ const navItems = [
 export function SiteLayout() {
   const [isNavOpen, setIsNavOpen] = useState(false)
   const [isNavScrolled, setIsNavScrolled] = useState(false)
-  const { isAuthenticated, session, signInWithGoogle, signOut, authError } =
+  const { isAuthenticated, session, signOut, authError } =
     useAuth()
 
   useEffect(() => {
@@ -124,16 +124,18 @@ export function SiteLayout() {
                 </button>
               </>
             ) : (
-              <button
-                type="button"
+              <NavLink
+                to="/admin"
                 className="auth-button login-like"
-                onClick={() => void signInWithGoogle()}
+                onClick={() => {
+                  setIsNavOpen(false)
+                }}
               >
                 <span className="login-icon" aria-hidden="true">
                   ●
                 </span>
                 Log In
-              </button>
+              </NavLink>
             )}
           </div>
         </div>

@@ -82,6 +82,7 @@ create table if not exists public.lead_requests (
   name text not null,
   email text not null,
   phone text,
+  user_id uuid references auth.users(id),
   travel_date date,
   travelers integer not null,
   message text,
@@ -115,6 +116,20 @@ begin
   end if;
 end $$;
 
+do $$
+begin
+  if not exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'lead_requests'
+      and column_name = 'user_id'
+  ) then
+    alter table public.lead_requests
+      add column user_id uuid references auth.users(id);
+  end if;
+end $$;
+
 alter table public.travel_packages enable row level security;
 alter table public.lead_requests enable row level security;
 alter table public.transfer_availability enable row level security;
@@ -131,6 +146,13 @@ create policy "public_can_read_all_packages"
 on public.travel_packages
 for select
 to anon
+using (true);
+
+drop policy if exists "authenticated_can_read_all_packages" on public.travel_packages;
+create policy "authenticated_can_read_all_packages"
+on public.travel_packages
+for select
+to authenticated
 using (true);
 
 drop policy if exists "public_can_insert_lead_requests" on public.lead_requests;
@@ -241,6 +263,51 @@ commit;
 
 Nota: El panel /admin usa permisos de lectura/escritura segun politicas RLS.
 Sin autenticacion o sin esas politicas, podras ver errores de autorizacion.
+
+## Login local (email/password) + Google opcional
+
+La app ya soporta:
+
+- Login local con email/password en /admin.
+- Login con Google (opcional, puede activarse despues).
+- Recuperacion de contraseña desde /admin.
+
+Nota: el acceso es solo para admins ya creados en Supabase Auth.
+
+### 1) Activar login local en Supabase
+
+En Supabase Dashboard:
+
+1. Authentication > Providers > Email.
+2. Activa Email provider.
+3. Crea los usuarios admin desde Authentication > Users (si aun no existen).
+
+### 2) Configurar URLs de redireccion
+
+En Authentication > URL Configuration agrega:
+
+- Site URL: tu URL principal (por ejemplo http://localhost:5173).
+- Additional Redirect URLs:
+  - http://localhost:5173/auth/reset-password
+  - http://localhost:5173/*
+  - https://TU_DOMINIO/*
+
+### 3) (Opcional) Activar Google despues
+
+Cuando tengas Google Cloud listo:
+
+1. Authentication > Providers > Google.
+2. Activa Google y pega Client ID/Client Secret.
+3. En Google Cloud, agrega el callback de Supabase (el que te muestra Supabase).
+
+Si Google no esta habilitado, el login local sigue funcionando sin problema.
+
+### 4) Recuperar contraseña (flujo completo)
+
+1. En /admin, pestaña Forgot, envia email de recuperacion.
+2. Abre el link recibido por correo.
+3. La app detecta modo recovery y muestra el formulario Set a new password en /auth/reset-password.
+4. Actualiza la contraseña y entra al panel.
 
 ## Build
 

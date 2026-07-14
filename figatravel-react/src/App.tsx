@@ -10,12 +10,14 @@ import { DestinationDetailPage } from './presentation/pages/DestinationDetailPag
 import { DestinationsPage } from './presentation/pages/DestinationsPage'
 import { FaqPage } from './presentation/pages/FaqPage'
 import { HomePage } from './presentation/pages/HomePage'
+import { ResetPasswordPage } from './presentation/pages/ResetPasswordPage'
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route element={<ResetPasswordPage />} path="auth/reset-password" />
           <Route element={<SiteLayout />} path="/">
             <Route element={<HomePage />} index />
             <Route element={<DestinationsPage />} path="destinations" />
