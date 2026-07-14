@@ -107,25 +107,45 @@ export function AdminPage() {
             <thead>
               <tr>
                 <th>Date</th>
+                <th>Estimated date</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Travelers</th>
                 <th>Package</th>
+                <th>Message</th>
               </tr>
             </thead>
             <tbody>
               {leads.map((lead) => (
                 <tr key={lead.id}>
                   <td>{lead.createdAt.slice(0, 10)}</td>
+                  <td>{lead.travelDate ?? 'Not specified'}</td>
                   <td>{lead.name}</td>
                   <td>{lead.email}</td>
                   <td>{lead.travelers}</td>
                   <td>{lead.packageId}</td>
+                  <td className="lead-message-cell">
+                    {lead.message?.trim() ? (
+                      lead.message.length > 120 ? (
+                        <details className="lead-message-details">
+                          <summary>
+                            {lead.message.slice(0, 120)}...
+                            <span className="lead-message-more"> Ver mas</span>
+                          </summary>
+                          <p>{lead.message}</p>
+                        </details>
+                      ) : (
+                        lead.message
+                      )
+                    ) : (
+                      'No message'
+                    )}
+                  </td>
                 </tr>
               ))}
               {!loading && leads.length === 0 ? (
                 <tr>
-                  <td colSpan={5}>No leads available.</td>
+                  <td colSpan={7}>No leads available.</td>
                 </tr>
               ) : null}
             </tbody>

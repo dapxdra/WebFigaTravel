@@ -1600,6 +1600,31 @@ h3 {
   background: #ebf6ef;
 }
 
+.lead-message-cell {
+  max-width: 320px;
+  white-space: normal;
+}
+
+.lead-message-details {
+  display: grid;
+  gap: 6px;
+}
+
+.lead-message-details summary {
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.lead-message-details p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.lead-message-more {
+  font-weight: 700;
+  color: var(--brand-deep);
+}
+
 .package-image,
 .destination-card img {
   width: 100%;
