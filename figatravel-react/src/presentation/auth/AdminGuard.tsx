@@ -12,7 +12,6 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
     authInfo,
     signInWithPassword,
     sendPasswordReset,
-    signInWithGoogle,
     clearAuthMessages,
   } = useAuth()
   const [mode, setMode] = useState<'signin' | 'forgot'>('signin')
@@ -64,7 +63,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
           <p className="eyebrow">ADMIN ACCESS</p>
           <h1>Restricted access</h1>
           <p className="hero-copy">
-            Sign in with email/password now. Google login is optional and can be enabled later.
+            Sign in with your admin account.
           </p>
 
           <div className="auth-mode-switch" role="tablist" aria-label="Auth mode">
@@ -128,19 +127,6 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
               {submitLabel}
             </button>
           </form>
-
-          <div className="auth-divider" aria-hidden="true">
-            <span>or</span>
-          </div>
-
-          <button
-            type="button"
-            className="hero-cta auth-google-button"
-            onClick={() => void signInWithGoogle()}
-            disabled={isAuthSubmitting}
-          >
-            Continue with Google
-          </button>
 
           {authInfo ? <p className="success-text auth-error-inline">{authInfo}</p> : null}
           {authError ? <p className="error-text auth-error-inline">{authError}</p> : null}
