@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import { useBookingFormViewModel } from '../hooks/useBookingFormViewModel'
-import { LeadForm } from '../components/LeadForm'
+import { usePaymentPageViewModel } from '../hooks/usePaymentPageViewModel'
+import { ReservationForm } from '../components/payment/ReservationForm'
+import { TilopayCheckout } from '../components/payment/TilopayCheckout'
 import { usePageMeta } from '../hooks/usePageMeta'
 import type { TravelPackage } from '../../domain/entities/TravelPackage'
 
@@ -10,7 +11,22 @@ export function BookOnlinePage() {
     'Book private transportation routes across Costa Rica with real pricing and quick request forms.',
   )
 
-  const { packages, loadingPackages, packagesError } = useBookingFormViewModel()
+  const {
+    packages,
+    loadingPackages,
+    packagesError,
+    availability,
+    loadingAvailability,
+    availabilityError,
+    loadAvailability,
+    reservation,
+    reservationState,
+    createReservation,
+    sdkSession,
+    tokenState,
+    fetchSdkToken,
+  } = usePaymentPageViewModel()
+
   const [selectedPackageId, setSelectedPackageId] = useState('')
 
   const selectedPackage = useMemo(
@@ -18,19 +34,11 @@ export function BookOnlinePage() {
     [packages, selectedPackageId],
   )
 
-  const routePrefillMessage = useMemo(() => {
-    if (!selectedPackage) {
-      return ''
-    }
-
-    return `Interested in ${selectedPackage.title} (${selectedPackage.destination}) - ${selectedPackage.currency} ${selectedPackage.price.toFixed(2)}.`
-  }, [selectedPackage])
-
   return (
     <main className="book-page">
       <header className="book-header">
         <h1>Book Online</h1>
-        <p>Choose your route and request your transfer in a few clicks.</p>
+        <p>Choose your route and pay securely to confirm your transfer.</p>
       </header>
 
       <section className="book-discount-bar" aria-label="Discount code">
@@ -79,17 +87,32 @@ export function BookOnlinePage() {
       </section>
 
       <div id="booking-form">
-        <LeadForm
-          key={selectedPackage?.id ?? 'default-route'}
-          title="Request your transportation"
-          subtitle={
-            selectedPackage
-              ? `Selected route: ${selectedPackage.title}`
-              : 'Select one route above or fill the form directly.'
-          }
-          showAvailability
-          defaultMessage={routePrefillMessage}
-        />
+        {!reservation ? (
+          <ReservationForm
+            key={selectedPackage?.id ?? 'default-route'}
+            packages={packages}
+            loadingPackages={loadingPackages}
+            packagesError={packagesError}
+            availability={availability}
+            loadingAvailability={loadingAvailability}
+            availabilityError={availabilityError}
+            loadAvailability={loadAvailability}
+            submitting={reservationState.loading}
+            error={reservationState.error}
+            initialPackageId={selectedPackage?.id}
+            onSubmit={async (request) => {
+              await createReservation(request)
+            }}
+          />
+        ) : (
+          <TilopayCheckout
+            reservation={reservation}
+            sdkSession={sdkSession}
+            tokenLoading={tokenState.loading}
+            tokenError={tokenState.error}
+            fetchSdkToken={fetchSdkToken}
+          />
+        )}
       </div>
     </main>
   )

@@ -5,14 +5,19 @@ import { GetRecentLeads } from '../../domain/use-cases/GetRecentLeads'
 import { SubmitLead } from '../../domain/use-cases/SubmitLead'
 import { UpdatePackageFeatured } from '../../domain/use-cases/UpdatePackageFeatured'
 import { UpdatePackagePrice } from '../../domain/use-cases/UpdatePackagePrice'
+import { CreatePendingReservation } from '../../domain/use-cases/CreatePendingReservation'
+import { GetTilopaySdkToken } from '../../domain/use-cases/GetTilopaySdkToken'
+import { VerifyTilopayPayment } from '../../domain/use-cases/VerifyTilopayPayment'
 import { SupabaseAvailabilityRepository } from '../../infrastructure/supabase/SupabaseAvailabilityRepository'
 import { SupabaseLeadRepository } from '../../infrastructure/supabase/SupabaseLeadRepository'
 import { SupabaseTravelPackageRepository } from '../../infrastructure/supabase/SupabaseTravelPackageRepository'
+import { SupabaseReservationRepository } from '../../infrastructure/supabase/SupabaseReservationRepository'
 
 export function buildContainer() {
   const travelPackageRepository = new SupabaseTravelPackageRepository()
   const leadRepository = new SupabaseLeadRepository()
   const availabilityRepository = new SupabaseAvailabilityRepository()
+  const reservationRepository = new SupabaseReservationRepository()
 
   return {
     getFeaturedPackages: new GetFeaturedPackages(travelPackageRepository),
@@ -22,5 +27,8 @@ export function buildContainer() {
     updatePackageFeatured: new UpdatePackageFeatured(travelPackageRepository),
     updatePackagePrice: new UpdatePackagePrice(travelPackageRepository),
     submitLead: new SubmitLead(leadRepository),
+    createPendingReservation: new CreatePendingReservation(reservationRepository),
+    getTilopaySdkToken: new GetTilopaySdkToken(reservationRepository),
+    verifyTilopayPayment: new VerifyTilopayPayment(reservationRepository),
   }
 }

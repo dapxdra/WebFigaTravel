@@ -17,7 +17,8 @@ La app esta organizada en capas:
 - /: Home
 - /destinations: Destinos
 - /destinations/:slug: Detalle por destino
-- /book-online: Reserva online
+- /book-online: Reserva online + pago con Tilopay SDK
+- /pago/respuesta: Resultado del pago (verificado contra Tilopay)
 - /faq: Preguntas frecuentes
 - /about-us: Sobre nosotros
 - /contact: Contacto
@@ -308,6 +309,65 @@ Si Google no esta habilitado, el login local sigue funcionando sin problema.
 2. Abre el link recibido por correo.
 3. La app detecta modo recovery y muestra el formulario Set a new password en /auth/reset-password.
 4. Actualiza la contraseña y entra al panel.
+
+## Pagos con Tilopay (SDK)
+
+El flujo de pago usa el SDK embebible de Tilopay, nunca la API server-to-server
+directa. Las credenciales de Tilopay viven unicamente como secrets de Supabase
+Edge Functions; nunca en el frontend ni en variables VITE_.
+
+### 1) Migracion SQL
+
+Aplica [supabase/migrations/20260730000000_add_tilopay_payment_fields.sql](supabase/migrations/20260730000000_add_tilopay_payment_fields.sql)
+con `supabase db push` (o pegala en el SQL editor de Supabase). Extiende
+`lead_requests` con `order_number`, `amount`, `currency`, `status` y
+`tilopay_transaction_id`, y ajusta la policy de insert para que el cliente
+solo pueda insertar filas con `status = 'pending'`. No hay policy de update
+para `anon`/`authenticated`: solo el service role (usado por las Edge
+Functions) puede marcar una reserva como `paid`/`failed`.
+
+### 2) Secrets de Supabase (nunca en el frontend)
+
+```bash
+supabase secrets set TILOPAY_API_USER=... 
+ supabase secrets set TILOPAY_API_PASSWORD=...
+supabase secrets set TILOPAY_API_KEY=...
+```
+
+Usa las credenciales de sandbox mientras pruebas; cuando Tilopay te entregue
+credenciales de produccion, corre los mismos comandos con los valores reales
+sobre el mismo proyecto de Supabase (un solo proyecto sirve para ambos
+entornos, ya que Tilopay diferencia sandbox/produccion por credencial, no por
+URL).
+
+### 3) Deploy de las Edge Functions
+
+```bash
+supabase functions deploy get-tilopay-token
+supabase functions deploy verify-tilopay-payment
+```
+
+`SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` ya estan disponibles automaticamente
+dentro de las Edge Functions; no hace falta configurarlos a mano.
+
+### 4) Variables del frontend (no secretas)
+
+En `.env` / Vercel, agrega la URL publica del script del SDK (la encuentras en
+tu panel/documentacion de Tilopay):
+
+```
+VITE_TILOPAY_SDK_URL=https://.../tilopay-sdk.js
+VITE_TILOPAY_JQUERY_URL=https://code.jquery.com/jquery-3.x.x.min.js
+```
+
+### 5) Redirect dinamico
+
+El `redirect` que se envia a `Tilopay.InitTokenize` se arma en el navegador con
+`window.location.origin + '/pago/respuesta'`, por lo que funciona igual en
+`localhost`, previews de Vercel y produccion sin variables adicionales. Si
+Tilopay exige registrar dominios de redirect en su panel, agrega ahi tu
+dominio de produccion y el de `localhost`; para previews de Vercel confirma
+con soporte de Tilopay (sac@tilopay.com) si aceptan comodines de dominio.
 
 ## Build
 

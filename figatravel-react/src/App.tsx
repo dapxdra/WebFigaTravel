@@ -10,6 +10,7 @@ import { DestinationDetailPage } from './presentation/pages/DestinationDetailPag
 import { DestinationsPage } from './presentation/pages/DestinationsPage'
 import { FaqPage } from './presentation/pages/FaqPage'
 import { HomePage } from './presentation/pages/HomePage'
+import { PaymentResponsePage } from './presentation/pages/PaymentResponsePage'
 import { ResetPasswordPage } from './presentation/pages/ResetPasswordPage'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
               path="destinations/:slug"
             />
             <Route element={<BookOnlinePage />} path="book-online" />
+            <Route element={<PaymentResponsePage />} path="pago/respuesta" />
             <Route element={<FaqPage />} path="faq" />
             <Route element={<AboutPage />} path="about-us" />
             <Route element={<ContactPage />} path="contact" />
