@@ -1,14 +1,22 @@
 import { env } from '../../shared/config/env'
 
 // Minimal shape of the Tilopay SDK v2 global, based on Tilopay's own
-// integration example (Tilopay.InitTokenize + Tilopay.startPayment).
-export interface TilopayInitTokenizeConfig {
+// integration example (Tilopay.Init + Tilopay.startPayment).
+//
+// NOT Tilopay.InitTokenize(): that method is Tilopay's save-a-card-for-later
+// flow (a real $1 authorization to verify and store a card for future
+// charges) and is gated to production-only merchant accounts. It also
+// ignores the `amount`/`orderNumber` passed to it, so it can never actually
+// charge a reservation. Tilopay.Init() is the one-time-payment method and is
+// what a checkout needs.
+export interface TilopayInitConfig {
   token: string
   key: string
   amount: string
   currency: string
   orderNumber: string
   redirect: string
+  capture: '0' | '1'
   language?: string
   billToFirstName: string
   billToLastName: string
@@ -28,8 +36,32 @@ export interface TilopayStartPaymentResult {
   [key: string]: unknown
 }
 
+export interface TilopayMethod {
+  id: string
+  name: string
+  type: string
+}
+
+export interface TilopaySavedCard {
+  id: string
+  name: string
+  brand: string
+}
+
+// Response shape of Tilopay.Init(): on success `methods` lists the payment
+// methods available to render in #tlpy_payment_method, and `cards` lists the
+// customer's saved cards for #tlpy_saved_cards. On failure Tilopay resolves
+// (does not reject) with an empty `methods` array and a `message` describing
+// the error.
+export interface TilopayInitResponse {
+  message: string
+  methods: TilopayMethod[]
+  cards: TilopaySavedCard[]
+  [key: string]: unknown
+}
+
 interface TilopaySdk {
-  InitTokenize(config: TilopayInitTokenizeConfig): Promise<unknown>
+  Init(config: TilopayInitConfig): Promise<TilopayInitResponse>
   startPayment(): Promise<TilopayStartPaymentResult>
 }
 

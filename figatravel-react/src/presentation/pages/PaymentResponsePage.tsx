@@ -23,7 +23,7 @@ export function PaymentResponsePage() {
         <h1>Payment result</h1>
       </header>
 
-      {loading ? <p>Verifying your payment with Tilopay...</p> : null}
+      {loading ? <p className="tilopay-status">Verifying your payment with Tilopay...</p> : null}
 
       {error ? (
         <div className="payment-result payment-result-error">

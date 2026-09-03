@@ -55,10 +55,12 @@ async function loginToTilopay(credentials: TilopayCredentials): Promise<TilopayL
   const response = await fetch(`${TILOPAY_BASE_URL}/loginSdk`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    // Field names per Tilopay's own loginSdk contract (apiuser/password/key) -
+    // NOT api_user/api_password/api_key, which Tilopay silently rejects.
     body: JSON.stringify({
-      api_user: credentials.apiUser,
-      api_password: credentials.apiPassword,
-      api_key: credentials.apiKey,
+      apiuser: credentials.apiUser,
+      password: credentials.apiPassword,
+      key: credentials.apiKey,
     }),
   })
 

@@ -55,6 +55,13 @@ Routing is composed in `src/App.tsx` (`react-router-dom`, `BrowserRouter`). Shar
 - The redirect URL passed to `Tilopay.InitTokenize` is built at runtime as `window.location.origin + '/pago/respuesta'`, so it works unmodified on localhost, Vercel previews, and production.
 - Only the service role (used by Edge Functions) can mark a reservation `paid`/`failed`; the anon/authenticated insert policy only allows `status = 'pending'`.
 - Frontend needs non-secret `VITE_TILOPAY_SDK_URL` and `VITE_TILOPAY_JQUERY_URL` env vars.
+- `lead_requests` also carries `pickup_time`, `pickup_location`, `dropoff_location` (added by `supabase/migrations/20260825000000_add_pickup_dropoff_time_fields.sql`); `dropoff_location` is auto-filled from the selected package's `destination`, `pickup_time` from the booking form's time-grid slot, and `pickup_location` is a free-text field the customer fills in (hotel/address).
+
+### FIGA reservas sync (Firestore)
+
+- Right after `verify-tilopay-payment` marks a reservation `paid` (never on `failed`/`pending`), it POSTs the reservation to `reservasFIGA`'s external integration endpoint (`app/api/integrations/reservas`, see that repo's README) via `syncReservationToFiga` in the same edge function. This is server-to-server and best-effort: a FIGA outage is logged but never blocks the paid response to the customer.
+- Requires Supabase Edge Function secrets `FIGA_RESERVAS_WEBHOOK_URL` and `FIGA_RESERVAS_WEBHOOK_SECRET` (and optionally `FIGA_RESERVAS_WEBHOOK_HMAC_SECRET` to sign requests), set via `supabase secrets set` — never as `VITE_` vars. If unset, the sync silently no-ops (warns in logs).
+- `source` is always `"figa-web"` and `externalReservationId` is the Tilopay `order_number`, so FIGA's idempotency keeps retries/replays safe. `proveedor` is the constant `"Figa Web"`. `AD` (adults) is set from `travelers`; there is no children count in this booking form, so `NI` is always `0`.
 
 ## Conventions
 

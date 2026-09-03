@@ -12,6 +12,29 @@ const ALL_TIME_SLOTS: string[] = Array.from({ length: 48 }, (_, i) => {
   return `${String(h).padStart(2, '0')}:${m}`
 })
 
+// Groups the 48 slots into 4 tabs of 12 so the picker shows a manageable
+// number of buttons at a time instead of all 48 at once.
+interface TimeSegment {
+  key: string
+  label: string
+  hourFrom: number
+  hourTo: number
+}
+
+const TIME_SEGMENTS: TimeSegment[] = [
+  { key: 'night', label: 'Night', hourFrom: 0, hourTo: 5 },
+  { key: 'morning', label: 'Morning', hourFrom: 6, hourTo: 11 },
+  { key: 'afternoon', label: 'Afternoon', hourFrom: 12, hourTo: 17 },
+  { key: 'evening', label: 'Evening', hourFrom: 18, hourTo: 23 },
+]
+
+function timesInSegment(segment: TimeSegment): string[] {
+  return ALL_TIME_SLOTS.filter((time) => {
+    const hour = Number(time.slice(0, 2))
+    return hour >= segment.hourFrom && hour <= segment.hourTo
+  })
+}
+
 interface ReservationFormProps {
   packages: TravelPackage[]
   loadingPackages: boolean
@@ -50,10 +73,12 @@ export function ReservationForm({
   const [phoneTouched, setPhoneTouched] = useState(false)
   const [travelDate, setTravelDate] = useState('')
   const [travelers, setTravelers] = useState(2)
+  const [pickupLocation, setPickupLocation] = useState('')
   const [message, setMessage] = useState('')
   const [packageId, setPackageId] = useState(initialPackageId ?? '')
   const [availabilitySlotId, setAvailabilitySlotId] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
+  const [activeSegment, setActiveSegment] = useState(TIME_SEGMENTS[1].key)
 
   const selectedPackage = useMemo(
     () => packages.find((item) => item.id === packageId) ?? null,
@@ -167,6 +192,7 @@ export function ReservationForm({
     travelDate > todayIso &&
     hasTimesForSelectedDate &&
     selectedTime !== '' &&
+    pickupLocation.trim() !== '' &&
     !submitting
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -176,15 +202,16 @@ export function ReservationForm({
       return
     }
 
-    const messageWithTime = `${message ? `${message}\n` : ''}Preferred time: ${selectedTime}`
-
     await onSubmit({
       fullName,
       email,
       phone: phone || undefined,
       travelDate: travelDate || undefined,
+      pickupTime: selectedTime,
+      pickupLocation,
+      dropoffLocation: selectedPackage.destination,
       travelers,
-      message: messageWithTime,
+      message: message || undefined,
       packageId: selectedPackage.id,
       availabilitySlotId: availabilitySlotId || undefined,
       amount: selectedPackage.price,
@@ -296,6 +323,17 @@ export function ReservationForm({
         </label>
 
         <label>
+          Pickup location
+          <input
+            type="text"
+            value={pickupLocation}
+            onChange={(event) => setPickupLocation(event.target.value)}
+            placeholder="Hotel name or address in La Fortuna"
+            required
+          />
+        </label>
+
+        <label>
           Notes (optional)
           <textarea value={message} onChange={(event) => setMessage(event.target.value)} />
         </label>
@@ -314,29 +352,52 @@ export function ReservationForm({
           ) : !hasTimesForSelectedDate ? (
             <p className="time-grid-hint">No availability for today or past dates. Select a future date.</p>
           ) : (
-            <div className="time-grid" role="group" aria-label="Available times">
-              {ALL_TIME_SLOTS.map((time) => {
-                const available = timeSlotStatus[time] ?? false
-                const active = selectedTime === time
-                return (
+            <>
+              <div className="time-segment-tabs" role="tablist" aria-label="Time of day">
+                {TIME_SEGMENTS.map((segment) => (
                   <button
-                    key={time}
+                    key={segment.key}
                     type="button"
+                    role="tab"
+                    aria-selected={activeSegment === segment.key}
                     className={
-                      active
-                        ? 'time-slot time-slot-active'
-                        : available
-                          ? 'time-slot time-slot-open'
-                          : 'time-slot time-slot-closed'
+                      activeSegment === segment.key
+                        ? 'time-segment-tab time-segment-tab-active'
+                        : 'time-segment-tab'
                     }
-                    disabled={!available}
-                    onClick={() => setSelectedTime(time)}
+                    onClick={() => setActiveSegment(segment.key)}
                   >
-                    {time}
+                    {segment.label}
                   </button>
-                )
-              })}
-            </div>
+                ))}
+              </div>
+
+              <div className="time-grid" role="group" aria-label="Available times">
+                {timesInSegment(TIME_SEGMENTS.find((segment) => segment.key === activeSegment)!).map(
+                  (time) => {
+                    const available = timeSlotStatus[time] ?? false
+                    const active = selectedTime === time
+                    return (
+                      <button
+                        key={time}
+                        type="button"
+                        className={
+                          active
+                            ? 'time-slot time-slot-active'
+                            : available
+                              ? 'time-slot time-slot-open'
+                              : 'time-slot time-slot-closed'
+                        }
+                        disabled={!available}
+                        onClick={() => setSelectedTime(time)}
+                      >
+                        {time}
+                      </button>
+                    )
+                  },
+                )}
+              </div>
+            </>
           )}
         </div>
 

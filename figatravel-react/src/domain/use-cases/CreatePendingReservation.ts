@@ -33,6 +33,18 @@ export class CreatePendingReservation {
       throw new Error('Currency is required.')
     }
 
+    if (input.pickupTime.trim() === '') {
+      throw new Error('Pickup time is required.')
+    }
+
+    if (input.pickupLocation.trim() === '') {
+      throw new Error('Pickup location is required.')
+    }
+
+    if (input.dropoffLocation.trim() === '') {
+      throw new Error('Dropoff location is required.')
+    }
+
     return this.repository.createPending(input)
   }
 }

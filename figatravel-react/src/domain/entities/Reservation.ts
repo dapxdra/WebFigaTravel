@@ -7,6 +7,9 @@ export interface Reservation {
   email: string
   phone?: string
   travelDate?: string
+  pickupTime?: string
+  pickupLocation?: string
+  dropoffLocation?: string
   packageId: string
   amount: number
   currency: string
@@ -20,6 +23,9 @@ export interface ReservationRequest {
   email: string
   phone?: string
   travelDate?: string
+  pickupTime: string
+  pickupLocation: string
+  dropoffLocation: string
   travelers: number
   message?: string
   packageId: string
