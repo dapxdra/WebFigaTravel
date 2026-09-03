@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
+import { FloatingWhatsApp } from './FloatingWhatsApp'
 
 const navItems = [
   { label: 'Home', to: '/' },
   { label: 'Destinations', to: '/destinations' },
+  { label: 'Fleet', to: '/fleet' },
   { label: 'Book Online', to: '/book-online' },
   { label: 'FAQ', to: '/faq' },
   { label: 'About Us', to: '/about-us' },
@@ -217,6 +219,8 @@ export function SiteLayout() {
 
         <p className="footer-copy">©2026 by Figa Travel Costa Rica</p>
       </footer>
+
+      <FloatingWhatsApp />
     </div>
   )
 }

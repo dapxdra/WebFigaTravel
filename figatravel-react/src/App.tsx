@@ -9,6 +9,7 @@ import { ContactPage } from './presentation/pages/ContactPage'
 import { DestinationDetailPage } from './presentation/pages/DestinationDetailPage'
 import { DestinationsPage } from './presentation/pages/DestinationsPage'
 import { FaqPage } from './presentation/pages/FaqPage'
+import { FleetPage } from './presentation/pages/FleetPage'
 import { HomePage } from './presentation/pages/HomePage'
 import { PaymentResponsePage } from './presentation/pages/PaymentResponsePage'
 import { ResetPasswordPage } from './presentation/pages/ResetPasswordPage'
@@ -26,6 +27,7 @@ function App() {
               element={<DestinationDetailPage />}
               path="destinations/:slug"
             />
+            <Route element={<FleetPage />} path="fleet" />
             <Route element={<BookOnlinePage />} path="book-online" />
             <Route element={<PaymentResponsePage />} path="pago/respuesta" />
             <Route element={<FaqPage />} path="faq" />

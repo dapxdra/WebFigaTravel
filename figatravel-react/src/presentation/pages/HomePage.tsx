@@ -2,7 +2,8 @@ import type { SyntheticEvent } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { faqItems, priorities, testimonials } from "../data/siteContent";
+import { faqItems, priorities, featuredReviews, fleet } from "../data/siteContent";
+import { ReviewsCarousel } from "../components/ReviewsCarousel";
 import { usePageMeta } from "../hooks/usePageMeta";
 
 const HERO_STATIC_FALLBACK = "/assets/home/hero-header.png";
@@ -176,14 +177,6 @@ export function HomePage() {
             <Link to="/book-online" className="home-book-now">
               BOOK NOW
             </Link>
-            <a
-              href="https://api.whatsapp.com/send/?phone=%2B50672271058&text=Hello%20Figa%20Travel%2C%20I%20want%20help%20planning%20my%20trip&type=phone_number&app_absent=0"
-              className="hero-cta ghost home-hero-secondary"
-              target="_blank"
-              rel="noreferrer"
-            >
-              WhatsApp Concierge
-            </a>
           </div>
         </div>
       </section>
@@ -253,8 +246,8 @@ export function HomePage() {
           aria-labelledby="home-priority-title"
         >
           <div className="home-section-head">
-            <p className="eyebrow">Safety is our</p>
-            <h2 id="home-priority-title">TOP PRIORITY</h2>
+            <p className="eyebrow">Why travelers pick Figa</p>
+            <h2 id="home-priority-title">WHAT EVERY TRANSFER INCLUDES</h2>
           </div>
 
           <div className="priority-grid home-priority-grid">
@@ -272,23 +265,51 @@ export function HomePage() {
           aria-labelledby="home-testimonials-title"
         >
           <div className="home-section-head">
-            <p className="eyebrow">
-              This is what our valued customers have shared about their
-              experiences with us
-            </p>
-            <h2 id="home-testimonials-title">Testimonials</h2>
+            <p className="eyebrow">Rated 4.9/5 on Google and Tripadvisor</p>
+            <h2 id="home-testimonials-title">What travelers say</h2>
           </div>
 
-          <div className="testimonial-grid home-testimonial-grid">
-            {testimonials.map((testimonial) => (
-              <article key={testimonial.author} className="testimonial-card">
-                <h3>{testimonial.author}</h3>
-                <p>{testimonial.quote}</p>
-              </article>
-            ))}
-          </div>
+          <ReviewsCarousel reviews={featuredReviews} />
         </section>
       </div>
+
+      <section
+        className="home-fleet-section"
+        aria-labelledby="home-fleet-title"
+        data-cy="home-fleet"
+      >
+        <div className="home-fleet-head">
+          <div>
+            <p className="eyebrow">Our fleet</p>
+            <h2 id="home-fleet-title">A vehicle for every group size</h2>
+          </div>
+          <Link to="/fleet" className="home-inline-link">
+            View full fleet
+          </Link>
+        </div>
+
+        <div className="home-fleet-grid">
+          {fleet.map((vehicle) => (
+            <Link
+              key={vehicle.slug}
+              to="/fleet"
+              className="fleet-card fleet-card--compact"
+              data-cy="home-fleet-card"
+            >
+              <div className="fleet-card__media">
+                <img src={vehicle.image} alt={vehicle.name} loading="lazy" />
+                {vehicle.premium ? (
+                  <span className="fleet-card__badge">Premium</span>
+                ) : null}
+              </div>
+              <div className="fleet-card__body">
+                <h3 className="fleet-card__name">{vehicle.name}</h3>
+                <p className="fleet-card__cap">{vehicle.capacity}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <section className="home-faq-teaser" aria-labelledby="home-faq-title">
         <div className="home-faq-copy">
@@ -327,7 +348,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section
+      {/* <section
         className="home-discount-section"
         aria-labelledby="home-discount-title"
       >
@@ -343,7 +364,7 @@ export function HomePage() {
         <Link to="/book-online" className="home-book-now home-discount-link">
           BOOK NOW
         </Link>
-      </section>
+      </section> */}
     </main>
   );
 }

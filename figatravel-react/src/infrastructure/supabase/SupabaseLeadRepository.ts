@@ -1,4 +1,3 @@
-import type { LeadRequest } from '../../domain/entities/LeadRequest'
 import type { LeadRecord } from '../../domain/entities/LeadRecord'
 import type { LeadRepository } from '../../domain/repositories/LeadRepository'
 import { supabaseClient } from './supabaseClient'
@@ -15,55 +14,11 @@ interface LeadRow {
   created_at: string
 }
 
-function isMissingUserIdColumn(error: { code?: string; message?: string } | null) {
-  if (!error) {
-    return false
-  }
-
-  const message = error.message?.toLowerCase() ?? ''
-  return error.code === 'PGRST204' || message.includes('user_id')
-}
-
+// Read-only adapter over `lead_requests`. New submissions now go through the
+// reservation/payment flow (SupabaseReservationRepository) or the contact form
+// (SupabaseContactRepository); this repository only feeds the admin panel's
+// recent-leads list.
 export class SupabaseLeadRepository implements LeadRepository {
-  async create(lead: LeadRequest): Promise<void> {
-    if (!supabaseClient) {
-      throw new Error(
-        'Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to submit real requests.',
-      )
-    }
-
-    const payload = {
-      name: lead.name,
-      email: lead.email,
-      phone: lead.phone ?? null,
-      user_id: lead.userId ?? null,
-      travel_date: lead.travelDate ?? null,
-      travelers: lead.travelers,
-      message: lead.message ?? null,
-      package_id: lead.packageId,
-      availability_slot_id: lead.availabilitySlotId ?? null,
-    }
-
-    const { error } = await supabaseClient.from('lead_requests').insert(payload)
-
-    if (error && lead.userId && isMissingUserIdColumn(error)) {
-      const { user_id, ...legacyPayload } = payload
-      const { error: retryError } = await supabaseClient
-        .from('lead_requests')
-        .insert(legacyPayload)
-
-      if (retryError) {
-        throw new Error(`Unable to submit the travel request: ${retryError.message}`)
-      }
-
-      return
-    }
-
-    if (error) {
-      throw new Error(`Unable to submit the travel request: ${error.message}`)
-    }
-  }
-
   async listRecent(limit: number): Promise<LeadRecord[]> {
     if (!supabaseClient) {
       return []

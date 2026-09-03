@@ -372,6 +372,39 @@ Tilopay exige registrar dominios de redirect en su panel, agrega ahi tu
 dominio de produccion y el de `localhost`; para previews de Vercel confirma
 con soporte de Tilopay (sac@tilopay.com) si aceptan comodines de dominio.
 
+## Formulario de contacto (email)
+
+La pagina `/contact` usa su propio formulario (`ContactForm`), independiente del
+flujo de reservas. Al enviarlo, la Edge Function `send-contact-email` manda un
+correo a la bandeja de Figa Travel. La API key del proveedor de email vive solo
+como secret de Supabase; nunca en el frontend ni en variables `VITE_`.
+
+### 1) Migracion SQL (opcional, historial)
+
+Aplica [supabase/migrations/20260904000000_add_contact_messages_table.sql](supabase/migrations/20260904000000_add_contact_messages_table.sql)
+con `supabase db push`. Crea la tabla `contact_messages` (solo lectura/escritura
+para el service role) como registro de auditoria. Si no la creas, el envio de
+correo sigue funcionando: guardar la fila es best-effort y solo se loguea si
+falla.
+
+### 2) Secrets de Supabase (nunca en el frontend)
+
+```bash
+supabase secrets set RESEND_API_KEY=...
+supabase secrets set CONTACT_FROM_EMAIL="Figa Travel <web@figatravelcr.com>"
+supabase secrets set CONTACT_TO_EMAIL=infofigatravel@gmail.com   # opcional, este es el valor por defecto
+```
+
+`CONTACT_FROM_EMAIL` debe ser un remitente de un dominio verificado en Resend.
+El `reply-to` del correo se fija al email del visitante, asi que responder desde
+Gmail le contesta directamente.
+
+### 3) Deploy de la Edge Function
+
+```bash
+supabase functions deploy send-contact-email
+```
+
 ## Build
 
 ```bash

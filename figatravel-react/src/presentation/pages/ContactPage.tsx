@@ -1,4 +1,4 @@
-import { LeadForm } from '../components/LeadForm'
+import { ContactForm } from '../components/ContactForm'
 import { usePageMeta } from '../hooks/usePageMeta'
 
 export function ContactPage() {
@@ -8,7 +8,7 @@ export function ContactPage() {
   )
 
   return (
-    <main className="info-page contact-page">
+    <main className="info-page contact-page" data-cy="contact-page">
       <header className="section page-hero contact-hero">
         <p className="eyebrow">CONTACT</p>
         <h1>We are ready to help you</h1>
@@ -39,9 +39,9 @@ export function ContactPage() {
         </div>
       </section>
 
-      <LeadForm
+      <ContactForm
         title="Contact form"
-        subtitle="We help you plan your transfer or complete itinerary."
+        subtitle="Send us a message and we will get back to you by email."
       />
     </main>
   )

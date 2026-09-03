@@ -74,3 +74,11 @@ Routing is composed in `src/App.tsx` (`react-router-dom`, `BrowserRouter`). Shar
 ## Deployment
 
 Deploys to Vercel as a static Vite build (build command `npm run build`, output dir `dist`). Vercel project env vars must include `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (and the Tilopay `VITE_` vars above). Supabase Edge Function secrets are configured separately via `supabase secrets set ...` / `supabase functions deploy <name>` and are not part of the Vercel build.
+
+## Rules
+
+- Keep the code simple to undestand
+- Always create data-cy for the html
+- Comment the most complex code
+- Write efficient code
+- When writing the code, doit in the most secure way

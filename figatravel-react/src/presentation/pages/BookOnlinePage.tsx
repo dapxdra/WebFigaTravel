@@ -41,12 +41,12 @@ export function BookOnlinePage() {
         <p>Choose your route and pay securely to confirm your transfer.</p>
       </header>
 
-      <section className="book-discount-bar" aria-label="Discount code">
+      {/* <section className="book-discount-bar" aria-label="Discount code">
         <p>
           Get 10% discount when you book online 2 or more transfers around Costa Rica.
           Use code <strong>FIGA10</strong>.
         </p>
-      </section>
+      </section> */}
 
       <section className="book-options" aria-labelledby="book-options-title">
         <h2 id="book-options-title" className="sr-only">

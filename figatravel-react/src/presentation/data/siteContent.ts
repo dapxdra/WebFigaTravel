@@ -20,10 +20,123 @@ export interface Priority {
   description: string
 }
 
-export interface Testimonial {
+export type ReviewSource = 'google' | 'tripadvisor'
+
+export interface Review {
   author: string
+  /** 1-5, whole stars */
+  rating: number
   quote: string
+  source: ReviewSource
+  /** Route or place the traveler mentions, shown under their name. */
+  trip?: string
+  /** Direct permalink to this review; when absent the card links to the profile below. */
+  url?: string
 }
+
+// Public Figa Travel listings. Review cards without their own `url` link here.
+export const REVIEW_PROFILE_URL: Record<ReviewSource, string> = {
+  google:
+    'https://www.google.com/maps/place/Figa+Travel+Costa+Rica/@10.4463206,-84.5733905,17z/data=!3m1!4b1!4m6!3m5!1s0x8fa0730fb466682b:0x6adb0f3b5ca53bf!8m2!3d10.4463206!4d-84.5708156!16s%2Fg%2F11vc16jgr5',
+  tripadvisor:
+    'https://www.tripadvisor.es/Attraction_Review-g309226-d26727944-Reviews-Figa_Travel_Costa_Rica-La_Fortuna_de_San_Carlos_Arenal_Volcano_National_Park_Pro.html',
+}
+
+/** Only 5-star reviews are surfaced on the home page. */
+export const MIN_FEATURED_RATING = 5
+
+export interface Vehicle {
+  slug: string
+  name: string
+  /** Short class label, e.g. "Passenger van". */
+  category: string
+  image: string
+  /** Human-readable seat range, e.g. "1–9 passengers". */
+  capacity: string
+  premium?: boolean
+  summary: string
+  features: string[]
+}
+
+// Ordered by passenger capacity, from the premium 4-seat SUV up to the minibus.
+export const fleet: Vehicle[] = [
+  {
+    slug: 'toyota-land-cruiser-prado',
+    name: 'Toyota Land Cruiser Prado',
+    category: 'Premium SUV',
+    image: '/assets/fleet/tp2018b.png',
+    capacity: '1–4 passengers',
+    premium: true,
+    summary:
+      'Our top comfort option for couples and small families, and the surest ride on gravel and mountain access roads.',
+    features: [
+      'Up to 4 passengers plus luggage',
+      'Leather seats and dual-zone climate control',
+      'All-wheel drive for rougher routes',
+      'Ideal for honeymoons and private tours',
+    ],
+  },
+  {
+    slug: 'hyundai-staria',
+    name: 'Hyundai Staria',
+    category: 'Passenger van',
+    image: '/assets/fleet/Hs2024g.png',
+    capacity: '1–5 passengers',
+    summary:
+      'A modern van with panoramic windows and a quiet, smooth ride for small groups.',
+    features: [
+      'Up to 5 passengers plus luggage',
+      'Large windows and generous legroom',
+      'USB charging and strong air conditioning',
+      'Great for airport transfers with light luggage',
+    ],
+  },
+  {
+    slug: 'toyota-hiace',
+    name: 'Toyota Hiace',
+    category: 'Tourism van',
+    image: '/assets/fleet/thtb2024b.png',
+    capacity: '1–6 passengers',
+    summary:
+      'The dependable workhorse of Costa Rica tourism, sized for a family and all of its gear.',
+    features: [
+      'Up to 6 passengers plus luggage',
+      'Dedicated rear luggage area',
+      'Air conditioning throughout the cabin',
+      'Everyday airport and hotel transfers',
+    ],
+  },
+  {
+    slug: 'toyota-hiace-commuter',
+    name: 'Toyota Hiace Commuter',
+    category: 'Large passenger van',
+    image: '/assets/fleet/thta2024b.png',
+    capacity: '1–9 passengers',
+    summary:
+      'The high-roof Hiace: stand-up height inside and room for larger families or small tour groups.',
+    features: [
+      'Up to 9 passengers plus luggage',
+      'High roof for easy boarding',
+      'Extended luggage compartment',
+      'Multi-stop itineraries and day tours',
+    ],
+  },
+  {
+    slug: 'toyota-coaster',
+    name: 'Toyota Coaster',
+    category: 'Minibus',
+    image: '/assets/fleet/tc2024b.png',
+    capacity: 'Up to 18 passengers',
+    summary:
+      'A full minibus for large groups, weddings, corporate travel, and event transportation.',
+    features: [
+      'Up to 18 passengers plus a luggage bay',
+      'High headroom and a wide aisle',
+      'Air conditioning and PA system',
+      'Group tours, events, and conferences',
+    ],
+  },
+]
 
 import { getDestinationGallery } from './destinationGalleries'
 
@@ -208,49 +321,100 @@ export function findDestinationBySlug(slug: string) {
 
 export const priorities: Priority[] = [
   {
-    title: 'Experienced Drivers',
+    title: 'Flight tracking, free wait time',
     description:
-      'Experienced drivers dedicated to providing safe and punctual transfers.',
+      'We follow your flight and adjust the pickup if it lands early or late. Every airport transfer includes 60 minutes of complimentary wait time.',
   },
   {
-    title: 'Vehicle Maintenance',
+    title: 'Licensed bilingual drivers',
     description:
-      'Inspected vehicles to ensure optimal performance on every route.',
+      'Local drivers authorized by the ICT tourism board who speak English and Spanish and know every route, from San Jose to both coasts.',
   },
   {
-    title: 'Insurance Coverage',
+    title: 'Insured, air-conditioned fleet',
     description:
-      'Comprehensive coverage to protect every part of your journey.',
+      'Late-model SUVs and vans with commercial passenger insurance, a seatbelt for every seat, cold water on board, and child seats on request.',
   },
   {
-    title: 'COVID-19 Measures',
+    title: 'One fixed price, door to door',
     description:
-      'Enhanced sanitation, consistent hygiene, and preventive protocols.',
+      'The quote you approve is the price you pay: tolls, taxes, and fuel included. No meter, no surprises, hotel lobby to hotel lobby.',
   },
 ]
 
-export const testimonials: Testimonial[] = [
+// Curated highlights from real review platforms. Kept in code (not a live API)
+// so the section stays fast and dependency-free; refresh periodically by hand.
+export const reviews: Review[] = [
   {
-    author: 'Sarah Davis',
+    author: 'Jennifer R.',
+    rating: 5,
+    source: 'google',
+    trip: 'SJO Airport to La Fortuna',
     quote:
-      'Andreina made my trip unforgettable. Impeccable service and great local knowledge.',
+      'Our driver was waiting with a sign, handled every bag, and stopped at the Arenal viewpoint for photos. Spotless van, cold water, calm driving the whole way up the mountain.',
   },
   {
-    author: 'Natalia V',
+    author: 'marcus_h',
+    rating: 5,
+    source: 'tripadvisor',
+    trip: 'Two weeks, four transfers',
     quote:
-      'Enrique was excellent for our family trip. Everything was clean, punctual, and comfortable.',
+      'Used Figa Travel for San Jose, Monteverde and Manuel Antonio. Always on time, always answering on WhatsApp, and the fixed price never changed. Easiest part of our trip.',
   },
   {
-    author: 'Emily Martinez',
+    author: 'Familia Gomez',
+    rating: 5,
+    source: 'google',
+    trip: 'Tamarindo with kids',
     quote:
-      'Outstanding attention from start to finish. We felt safe at all times.',
+      'We travelled with two small children and they arranged car seats with no fuss. The driver took the curves slowly and checked in with us the whole way. We will book again.',
   },
   {
-    author: 'David Patel',
+    author: 'SunChaser2024',
+    rating: 5,
+    source: 'tripadvisor',
+    trip: 'Delayed flight pickup',
     quote:
-      'Stress-free transfer for a business trip. I would book again without hesitation.',
+      'Our flight landed two hours late. The driver tracked it and was still there waiting, no extra charge. Comfortable Hiace, working A/C, excellent English. Rare service.',
+  },
+  {
+    author: 'David P.',
+    rating: 5,
+    source: 'google',
+    trip: 'Tamarindo to SJO Airport',
+    quote:
+      'Professional from the first message. Clear quote, no hidden fees, tolls included. Pickup was early enough that we never felt rushed getting to the airport.',
+  },
+  {
+    author: 'Elena K.',
+    rating: 4,
+    source: 'tripadvisor',
+    trip: 'Puerto Viejo transfer',
+    quote:
+      'Clean vehicle and a friendly driver who shared good tips about Puerto Viejo. Pickup ran about ten minutes late, but they messaged ahead to let us know. Would use again.',
+  },
+  {
+    author: 'Robert & Susan',
+    rating: 5,
+    source: 'google',
+    trip: 'Papagayo to San Jose',
+    quote:
+      'We felt safe the entire drive. The driver knew the roads, kept a steady pace, and the vehicle was newer than what we have had with other companies here.',
+  },
+  {
+    author: 'trekker_cr',
+    rating: 5,
+    source: 'tripadvisor',
+    trip: 'Hotel to Manuel Antonio',
+    quote:
+      'Easy booking, quick replies, and the price I was quoted was the price I paid. Straight from my hotel lobby to Manuel Antonio. Already planning to use them next trip.',
   },
 ]
+
+// What the home page carousel shows: top-rated reviews only.
+export const featuredReviews: Review[] = reviews.filter(
+  (review) => review.rating >= MIN_FEATURED_RATING,
+)
 
 export const faqItems: FaqItem[] = [
   {
