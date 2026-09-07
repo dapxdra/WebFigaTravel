@@ -65,7 +65,7 @@ export const fleet: Vehicle[] = [
     name: 'Toyota Land Cruiser Prado',
     category: 'Premium SUV',
     image: '/assets/fleet/tp2018b.png',
-    capacity: '1–4 passengers',
+    capacity: '1–3 passengers',
     premium: true,
     summary:
       'Our top comfort option for couples and small families, and the surest ride on gravel and mountain access roads.',
