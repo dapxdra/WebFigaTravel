@@ -72,6 +72,11 @@ declare global {
   }
 }
 
+// Tilopay's SDK v2 requires jQuery on the page but its docs don't publish a
+// specific URL to use, so we pin one directly instead of relying on an env
+// var (a misconfigured/missing one previously broke checkout in production).
+const TILOPAY_JQUERY_URL = 'https://code.jquery.com/jquery-3.7.1.min.js'
+
 let loadPromise: Promise<TilopaySdk> | null = null
 
 function loadScript(src: string): Promise<void> {
@@ -108,8 +113,8 @@ export function loadTilopaySdk(): Promise<TilopaySdk> {
   }
 
   loadPromise = (async () => {
-    if (!window.jQuery && env.tilopayJqueryScriptUrl) {
-      await loadScript(env.tilopayJqueryScriptUrl)
+    if (!window.jQuery) {
+      await loadScript(TILOPAY_JQUERY_URL)
     }
 
     await loadScript(env.tilopaySdkScriptUrl as string)

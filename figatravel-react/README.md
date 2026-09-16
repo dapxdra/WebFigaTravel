@@ -360,8 +360,12 @@ tu panel/documentacion de Tilopay):
 
 ```
 VITE_TILOPAY_SDK_URL=https://.../tilopay-sdk.js
-VITE_TILOPAY_JQUERY_URL=https://code.jquery.com/jquery-3.x.x.min.js
 ```
+
+jQuery (requerido por el SDK de Tilopay) ya no se configura por variable de
+entorno: `tilopaySdk.ts` carga una version fija desde el CDN oficial de
+jQuery, asi que no hace falta ninguna `VITE_TILOPAY_JQUERY_URL`. Si antes
+tenias esa variable en Vercel, puedes borrarla (ya no se usa).
 
 ### 5) Redirect dinamico
 
