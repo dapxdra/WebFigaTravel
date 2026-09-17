@@ -11,6 +11,9 @@ export function DestinationDetailPage() {
     destination
       ? `${destination.name} travel guide, attractions, and tips for your Costa Rica itinerary.`
       : 'The destination you requested is not available in our Costa Rica catalog.',
+    destination
+      ? { keywords: `${destination.name} transfer, private transportation to ${destination.name}` }
+      : { noindex: true },
   )
 
   if (!destination) {

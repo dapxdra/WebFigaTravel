@@ -9,6 +9,7 @@ export function BookOnlinePage() {
   usePageMeta(
     'Book Online',
     'Book private transportation routes across Costa Rica with real pricing and quick request forms.',
+    { keywords: 'book airport shuttle Costa Rica, book private transfer Costa Rica, Costa Rica transfer booking' },
   )
 
   const {

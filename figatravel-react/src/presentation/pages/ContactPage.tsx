@@ -5,6 +5,7 @@ export function ContactPage() {
   usePageMeta(
     'Contact',
     'Contact Figa Travel for private transportation in Costa Rica. Reach us by phone, email, WhatsApp, or contact form.',
+    { keywords: 'contact Costa Rica transfer company, Costa Rica transportation quote' },
   )
 
   return (

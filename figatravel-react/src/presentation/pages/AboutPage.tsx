@@ -5,6 +5,7 @@ export function AboutPage() {
   usePageMeta(
     'About Us',
     'Learn about Figa Travel, our mission, and our commitment to safe and memorable transportation across Costa Rica.',
+    { keywords: 'licensed tourism transport Costa Rica, private transportation company Costa Rica' },
   )
 
   return (

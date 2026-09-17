@@ -106,6 +106,10 @@ export function HomePage() {
   usePageMeta(
     "Private Transfers in Costa Rica",
     "Discover Costa Rica with premium private transportation, top destinations, and flexible booking with Figa Travel.",
+    {
+      keywords:
+        "private shuttle Costa Rica, private driver Costa Rica, hotel transfer Costa Rica, tourist transfer Costa Rica",
+    },
   );
 
   const [heroMediaIndex, setHeroMediaIndex] = useState(0);

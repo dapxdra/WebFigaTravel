@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function ResetPasswordPage() {
+  usePageMeta(
+    'Password Recovery',
+    'Set a new password for your Figa Travel admin account.',
+    { noindex: true },
+  )
+
   const {
     isLoading,
     isPasswordRecovery,

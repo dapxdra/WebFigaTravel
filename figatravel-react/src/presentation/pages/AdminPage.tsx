@@ -5,6 +5,7 @@ export function AdminPage() {
   usePageMeta(
     'Admin Dashboard',
     'Manage featured travel packages and review incoming leads from the website.',
+    { noindex: true },
   )
 
   const {

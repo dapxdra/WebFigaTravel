@@ -1,9 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useAuth } from '../../auth/useAuth'
 import type { AvailabilitySlot } from '../../../domain/entities/AvailabilitySlot'
 import type { TravelPackage } from '../../../domain/entities/TravelPackage'
 import type { ReservationRequest } from '../../../domain/entities/Reservation'
+
+// Basic RFC-5322-ish check, mirrored from the contact form and the
+// CreatePendingReservation use-case so the UI can show an inline error
+// before the request round-trips to Supabase.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Bots that script-fill and submit forms typically do so in well under a
+// second; real visitors need at least a couple of seconds to fill this out.
+const MIN_FILL_TIME_MS = 2000
 
 // 48 half-hour slots: 00:00 to 23:30
 const ALL_TIME_SLOTS: string[] = Array.from({ length: 48 }, (_, i) => {
@@ -79,6 +87,15 @@ export function ReservationForm({
   const [availabilitySlotId, setAvailabilitySlotId] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [activeSegment, setActiveSegment] = useState(TIME_SEGMENTS[1].key)
+  // Honeypot: real users never see or fill this field, so any value means a bot.
+  const [company, setCompany] = useState('')
+  const mountedAtRef = useRef(0)
+
+  useEffect(() => {
+    mountedAtRef.current = Date.now()
+  }, [])
+
+  const emailIsInvalid = email.trim() !== '' && !EMAIL_PATTERN.test(email.trim())
 
   const selectedPackage = useMemo(
     () => packages.find((item) => item.id === packageId) ?? null,
@@ -114,7 +131,10 @@ export function ReservationForm({
       return
     }
 
+    // Prefilling from the async auth session (an external system) genuinely
+    // needs an effect; each branch is already guarded so it only fires once.
     if (!nameTouched && fullName.trim() === '' && authName !== '') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFullName(authName)
     }
 
@@ -151,6 +171,7 @@ export function ReservationForm({
       return
     }
     if (travelDate === '') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTravelDate(availableDateList[0])
       setSelectedTime('')
     }
@@ -164,6 +185,7 @@ export function ReservationForm({
     const dateSlot = availability.find(
       (slot) => slot.date === travelDate && slot.seatsAvailable > 0,
     )
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAvailabilitySlotId(dateSlot?.id ?? '')
     setSelectedTime('')
   }, [travelDate, availability])
@@ -187,6 +209,7 @@ export function ReservationForm({
   const canSubmit =
     fullName.trim() !== '' &&
     email.trim() !== '' &&
+    !emailIsInvalid &&
     packageId !== '' &&
     travelDate.trim() !== '' &&
     travelDate > todayIso &&
@@ -199,6 +222,12 @@ export function ReservationForm({
     event.preventDefault()
 
     if (!canSubmit || !selectedPackage) {
+      return
+    }
+
+    // Silently drop obvious bot submissions: honeypot filled, or submitted
+    // faster than a human could plausibly complete the form.
+    if (company !== '' || Date.now() - mountedAtRef.current < MIN_FILL_TIME_MS) {
       return
     }
 
@@ -231,7 +260,7 @@ export function ReservationForm({
       {availabilityError ? <p className="error-text">{availabilityError}</p> : null}
       {error ? <p className="error-text">{error}</p> : null}
 
-      <form className="lead-form" onSubmit={handleSubmit}>
+      <form className="lead-form" onSubmit={handleSubmit} data-cy="reservation-form">
         <label>
           Full name
           <input
@@ -242,6 +271,7 @@ export function ReservationForm({
               setFullName(event.target.value)
             }}
             required
+            data-cy="reservation-name"
           />
         </label>
 
@@ -255,7 +285,14 @@ export function ReservationForm({
               setEmail(event.target.value)
             }}
             required
+            aria-invalid={emailTouched && emailIsInvalid}
+            data-cy="reservation-email"
           />
+          {emailTouched && emailIsInvalid ? (
+            <small className="error-text" data-cy="reservation-email-error">
+              Enter a valid email address.
+            </small>
+          ) : null}
         </label>
 
         <label>
@@ -267,6 +304,7 @@ export function ReservationForm({
               setPhoneTouched(true)
               setPhone(event.target.value)
             }}
+            data-cy="reservation-phone"
           />
         </label>
 
@@ -282,6 +320,7 @@ export function ReservationForm({
               setSelectedTime('')
             }}
             required
+            data-cy="reservation-package"
           >
             <option value="">Select a service</option>
             {packages.map((item) => (
@@ -303,6 +342,7 @@ export function ReservationForm({
               setSelectedTime('')
               setAvailabilitySlotId('')
             }}
+            data-cy="reservation-date"
           />
           {packageId !== '' && availableDateList.length > 0 ? (
             <small className="availability-hint">
@@ -319,6 +359,7 @@ export function ReservationForm({
             min={1}
             max={25}
             onChange={(event) => setTravelers(Number(event.target.value))}
+            data-cy="reservation-travelers"
           />
         </label>
 
@@ -330,12 +371,29 @@ export function ReservationForm({
             onChange={(event) => setPickupLocation(event.target.value)}
             placeholder="Hotel name or address in La Fortuna"
             required
+            data-cy="reservation-pickup-location"
           />
         </label>
 
         <label>
           Notes (optional)
-          <textarea value={message} onChange={(event) => setMessage(event.target.value)} />
+          <textarea
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            data-cy="reservation-notes"
+          />
+        </label>
+
+        {/* Honeypot field: hidden from real visitors, ignored by the backend if filled. */}
+        <label className="sr-only" aria-hidden="true">
+          Company
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={company}
+            onChange={(event) => setCompany(event.target.value)}
+          />
         </label>
 
         <div className="time-grid-wrap full-width">
@@ -407,7 +465,7 @@ export function ReservationForm({
           </p>
         ) : null}
 
-        <button type="submit" disabled={!canSubmit}>
+        <button type="submit" disabled={!canSubmit} data-cy="reservation-submit">
           {submitting ? 'Creating reservation...' : 'Continue to payment'}
         </button>
       </form>

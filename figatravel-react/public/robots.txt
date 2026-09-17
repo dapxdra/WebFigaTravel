@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /auth/reset-password
+Disallow: /pago/respuesta
+
+Sitemap: https://figatravelcr.com/sitemap.xml

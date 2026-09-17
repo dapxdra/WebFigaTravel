@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useContactFormViewModel } from '../hooks/useContactFormViewModel'
 
@@ -6,6 +6,11 @@ interface ContactFormProps {
   title: string
   subtitle: string
 }
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Bots that script-fill and submit forms typically do so in well under a
+// second; real visitors need at least a couple of seconds to fill this out.
+const MIN_FILL_TIME_MS = 2000
 
 // Public "just get in touch" form. Unlike the booking flow it has no package,
 // date, or traveler fields; on submit it triggers an email to the Figa Travel
@@ -15,15 +20,24 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [emailTouched, setEmailTouched] = useState(false)
   const [phone, setPhone] = useState('')
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
   // Honeypot: real users never see this field, so any value means a bot.
   const [company, setCompany] = useState('')
+  const mountedAtRef = useRef(0)
+
+  useEffect(() => {
+    mountedAtRef.current = Date.now()
+  }, [])
+
+  const emailIsInvalid = email.trim() !== '' && !EMAIL_PATTERN.test(email.trim())
 
   const canSubmit =
     name.trim() !== '' &&
     email.trim() !== '' &&
+    !emailIsInvalid &&
     subject.trim() !== '' &&
     message.trim().length >= 10
 
@@ -31,6 +45,11 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
     event.preventDefault()
 
     if (!canSubmit || submitState.loading || company !== '') {
+      return
+    }
+
+    // Submitted faster than a human could plausibly fill the form: drop it.
+    if (Date.now() - mountedAtRef.current < MIN_FILL_TIME_MS) {
       return
     }
 
@@ -78,9 +97,16 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            onBlur={() => setEmailTouched(true)}
             required
+            aria-invalid={emailTouched && emailIsInvalid}
             data-cy="contact-email"
           />
+          {emailTouched && emailIsInvalid ? (
+            <small className="error-text" data-cy="contact-email-error">
+              Enter a valid email address.
+            </small>
+          ) : null}
         </label>
 
         <label>

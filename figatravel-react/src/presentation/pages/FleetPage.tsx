@@ -9,6 +9,9 @@ export function FleetPage() {
   usePageMeta(
     'Our Fleet',
     'See the vehicles Figa Travel uses for private transfers in Costa Rica, from a premium SUV to an 18-seat minibus.',
+    {
+      keywords: 'van rental with driver Costa Rica, minibus rental Costa Rica, group transportation Costa Rica',
+    },
   )
 
   return (

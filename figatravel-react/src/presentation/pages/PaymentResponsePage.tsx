@@ -6,6 +6,7 @@ export function PaymentResponsePage() {
   usePageMeta(
     'Payment result',
     'Check the result of your Tilopay payment.',
+    { noindex: true },
   )
 
   const [searchParams] = useSearchParams()

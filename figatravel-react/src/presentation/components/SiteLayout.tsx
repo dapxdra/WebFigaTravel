@@ -217,6 +217,12 @@ export function SiteLayout() {
           </section>
         </div>
 
+        <div className="footer-legal-row">
+          <NavLink to="/privacy-policy">Privacy Policy</NavLink>
+          <span aria-hidden="true">·</span>
+          <NavLink to="/terms-and-conditions">Terms and Conditions</NavLink>
+        </div>
+
         <p className="footer-copy">©2026 by Figa Travel Costa Rica</p>
       </footer>
 

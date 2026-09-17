@@ -1,7 +1,8 @@
 import type { SyntheticEvent } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { faqItems } from '../data/siteContent'
+import { useJsonLd } from '../hooks/useJsonLd'
 import { usePageMeta } from '../hooks/usePageMeta'
 
 export function FaqPage() {
@@ -39,7 +40,26 @@ export function FaqPage() {
   usePageMeta(
     'FAQ',
     'Find answers about transfers, schedules, and booking details with Figa Travel Costa Rica.',
+    { keywords: 'Costa Rica transfer FAQ, airport shuttle questions Costa Rica' },
   )
+
+  const faqJsonLd = useMemo(
+    () => ({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    }),
+    [],
+  )
+
+  useJsonLd('faq-json-ld', faqJsonLd)
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {

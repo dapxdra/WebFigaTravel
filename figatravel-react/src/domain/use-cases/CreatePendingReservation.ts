@@ -1,6 +1,10 @@
 import type { Reservation, ReservationRequest } from '../entities/Reservation'
 import type { ReservationRepository } from '../repositories/ReservationRepository'
 
+// Basic RFC-5322-ish check: enough to reject obvious typos without fighting
+// every valid edge case (the real validation is the confirmation email).
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export class CreatePendingReservation {
   private readonly repository: ReservationRepository
 
@@ -13,8 +17,8 @@ export class CreatePendingReservation {
       throw new Error('Full name is required.')
     }
 
-    if (input.email.trim() === '') {
-      throw new Error('Email is required.')
+    if (!EMAIL_PATTERN.test(input.email.trim())) {
+      throw new Error('Enter a valid email address.')
     }
 
     if (!input.packageId) {

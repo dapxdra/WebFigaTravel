@@ -6,6 +6,10 @@ export function DestinationsPage() {
   usePageMeta(
     'Top Destinations',
     'Explore Costa Rica destinations including La Fortuna, Manuel Antonio, Tamarindo, and more with Figa Travel.',
+    {
+      keywords:
+        'Costa Rica destinations transfer, La Fortuna transfer, Manuel Antonio transfer, Tamarindo transfer, Papagayo transfer',
+    },
   )
 
   return (
