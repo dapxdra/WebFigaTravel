@@ -416,55 +416,141 @@ export const featuredReviews: Review[] = reviews.filter(
   (review) => review.rating >= MIN_FEATURED_RATING,
 )
 
+// Written "answer first": every answer starts with the direct answer and names
+// Figa Travel, so it still makes sense when an AI assistant or search snippet
+// quotes it on its own. The first three are also shown on the home page.
 export const faqItems: FaqItem[] = [
   {
-    question: 'How can I book transportation services with your company?',
+    question: 'What is the best way to get from San Jose Airport (SJO) to La Fortuna or Arenal?',
     answer:
-      'You can book from Book Online, by WhatsApp, or by sending us a direct message with your route, date, and number of travelers.',
+      'The most comfortable way is a private door-to-door transfer. Figa Travel Costa Rica picks you up at Juan Santamaria International Airport (SJO) with a bilingual driver, tracks your flight, and drives you straight to your hotel in La Fortuna / Arenal in about 3 hours, at one fixed price with tolls, taxes, and fuel included.',
   },
   {
-    question: 'Where do you provide transportation services in Costa Rica?',
+    question: 'How do I book a private transfer or airport shuttle in Costa Rica with Figa Travel?',
     answer:
-      'We provide transfers across Costa Rica, including airport pickups, popular destinations, and custom routes by request.',
+      'You can book online at figatravelcr.com/book-online by choosing your route, date, pickup time, pickup location, and number of travelers, then paying securely by card. You can also book through WhatsApp (+506 7227 1058), phone (+506 7139 2747), or email (infofigatravel@gmail.com). A booking is confirmed once payment is processed.',
   },
   {
-    question: 'Can I make changes to my booking after it has been confirmed?',
+    question: 'How much does a private transfer in Costa Rica cost?',
     answer:
-      'Yes. Contact us as soon as possible and we will help update your reservation when availability allows.',
+      'Figa Travel charges one fixed price per vehicle and route, not per passenger or by meter. The price shown at checkout on the Book Online page is the total, door to door, including tolls, taxes, and fuel, so there are no hidden fees. Prices depend on the route and vehicle size.',
   },
   {
-    question: 'What types of vehicles do you use for transportation?',
+    question: 'Which airports in Costa Rica do you serve?',
     answer:
-      'We use comfortable, well-maintained vehicles selected to match the size of your group and the route you need.',
+      "Figa Travel provides airport pickups and drop-offs at Juan Santamaria International Airport (SJO) in San Jose and Guanacaste Airport (LIR) in Liberia, connecting them with La Fortuna, Arenal, Manuel Antonio, Tamarindo, Papagayo, Puerto Viejo, San Jose, and other destinations across Costa Rica.",
   },
   {
-    question: 'Are your drivers licensed and experienced?',
+    question: 'What happens if my flight is delayed?',
     answer:
-      'Yes. Our drivers are licensed, experienced, and familiar with Costa Rica routes and travel conditions.',
+      'Nothing changes for you. Figa Travel tracks your flight and adjusts the pickup time if it lands early or late, and every airport transfer includes 60 minutes of complimentary wait time after landing, at no extra charge.',
   },
   {
-    question: 'Do you offer transportation to and from the airport?',
+    question: 'Where in Costa Rica does Figa Travel provide transportation?',
     answer:
-      'Yes. Airport transfers are one of our main services and we track arrival times for smoother pickups.',
+      'Figa Travel covers all of Costa Rica from its base in La Fortuna (Arenal). Popular routes include San Jose, SJO airport, La Fortuna and Arenal Volcano, Manuel Antonio, Tamarindo, Papagayo, and Puerto Viejo on the Caribbean coast. Custom routes and multi-stop itineraries are available on request.',
   },
   {
-    question: 'What safety measures do you have in place?',
+    question: 'How long are the drives between popular destinations in Costa Rica?',
     answer:
-      'We focus on reliable vehicles, careful driving, and clear coordination before every trip.',
+      'Approximate private transfer times from San Jose: La Fortuna / Arenal 3 hours, Manuel Antonio 3 hours 30 minutes, Papagayo 4 hours 30 minutes, Tamarindo 4 hours 40 minutes, and Puerto Viejo 4 hours 45 minutes. Actual times vary with traffic, weather, and road conditions.',
   },
   {
-    question: 'Do you offer transportation services for large groups or events?',
+    question: 'What types of vehicles do you use and how many passengers fit?',
     answer:
-      'Yes. We can organize service for families, groups, and event transportation needs.',
+      'Figa Travel uses late-model, air-conditioned vehicles sized to your group: a Toyota Land Cruiser Prado premium SUV (1–3 passengers), a Hyundai Staria van (1–5), a Toyota Hiace (1–6), a Toyota Hiace Commuter (1–9), and a Toyota Coaster minibus (up to 18 passengers), all with room for luggage.',
   },
   {
-    question: 'Can you accommodate special requests, such as child seats or pet-friendly transportation?',
+    question: 'Are your drivers licensed and do they speak English?',
     answer:
-      'Yes. Let us know your special request in advance and we will do our best to accommodate it.',
+      'Yes. All Figa Travel drivers are local, experienced, and authorized by the Costa Rica Tourism Board (ICT) to operate tourism transportation, and they speak both English and Spanish.',
   },
   {
-    question: 'How far in advance should I book my transportation services?',
+    question: 'Is private transportation in Costa Rica with Figa Travel safe?',
     answer:
-      'Booking in advance is recommended, especially for busy seasons, but we also try to help with last-minute requests.',
+      'Yes. Every vehicle carries commercial passenger insurance, has a seatbelt for every seat, and is regularly maintained. Drivers are licensed, know the mountain and coastal routes, and drive at a steady, careful pace. Child seats are available on request.',
+  },
+  {
+    question: 'Do you offer transportation for large groups, weddings, or events?',
+    answer:
+      'Yes. Figa Travel transports families, tour groups, weddings, corporate trips, and conferences, with vans for up to 9 passengers and a Toyota Coaster minibus for up to 18 passengers. Several vehicles can be combined for larger groups.',
+  },
+  {
+    question: 'Can you provide child seats or pet-friendly transportation?',
+    answer:
+      'Yes. Child and baby seats are available on request, and Figa Travel will do its best to accommodate pet-friendly transfers. Mention your request when you book so the right vehicle and equipment are ready.',
+  },
+  {
+    question: 'Can I make stops along the way?',
+    answer:
+      'Yes. Because the transfer is private, you can ask your driver for short stops, such as a scenic viewpoint, a restroom break, or a quick snack. For planned multi-stop itineraries or day tours, include the stops when you book.',
+  },
+  {
+    question: 'Can I change or cancel my booking after it is confirmed?',
+    answer:
+      'Yes. Contact Figa Travel as soon as possible by WhatsApp, phone, or email with your booking details and the team will update your reservation when availability allows. Changes requested shortly before pickup time may not always be possible.',
+  },
+  {
+    question: 'How far in advance should I book my transfer?',
+    answer:
+      'Booking at least a few days ahead is recommended, and earlier during the high season from December to April and on holidays. Figa Travel also tries to help with last-minute requests; message the team on WhatsApp to check availability.',
+  },
+  {
+    question: 'What is included in a Figa Travel private transfer?',
+    answer:
+      'Every private transfer includes door-to-door pickup at your hotel, address, or airport, a bilingual licensed driver, an air-conditioned insured vehicle, cold water on board, flight tracking with 60 minutes of free wait time for airport pickups, and all tolls, taxes, and fuel.',
   },
 ]
+
+// "4h 30m from San Jose" -> "4 hours 30 minutes" (reads naturally when quoted).
+function formatTransferTime(transferTime: string) {
+  return transferTime
+    .replace(/\s*from San Jose/i, '')
+    .replace(/(\d+)h/, (_, hours: string) => `${hours} ${hours === '1' ? 'hour' : 'hours'}`)
+    .replace(/(\d+)m/, '$1 minutes')
+}
+
+// Removes the "Best Time to Visit: " style label from a travel tip.
+function stripTipLabel(tip: string) {
+  return tip.replace(/^[^:]+:\s*/, '')
+}
+
+/**
+ * Question-and-answer pairs for a destination page, built from its data so
+ * they stay accurate. Phrased the way travelers ask search engines and AI
+ * assistants ("How long is the transfer from San Jose to ...?").
+ */
+export function buildDestinationFaq(destination: Destination): FaqItem[] {
+  const { name } = destination
+  const bestTimeTip = destination.travelTips.find((tip) => tip.startsWith('Best Time to Visit'))
+  const attractionNames = destination.attractions.map((item) => item.split(':')[0])
+  const isLocal = !/\d/.test(destination.transferTime)
+
+  const items: FaqItem[] = [
+    {
+      question: isLocal
+        ? `Do you offer private transfers in ${name}?`
+        : `How long is the private transfer from San Jose to ${name}?`,
+      answer: isLocal
+        ? `Yes. Figa Travel offers local private transfers in ${name}, including pickups at Juan Santamaria International Airport (SJO), hotel-to-hotel rides, and connections from ${name} to every major destination in Costa Rica.`
+        : `A private transfer from San Jose to ${name} takes about ${formatTransferTime(destination.transferTime)} with Figa Travel Costa Rica, door to door. Actual time varies with traffic, weather, and road conditions.`,
+    },
+    {
+      question: `How do I book a private shuttle to ${name}?`,
+      answer: `Book your private shuttle to ${name} online at figatravelcr.com/book-online or through WhatsApp (+506 7227 1058). Figa Travel quotes one fixed price per vehicle including tolls, taxes, and fuel, and airport pickups include flight tracking and 60 minutes of free wait time.`,
+    },
+    {
+      question: `What are the top things to do in ${name}?`,
+      answer: `Top things to do in ${name} include ${attractionNames.slice(0, -1).join(', ')} and ${attractionNames.at(-1)}. Best for: ${destination.bestFor.toLowerCase()}.`,
+    },
+  ]
+
+  if (bestTimeTip) {
+    items.push({
+      question: `When is the best time to visit ${name}?`,
+      answer: stripTipLabel(bestTimeTip),
+    })
+  }
+
+  return items
+}

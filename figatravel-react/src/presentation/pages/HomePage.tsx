@@ -104,11 +104,11 @@ export function HomePage() {
   };
 
   usePageMeta(
-    "Private Transfers in Costa Rica",
-    "Discover Costa Rica with premium private transportation, top destinations, and flexible booking with Figa Travel.",
+    "Private Transfers & Airport Shuttle in Costa Rica",
+    "Private transfers and airport shuttles in Costa Rica: SJO airport to La Fortuna/Arenal, Manuel Antonio, Tamarindo, Papagayo and Puerto Viejo. Bilingual licensed drivers, flight tracking, fixed door-to-door prices.",
     {
       keywords:
-        "private shuttle Costa Rica, private driver Costa Rica, hotel transfer Costa Rica, tourist transfer Costa Rica",
+        "private shuttle Costa Rica, private driver Costa Rica, hotel transfer Costa Rica, tourist transfer Costa Rica, SJO to La Fortuna shuttle, San Jose to Arenal transfer, Manuel Antonio shuttle, Tamarindo shuttle",
     },
   );
 

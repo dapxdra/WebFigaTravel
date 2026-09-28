@@ -1,5 +1,7 @@
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { DEFAULT_KEYWORDS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '../../shared/config/seo'
+import { HeadCollectorContext } from '../seo/HeadCollector'
 
 const defaultTitle = SITE_NAME
 const defaultDescription =
@@ -45,17 +47,34 @@ function upsertCanonical(href: string) {
 
 export function usePageMeta(title: string, description: string, options: PageMetaOptions = {}) {
   const { keywords, image, noindex } = options
+  const { pathname } = useLocation()
+  const collector = useContext(HeadCollectorContext)
+
+  const fullTitle = title === defaultTitle ? defaultTitle : `${title} | ${defaultTitle}`
+  // Home is canonicalized with a trailing slash, every other route without one.
+  const canonicalUrl = pathname === '/' ? `${SITE_URL}/` : `${SITE_URL}${pathname.replace(/\/$/, '')}`
+  const ogImage = image ?? DEFAULT_OG_IMAGE
+  const allKeywords = keywords ? `${keywords}, ${DEFAULT_KEYWORDS}` : DEFAULT_KEYWORDS
+  const robots = noindex ? 'noindex, nofollow' : 'index, follow'
+
+  // Build-time prerender only: record the tags so they land in the static HTML.
+  if (collector) {
+    collector.setMeta({
+      title: fullTitle,
+      description,
+      keywords: allKeywords,
+      robots,
+      canonicalUrl,
+      image: ogImage,
+    })
+  }
 
   useEffect(() => {
-    const fullTitle = title === defaultTitle ? defaultTitle : `${title} | ${defaultTitle}`
     document.title = fullTitle
 
-    const canonicalUrl = `${SITE_URL}${window.location.pathname}`
-    const ogImage = image ?? DEFAULT_OG_IMAGE
-
     upsertMeta('name', 'description', description)
-    upsertMeta('name', 'keywords', keywords ? `${keywords}, ${DEFAULT_KEYWORDS}` : DEFAULT_KEYWORDS)
-    upsertMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow')
+    upsertMeta('name', 'keywords', allKeywords)
+    upsertMeta('name', 'robots', robots)
     upsertCanonical(canonicalUrl)
 
     upsertMeta('property', 'og:title', fullTitle)
@@ -69,7 +88,7 @@ export function usePageMeta(title: string, description: string, options: PageMet
     upsertMeta('name', 'twitter:title', fullTitle)
     upsertMeta('name', 'twitter:description', description)
     upsertMeta('name', 'twitter:image', ogImage)
-  }, [title, description, keywords, image, noindex])
+  }, [fullTitle, description, allKeywords, robots, canonicalUrl, ogImage])
 }
 
 export const defaultSeoDescription = defaultDescription

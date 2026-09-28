@@ -5,6 +5,10 @@ import { faqItems } from '../data/siteContent'
 import { useJsonLd } from '../hooks/useJsonLd'
 import { usePageMeta } from '../hooks/usePageMeta'
 
+// Shown on the page as a freshness signal for search engines and AI answers.
+// Update it whenever the FAQ answers change.
+const LAST_UPDATED = 'September 28, 2026'
+
 export function FaqPage() {
   const handleAccordionToggle = (event: SyntheticEvent<HTMLDetailsElement>) => {
     const currentItem = event.currentTarget
@@ -38,9 +42,12 @@ export function FaqPage() {
   }
 
   usePageMeta(
-    'FAQ',
-    'Find answers about transfers, schedules, and booking details with Figa Travel Costa Rica.',
-    { keywords: 'Costa Rica transfer FAQ, airport shuttle questions Costa Rica' },
+    'Costa Rica Private Transfer & Airport Shuttle FAQ',
+    'Answers about private transfers and airport shuttles in Costa Rica: SJO to La Fortuna, prices, travel times, vehicles, flight delays, child seats, and how to book with Figa Travel.',
+    {
+      keywords:
+        'Costa Rica transfer FAQ, SJO to La Fortuna shuttle, how to get from San Jose airport to Arenal, Costa Rica private shuttle price, Costa Rica airport shuttle questions',
+    },
   )
 
   const faqJsonLd = useMemo(
@@ -98,12 +105,15 @@ export function FaqPage() {
   }, [])
 
   return (
-    <main className="info-page faq-page">
-      <header className="section page-hero faq-hero">
+    <main className="info-page faq-page" data-cy="faq-page">
+      <header className="section page-hero faq-hero" data-cy="faq-hero">
         <p className="eyebrow">HAVE ANY QUESTIONS?</p>
-        <h1>FAQ</h1>
+        <h1>Costa Rica Private Transfer FAQ</h1>
         <p className="hero-copy">
           Quick answers to help you plan your trip with complete clarity.
+        </p>
+        <p className="hero-copy" data-cy="faq-last-updated">
+          Last updated: <time dateTime="2026-09-28">{LAST_UPDATED}</time>
         </p>
       </header>
 
@@ -113,12 +123,13 @@ export function FaqPage() {
           <p>If you need anything else, contact us via WhatsApp, email, or the contact form.</p>
         </div>
 
-        <div className="faq-list">
+        <div className="faq-list" data-cy="faq-list">
           {faqItems.map((item, index) => (
             <details
               key={item.question}
               className="faq-item faq-accordion-item"
               onToggle={handleAccordionToggle}
+              data-cy={`faq-item-${index}`}
               open={index === 0}
             >
               <summary className="faq-question">{item.question}</summary>
@@ -129,7 +140,7 @@ export function FaqPage() {
           ))}
         </div>
 
-        <div className="faq-cta-row">
+        <div className="faq-cta-row" data-cy="faq-cta-row">
           <a
             href="https://api.whatsapp.com/send/?phone=%2B50672271058&text&type=phone_number&app_absent=0"
             className="hero-cta"

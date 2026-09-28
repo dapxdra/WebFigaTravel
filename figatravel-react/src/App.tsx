@@ -30,40 +30,49 @@ const PaymentResponsePage = lazy(() =>
   })),
 )
 
+// Route tree without a router, so the same routes render in the browser
+// (BrowserRouter, below) and in the build-time prerender (StaticRouter, see
+// entry-server.tsx).
+export function AppRoutes() {
+  return (
+    <Suspense fallback={<div className="route-loading" aria-live="polite">Loading...</div>}>
+      <Routes>
+        <Route element={<ResetPasswordPage />} path="auth/reset-password" />
+        <Route element={<SiteLayout />} path="/">
+          <Route element={<HomePage />} index />
+          <Route element={<DestinationsPage />} path="destinations" />
+          <Route
+            element={<DestinationDetailPage />}
+            path="destinations/:slug"
+          />
+          <Route element={<FleetPage />} path="fleet" />
+          <Route element={<BookOnlinePage />} path="book-online" />
+          <Route element={<PaymentResponsePage />} path="pago/respuesta" />
+          <Route element={<FaqPage />} path="faq" />
+          <Route element={<AboutPage />} path="about-us" />
+          <Route element={<ContactPage />} path="contact" />
+          <Route element={<PrivacyPolicyPage />} path="privacy-policy" />
+          <Route element={<TermsConditionsPage />} path="terms-and-conditions" />
+          <Route
+            element={
+              <AdminGuard>
+                <AdminPage />
+              </AdminGuard>
+            }
+            path="admin"
+          />
+          <Route element={<NotFoundPage />} path="*" />
+        </Route>
+      </Routes>
+    </Suspense>
+  )
+}
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Suspense fallback={<div className="route-loading" aria-live="polite">Loading...</div>}>
-          <Routes>
-            <Route element={<ResetPasswordPage />} path="auth/reset-password" />
-            <Route element={<SiteLayout />} path="/">
-              <Route element={<HomePage />} index />
-              <Route element={<DestinationsPage />} path="destinations" />
-              <Route
-                element={<DestinationDetailPage />}
-                path="destinations/:slug"
-              />
-              <Route element={<FleetPage />} path="fleet" />
-              <Route element={<BookOnlinePage />} path="book-online" />
-              <Route element={<PaymentResponsePage />} path="pago/respuesta" />
-              <Route element={<FaqPage />} path="faq" />
-              <Route element={<AboutPage />} path="about-us" />
-              <Route element={<ContactPage />} path="contact" />
-              <Route element={<PrivacyPolicyPage />} path="privacy-policy" />
-              <Route element={<TermsConditionsPage />} path="terms-and-conditions" />
-              <Route
-                element={
-                  <AdminGuard>
-                    <AdminPage />
-                  </AdminGuard>
-                }
-                path="admin"
-              />
-              <Route element={<NotFoundPage />} path="*" />
-            </Route>
-          </Routes>
-        </Suspense>
+        <AppRoutes />
       </BrowserRouter>
     </AuthProvider>
   )

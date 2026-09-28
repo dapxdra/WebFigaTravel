@@ -71,6 +71,13 @@ Routing is composed in `src/App.tsx` (`react-router-dom`, `BrowserRouter`). Shar
 - Prefer small, local, minimal-diff edits over broad rewrites or unrelated refactors.
 - Never hardcode secrets or service-role keys in source.
 
+### SEO / AI search (prerender)
+
+- `npm run build` also runs `vite build --ssr src/entry-server.tsx` + `scripts/prerender.mjs`, which renders every route in `prerenderRoutes` (`entry-server.tsx`) to static HTML (`dist/faq.html`, `dist/destinations/<slug>.html`, …) so crawlers that don't run JS (GPTBot, ClaudeBot, PerplexityBot) read the content. It also generates `sitemap.xml`, `llms.txt` and `llms-full.txt` from `siteContent.ts` — don't add those to `public/`.
+- `usePageMeta`/`useJsonLd` record tags into `HeadCollectorContext` during prerender; keep using them (not direct `document.head` edits) so tags land in the static HTML. Browser APIs (`window`, `document`) must stay inside effects/handlers, never in render.
+- New public routes must be added to `prerenderRoutes`. `vercel.json` uses `cleanUrls` and falls back to `spa.html` (noindex shell) for client-only routes.
+- FAQ answers in `faqItems` are "answer first" and self-contained (they name Figa Travel and include concrete facts) so AI assistants can quote them.
+
 ## Deployment
 
 Deploys to Vercel as a static Vite build (build command `npm run build`, output dir `dist`). Vercel project env vars must include `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (and the Tilopay `VITE_` vars above). Supabase Edge Function secrets are configured separately via `supabase secrets set ...` / `supabase functions deploy <name>` and are not part of the Vercel build.
