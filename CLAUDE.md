@@ -61,7 +61,14 @@ Routing is composed in `src/App.tsx` (`react-router-dom`, `BrowserRouter`). Shar
 
 - Right after `verify-tilopay-payment` marks a reservation `paid` (never on `failed`/`pending`), it POSTs the reservation to `reservasFIGA`'s external integration endpoint (`app/api/integrations/reservas`, see that repo's README) via `syncReservationToFiga` in the same edge function. This is server-to-server and best-effort: a FIGA outage is logged but never blocks the paid response to the customer.
 - Requires Supabase Edge Function secrets `FIGA_RESERVAS_WEBHOOK_URL` and `FIGA_RESERVAS_WEBHOOK_SECRET` (and optionally `FIGA_RESERVAS_WEBHOOK_HMAC_SECRET` to sign requests), set via `supabase secrets set` — never as `VITE_` vars. If unset, the sync silently no-ops (warns in logs).
-- `source` is always `"figa-web"` and `externalReservationId` is the Tilopay `order_number`, so FIGA's idempotency keeps retries/replays safe. `proveedor` is the constant `"Figa Web"`. `AD` (adults) is set from `travelers`; there is no children count in this booking form, so `NI` is always `0`.
+- `source` is always `"figa-web"` and `externalReservationId` is the Tilopay `order_number`, so FIGA's idempotency keeps retries/replays safe. `proveedor` is the constant `"Figa Web"`. `travelers` is the total head count; `NI` comes from `lead_requests.children` (only custom routes collect it, package bookings leave it `0`) and `AD = travelers - children`.
+
+### Custom routes (km pricing, Google Maps)
+
+- `RouteSearchCard` ("Where are you headed?", on Home and `/book-online`) uses Google Places Autocomplete (Places API New, data API, Costa Rica only) via `presentation/lib/googleMaps.ts` with the browser key `VITE_GOOGLE_MAPS_API_KEY` (restrict by HTTP referrer). Home hands the search to `/book-online` through router state.
+- Price is computed **only** in the `custom-route-booking` Edge Function (actions `quote` / `reserve`) from the Google Routes API driving distance, using the server secret `GOOGLE_MAPS_SERVER_API_KEY`. Max 18 passengers.
+- Pricing rules live in the single-row table `custom_route_pricing` (migration `20261016000000_add_custom_route_pricing.sql`), edited from `/admin` (`CustomRoutePricingEditor`). Model: 3 km tiers with a USD/km rate for the 5-passenger vehicle (default $1.80 up to 120 km); after the last tier the price stays flat; 6–8 and 9–18 pax = 5-pax price × multiplier (no per-seat discounts: every passenger count in a group pays the same); optional minimum fare; total rounded to whole USD. The edge function reads the row with the service role (60 s cache, fails closed on DB errors). The formula exists twice — `src/domain/entities/CustomRoutePricing.ts` (admin preview + validation) and the edge function — keep them in sync. The browser never sends a price.
+- `reserve` recomputes the price and inserts the row with the service role (`package_id` null, `children`, `distance_km`; migration `20261005000000_add_custom_route_fields.sql`). The browser insert policy only allows package bookings. `verify-tilopay-payment` refuses to mark `paid` when Tilopay's charged amount is below the stored amount.
 
 ## Conventions
 

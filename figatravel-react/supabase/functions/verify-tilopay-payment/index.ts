@@ -115,6 +115,8 @@ interface FigaSyncRow {
   pickup_location: string | null
   dropoff_location: string | null
   travelers: number
+  children: number | null
+  distance_km: number | null
   amount: number
   currency: string
   travel_packages: FigaSyncPackage | FigaSyncPackage[] | null
@@ -149,6 +151,9 @@ async function syncReservationToFiga(row: FigaSyncRow, tilopayTransactionId: str
   }
 
   const packageInfo = Array.isArray(row.travel_packages) ? row.travel_packages[0] : row.travel_packages
+  // `travelers` is the total head count; children are stored separately.
+  const children = row.children ?? 0
+  const routeLabel = packageInfo?.title ?? (row.distance_km ? `Custom route (${row.distance_km} km)` : null)
 
   const body = JSON.stringify({
     source: 'figa-web',
@@ -159,10 +164,10 @@ async function syncReservationToFiga(row: FigaSyncRow, tilopayTransactionId: str
     pickUp: row.pickup_location || 'Por confirmar',
     dropOff: row.dropoff_location || packageInfo?.destination || 'Por confirmar',
     proveedor: 'Figa Web',
-    nota: [packageInfo?.title, row.phone ? `Tel: ${row.phone}` : null].filter(Boolean).join(' | '),
+    nota: [routeLabel, row.phone ? `Tel: ${row.phone}` : null].filter(Boolean).join(' | '),
     precio: row.amount,
-    AD: row.travelers,
-    NI: 0,
+    AD: row.travelers - children,
+    NI: children,
     pago: true,
     fechaPago: new Date().toISOString().slice(0, 10),
     metadata: { tilopayTransactionId, email: row.email, currency: row.currency },
@@ -219,7 +224,7 @@ Deno.serve(async (req: Request) => {
 
   const { data: reservation, error: reservationError } = await supabaseAdmin
     .from('lead_requests')
-    .select('id, status, order_number')
+    .select('id, status, order_number, amount')
     .eq('order_number', orderNumber)
     .maybeSingle()
 
@@ -276,7 +281,21 @@ Deno.serve(async (req: Request) => {
       throw new Error('Tilopay did not return any transaction for this orderNumber.')
     }
 
-    const isApproved = transaction.code === '1'
+    // The charged amount is set client-side in Tilopay.Init, so a tampered
+    // browser could pay less than the stored price. Only accept an approved
+    // transaction when Tilopay's charged amount covers the reservation amount.
+    const chargedAmount = Number(transaction.amount)
+    const expectedAmount = Number(reservation.amount)
+    const amountMatches =
+      !Number.isFinite(expectedAmount) || (Number.isFinite(chargedAmount) && chargedAmount + 0.01 >= expectedAmount)
+
+    if (transaction.code === '1' && !amountMatches) {
+      console.error(
+        `verify-tilopay-payment: amount mismatch for order ${orderNumber} (charged=${transaction.amount}, expected=${reservation.amount})`,
+      )
+    }
+
+    const isApproved = transaction.code === '1' && amountMatches
     const newStatus = isApproved ? 'paid' : 'failed'
     const tilopayTransactionId = String(transaction.id_tilopay)
 
@@ -298,7 +317,7 @@ Deno.serve(async (req: Request) => {
       .eq('order_number', orderNumber)
       .eq('status', 'pending')
       .select(
-        'order_number, name, email, phone, travel_date, pickup_time, pickup_location, dropoff_location, travelers, amount, currency, travel_packages(title, destination)',
+        'order_number, name, email, phone, travel_date, pickup_time, pickup_location, dropoff_location, travelers, children, distance_km, amount, currency, travel_packages(title, destination)',
       )
 
     if (updateError) {
@@ -316,7 +335,9 @@ Deno.serve(async (req: Request) => {
 
     return jsonResponse({
       status: newStatus,
-      message: transaction.response,
+      message: amountMatches
+        ? transaction.response
+        : 'The charged amount does not match your reservation. Please contact us.',
       transactionId: tilopayTransactionId,
     })
   } catch (error) {

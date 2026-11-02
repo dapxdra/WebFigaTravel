@@ -1,9 +1,10 @@
 import type { SyntheticEvent } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { faqItems, priorities, featuredReviews, fleet } from "../data/siteContent";
 import { ReviewsCarousel } from "../components/ReviewsCarousel";
+import { RouteSearchCard } from "../components/route-search/RouteSearchCard";
 import { usePageMeta } from "../hooks/usePageMeta";
 
 const HERO_STATIC_FALLBACK = "/assets/home/hero-header.png";
@@ -72,6 +73,8 @@ const serviceStrip = [
 ];
 
 export function HomePage() {
+  const navigate = useNavigate();
+
   const handleAccordionToggle = (event: SyntheticEvent<HTMLDetailsElement>) => {
     const currentItem = event.currentTarget;
 
@@ -158,18 +161,23 @@ export function HomePage() {
       <section
         className="home-hero"
         aria-label="Discover the Beauty of Costa Rica"
+        data-cy="home-hero"
       >
-        <img
-          src={heroMediaSrc}
-          alt="Costa Rica coast"
-          className="home-hero-image"
-          loading="eager"
-          onError={() => {
-            setHeroMediaIndex((current) =>
-              current < HERO_MEDIA_CANDIDATES.length - 1 ? current + 1 : current,
-            );
-          }}
-        />
+        {/* Media is clipped in its own layer so the hero itself can stay
+            overflow-visible and the address suggestions are never cut off. */}
+        <div className="home-hero-media" aria-hidden="true">
+          <img
+            src={heroMediaSrc}
+            alt=""
+            className="home-hero-image"
+            loading="eager"
+            onError={() => {
+              setHeroMediaIndex((current) =>
+                current < HERO_MEDIA_CANDIDATES.length - 1 ? current + 1 : current,
+              );
+            }}
+          />
+        </div>
 
         <div className="home-hero-overlay">
           <h1>Discover the Beauty of Costa Rica with FIGA TRAVEL</h1>
@@ -177,11 +185,14 @@ export function HomePage() {
             Private transfers, local guidance, and curated routes from volcanoes
             to beaches.
           </p>
-          <div className="home-hero-actions">
-            <Link to="/book-online" className="home-book-now">
-              BOOK NOW
-            </Link>
-          </div>
+        </div>
+
+        <div className="home-hero-search" data-cy="home-route-search">
+          {/* Pricing happens on /book-online; the search is handed over in router state. */}
+          <RouteSearchCard
+            submitLabel="See my price"
+            onSubmit={(search) => navigate("/book-online", { state: { routeSearch: search } })}
+          />
         </div>
       </section>
 

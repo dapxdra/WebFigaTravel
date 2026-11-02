@@ -1,5 +1,6 @@
 import { useAdminDashboardViewModel } from '../hooks/useAdminDashboardViewModel'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { CustomRoutePricingEditor } from '../components/admin/CustomRoutePricingEditor'
 
 export function AdminPage() {
   usePageMeta(
@@ -96,6 +97,8 @@ export function AdminPage() {
           ))}
         </div>
       </section>
+
+      <CustomRoutePricingEditor />
 
       <section className="section" aria-labelledby="admin-leads-title">
         <div className="section-head">

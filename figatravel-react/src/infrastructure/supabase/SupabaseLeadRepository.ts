@@ -10,7 +10,7 @@ interface LeadRow {
   travel_date: string | null
   travelers: number
   message: string | null
-  package_id: string
+  package_id: string | null
   created_at: string
 }
 
@@ -44,7 +44,7 @@ export class SupabaseLeadRepository implements LeadRepository {
       travelDate: row.travel_date ?? undefined,
       travelers: row.travelers,
       message: row.message ?? undefined,
-      packageId: row.package_id,
+      packageId: row.package_id ?? 'Custom route',
       createdAt: row.created_at,
     }))
   }

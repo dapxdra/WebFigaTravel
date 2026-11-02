@@ -4,6 +4,7 @@ import { useAuth } from '../../auth/useAuth'
 import type { AvailabilitySlot } from '../../../domain/entities/AvailabilitySlot'
 import type { TravelPackage } from '../../../domain/entities/TravelPackage'
 import type { ReservationRequest } from '../../../domain/entities/Reservation'
+import { PickupTimePicker } from './PickupTimePicker'
 
 // Basic RFC-5322-ish check, mirrored from the contact form and the
 // CreatePendingReservation use-case so the UI can show an inline error
@@ -12,36 +13,6 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // Bots that script-fill and submit forms typically do so in well under a
 // second; real visitors need at least a couple of seconds to fill this out.
 const MIN_FILL_TIME_MS = 2000
-
-// 48 half-hour slots: 00:00 to 23:30
-const ALL_TIME_SLOTS: string[] = Array.from({ length: 48 }, (_, i) => {
-  const h = Math.floor(i / 2)
-  const m = i % 2 === 0 ? '00' : '30'
-  return `${String(h).padStart(2, '0')}:${m}`
-})
-
-// Groups the 48 slots into 4 tabs of 12 so the picker shows a manageable
-// number of buttons at a time instead of all 48 at once.
-interface TimeSegment {
-  key: string
-  label: string
-  hourFrom: number
-  hourTo: number
-}
-
-const TIME_SEGMENTS: TimeSegment[] = [
-  { key: 'night', label: 'Night', hourFrom: 0, hourTo: 5 },
-  { key: 'morning', label: 'Morning', hourFrom: 6, hourTo: 11 },
-  { key: 'afternoon', label: 'Afternoon', hourFrom: 12, hourTo: 17 },
-  { key: 'evening', label: 'Evening', hourFrom: 18, hourTo: 23 },
-]
-
-function timesInSegment(segment: TimeSegment): string[] {
-  return ALL_TIME_SLOTS.filter((time) => {
-    const hour = Number(time.slice(0, 2))
-    return hour >= segment.hourFrom && hour <= segment.hourTo
-  })
-}
 
 interface ReservationFormProps {
   packages: TravelPackage[]
@@ -86,7 +57,6 @@ export function ReservationForm({
   const [packageId, setPackageId] = useState(initialPackageId ?? '')
   const [availabilitySlotId, setAvailabilitySlotId] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
-  const [activeSegment, setActiveSegment] = useState(TIME_SEGMENTS[1].key)
   // Honeypot: real users never see or fill this field, so any value means a bot.
   const [company, setCompany] = useState('')
   const mountedAtRef = useRef(0)
@@ -194,17 +164,6 @@ export function ReservationForm({
     () => packageId !== '' && travelDate !== '' && travelDate > todayIso,
     [packageId, travelDate, todayIso],
   )
-
-  // Future dates have all slots available; today/past dates have none.
-  const timeSlotStatus = useMemo(() => {
-    if (!travelDate) return {} as Record<string, boolean>
-    const isFutureDate = travelDate > todayIso
-    const result: Record<string, boolean> = {}
-    for (const time of ALL_TIME_SLOTS) {
-      result[time] = isFutureDate
-    }
-    return result
-  }, [travelDate, todayIso])
 
   const canSubmit =
     fullName.trim() !== '' &&
@@ -410,52 +369,11 @@ export function ReservationForm({
           ) : !hasTimesForSelectedDate ? (
             <p className="time-grid-hint">No availability for today or past dates. Select a future date.</p>
           ) : (
-            <>
-              <div className="time-segment-tabs" role="tablist" aria-label="Time of day">
-                {TIME_SEGMENTS.map((segment) => (
-                  <button
-                    key={segment.key}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeSegment === segment.key}
-                    className={
-                      activeSegment === segment.key
-                        ? 'time-segment-tab time-segment-tab-active'
-                        : 'time-segment-tab'
-                    }
-                    onClick={() => setActiveSegment(segment.key)}
-                  >
-                    {segment.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="time-grid" role="group" aria-label="Available times">
-                {timesInSegment(TIME_SEGMENTS.find((segment) => segment.key === activeSegment)!).map(
-                  (time) => {
-                    const available = timeSlotStatus[time] ?? false
-                    const active = selectedTime === time
-                    return (
-                      <button
-                        key={time}
-                        type="button"
-                        className={
-                          active
-                            ? 'time-slot time-slot-active'
-                            : available
-                              ? 'time-slot time-slot-open'
-                              : 'time-slot time-slot-closed'
-                        }
-                        disabled={!available}
-                        onClick={() => setSelectedTime(time)}
-                      >
-                        {time}
-                      </button>
-                    )
-                  },
-                )}
-              </div>
-            </>
+            <PickupTimePicker
+              value={selectedTime}
+              onChange={setSelectedTime}
+              dataCy="reservation-time-picker"
+            />
           )}
         </div>
 

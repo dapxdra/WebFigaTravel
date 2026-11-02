@@ -402,42 +402,67 @@ h3 {
   margin-inline: auto;
 }
 
+/* The hero stacks the headline and the route search card over the moving
+   image. It stays overflow-visible so the address suggestions dropdown can
+   extend past its edge; the media layer does the rounded-corner clipping. */
 .home-hero {
   position: relative;
   border-radius: 28px;
-  overflow: hidden;
   border: 1px solid rgba(14, 67, 49, 0.16);
   box-shadow: var(--shadow-soft);
   min-height: clamp(320px, 48vw, 540px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(18px, 3vw, 28px);
+  padding: clamp(28px, 6vw, 72px) clamp(14px, 4vw, 48px) clamp(14px, 3vw, 32px);
+}
+
+.home-hero-media {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
 }
 
 .home-hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(10, 31, 25, 0.68) 5%, rgba(10, 31, 25, 0.16) 58%, rgba(10, 31, 25, 0.04) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 31, 25, 0.62) 5%, rgba(10, 31, 25, 0.12) 60%, rgba(10, 31, 25, 0.04) 100%),
+    linear-gradient(180deg, rgba(10, 31, 25, 0) 40%, rgba(10, 31, 25, 0.45) 100%);
 }
 
 .home-hero-image {
   width: 100%;
   height: 100%;
-  min-height: inherit;
   object-fit: cover;
   display: block;
   transform: scale(1.03);
 }
 
 .home-hero-overlay {
-  position: absolute;
+  position: relative;
   z-index: 1;
-  left: clamp(20px, 6vw, 72px);
-  right: 18px;
-  bottom: clamp(22px, 6vw, 58px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  padding-inline: clamp(6px, 2vw, 24px);
   color: #fff;
+}
+
+.home-hero-search {
+  position: relative;
+  z-index: 2;
+}
+
+.home-hero-search .route-search-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
 }
 
 .home-hero-overlay h1 {
@@ -2255,6 +2280,59 @@ a.fleet-card:focus-visible {
   overflow-x: auto;
 }
 
+/* Custom route pricing editor (/admin) */
+.admin-pricing-form {
+  max-width: 1080px;
+  margin: 0 auto 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.admin-pricing-form fieldset {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.admin-pricing-form legend {
+  font-weight: 700;
+}
+
+.admin-pricing-form .error-text,
+.admin-pricing-form .success-text,
+.admin-pricing-form .admin-save-price {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
+.admin-pricing-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.admin-pricing-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.admin-pricing-form input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-soft);
+  padding: 8px 10px;
+}
+
+.admin-page section > h3 {
+  max-width: 1080px;
+  margin: 20px auto 8px;
+}
+
 .lead-table {
   width: 100%;
   border-collapse: collapse;
@@ -2547,12 +2625,6 @@ a.fleet-card:focus-visible {
     min-height: 360px;
   }
 
-  .home-hero-overlay {
-    left: 14px;
-    right: 14px;
-    bottom: 16px;
-  }
-
   .home-hero-overlay h1 {
     line-height: 1.08;
     letter-spacing: -0.015em;
@@ -2606,6 +2678,9 @@ a.fleet-card:focus-visible {
   }
 }
 
+/* Floating WhatsApp button: official logo colors, an expanding "sonar" ring
+   and a periodic gentle wiggle to draw attention without being noisy. All
+   motion is disabled by the prefers-reduced-motion rule below. */
 .floating-whatsapp {
   position: fixed;
   right: 20px;
@@ -2613,40 +2688,650 @@ a.fleet-card:focus-visible {
   z-index: 300;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #25d366;
-  color: #fff;
+  gap: 12px;
   text-decoration: none;
-  box-shadow: 0 12px 28px rgba(18, 140, 76, 0.36);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  animation: whatsapp-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
 }
 
-.floating-whatsapp:hover {
-  background: #1fbb59;
-  transform: translateY(-2px);
-  box-shadow: 0 16px 34px rgba(18, 140, 76, 0.44);
+.floating-whatsapp-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: #fff;
+  /* Same top-to-bottom green gradient as the WhatsApp app icon. */
+  background: linear-gradient(180deg, #60d66a 0%, #25d366 45%, #1faf38 100%);
+  box-shadow: 0 10px 26px rgba(18, 140, 76, 0.38), inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Two staggered rings that grow and fade out from behind the button. */
+.floating-whatsapp-button::before,
+.floating-whatsapp-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: #25d366;
+  animation: whatsapp-sonar 2.8s ease-out infinite;
+}
+
+.floating-whatsapp-button::after {
+  animation-delay: 1.4s;
+}
+
+.floating-whatsapp-icon {
+  width: 34px;
+  height: 34px;
+  fill: currentColor;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
+  transform-origin: 50% 60%;
+  animation: whatsapp-wiggle 6s ease-in-out 2s infinite;
+}
+
+.floating-whatsapp-label {
+  position: relative;
+  padding: 9px 14px;
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translateX(8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  /* Peeks out once, a few seconds after load, then hides again. */
+  animation: whatsapp-label-peek 6s ease 3.5s 1 both;
+}
+
+/* Little tail pointing at the button, like a chat bubble. */
+.floating-whatsapp-label::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.floating-whatsapp:hover .floating-whatsapp-button,
+.floating-whatsapp:focus-visible .floating-whatsapp-button {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 14px 32px rgba(18, 140, 76, 0.46);
+}
+
+.floating-whatsapp:hover .floating-whatsapp-label,
+.floating-whatsapp:focus-visible .floating-whatsapp-label {
+  animation: none;
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .floating-whatsapp:focus-visible {
+  outline: none;
+}
+
+.floating-whatsapp:focus-visible .floating-whatsapp-button {
   outline: 2px solid var(--forest);
   outline-offset: 3px;
 }
 
-.floating-whatsapp-icon {
-  width: 30px;
-  height: 30px;
-  fill: currentColor;
+@keyframes whatsapp-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes whatsapp-sonar {
+  0% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+/* Wiggles during the first ~12% of each 6s cycle, then rests. */
+@keyframes whatsapp-wiggle {
+  0%,
+  12%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  2% {
+    transform: rotate(-14deg);
+  }
+
+  4% {
+    transform: rotate(12deg);
+  }
+
+  6% {
+    transform: rotate(-8deg);
+  }
+
+  8% {
+    transform: rotate(5deg);
+  }
+
+  10% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes whatsapp-label-peek {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  8%,
+  85% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @media (max-width: 640px) {
   .floating-whatsapp {
     right: 16px;
     bottom: 16px;
-    width: 52px;
-    height: 52px;
+  }
+
+  .floating-whatsapp-button {
+    width: 54px;
+    height: 54px;
+  }
+
+  .floating-whatsapp-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* No room for the hint bubble next to the button on phones. */
+  .floating-whatsapp-label {
+    display: none;
+  }
+}
+
+/* Route search card ("Where are you headed?") */
+.route-search-section {
+  display: grid;
+  gap: 10px;
+}
+
+.book-page .route-search-section {
+  margin-bottom: 24px;
+}
+
+.route-search-card {
+  /* FIGA palette: forest green for icons/controls, brand amber for the CTA. */
+  --route-accent: var(--forest);
+  --route-accent-soft: var(--line);
+  --route-accent-tint: var(--forest-soft);
+  /* Full width of its column, like the other page sections. */
+  width: 100%;
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid rgba(14, 67, 49, 0.16);
+  border-radius: 24px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 14px;
+}
+
+.route-search-title {
+  margin: 0 0 4px;
+  text-align: center;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  color: var(--text);
+}
+
+.route-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.route-icon-accent {
+  color: var(--route-accent);
+}
+
+.route-icon-muted {
+  color: var(--muted);
+}
+
+.route-search-places {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.route-place-field {
+  position: relative;
+}
+
+.route-place-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 58px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-soft);
+  cursor: text;
+  transition: box-shadow 0.15s ease;
+}
+
+.route-place-input-wrap:focus-within {
+  border-color: var(--forest);
+  background: var(--paper);
+  box-shadow: 0 0 0 4px rgba(31, 106, 79, 0.14);
+}
+
+.route-place-input-wrap input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.route-place-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.route-place-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.route-place-option .route-icon {
+  margin-top: 2px;
+}
+
+.route-place-option span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.route-place-option strong {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.route-place-option small {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.route-place-option-active {
+  background: var(--route-accent-tint);
+}
+
+.route-place-error {
+  display: block;
+  margin-top: 6px;
+}
+
+.route-swap-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--route-accent);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.route-swap-button:hover {
+  background: var(--route-accent-tint);
+  transform: rotate(180deg);
+}
+
+.route-passengers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--route-accent-soft);
+  border-radius: 14px;
+  background: var(--paper-soft);
+}
+
+.route-passengers-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.route-passengers-counters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.passenger-counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.passenger-counter-label {
+  display: grid;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.passenger-counter-label small {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.passenger-counter-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--route-accent);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--route-accent);
+  cursor: pointer;
+}
+
+.passenger-counter-button:disabled {
+  border-color: var(--line);
+  color: var(--line);
+  cursor: not-allowed;
+}
+
+.passenger-counter-value {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* Visual style comes from the shared .home-book-now CTA class. */
+.route-search-submit {
+  justify-self: center;
+  min-width: 240px;
+}
+
+.route-search-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.route-search-perks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 28px;
+  margin: 4px 0 0;
+  padding: 16px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.route-search-perks li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.route-search-perks .route-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.route-search-error {
+  text-align: center;
+}
+
+/* Price breakdown shown above the custom route booking form. */
+.route-quote-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-soft);
+}
+
+.route-quote-row {
+  margin: 0;
+}
+
+.route-quote-row-wide {
+  grid-column: span 2;
+}
+
+.route-quote-row dt,
+.route-quote-total dt {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.route-quote-row dd {
+  margin: 2px 0 0;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.route-quote-total {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.route-quote-total dd {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--forest);
+}
+
+/* Booking page mode switch (custom route vs fixed-price packages). */
+.book-mode-tabs {
+  display: flex;
+  gap: 6px;
+  width: fit-content;
+  margin: 0 auto 20px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+.book-mode-tab {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.book-mode-tab:hover {
+  color: var(--forest);
+}
+
+.book-mode-tab-active,
+.book-mode-tab-active:hover {
+  background: linear-gradient(115deg, var(--forest), #134f3a);
+  color: #fff;
+}
+
+.book-mode-tab:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+/* Compact package cards: several per row instead of one tall row each. */
+.book-option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.book-option-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.book-option-card:hover {
+  transform: translateY(-2px);
+}
+
+.book-option-card-active {
+  border-color: var(--forest);
+  box-shadow: 0 0 0 3px rgba(31, 106, 79, 0.14);
+}
+
+.book-option-card .book-option-info h3 {
+  font-size: 1.05rem;
+}
+
+/* Two lines max so cards stay the same height. */
+.book-option-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 6px 0 0;
+  font-size: 0.86rem;
+}
+
+.book-option-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.book-option-card-footer strong {
+  color: var(--forest);
+}
+
+@media (max-width: 640px) {
+  .route-search-places {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .route-swap-button {
+    justify-self: center;
+    width: 38px;
+    height: 38px;
+    transform: rotate(90deg);
+  }
+
+  .route-swap-button:hover {
+    transform: rotate(270deg);
+  }
+
+  .route-passengers {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .route-search-submit {
+    width: 100%;
+  }
+
+  .route-quote-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .book-mode-tabs {
+    width: 100%;
+  }
+
+  .book-mode-tab {
+    flex: 1;
+    padding: 10px 8px;
+    font-size: 0.86rem;
   }
 }
 

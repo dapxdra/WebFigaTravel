@@ -8,11 +8,17 @@ import { UpdatePackagePrice } from '../../domain/use-cases/UpdatePackagePrice'
 import { CreatePendingReservation } from '../../domain/use-cases/CreatePendingReservation'
 import { GetTilopaySdkToken } from '../../domain/use-cases/GetTilopaySdkToken'
 import { VerifyTilopayPayment } from '../../domain/use-cases/VerifyTilopayPayment'
+import { GetCustomRouteQuote } from '../../domain/use-cases/GetCustomRouteQuote'
+import { CreateCustomRouteReservation } from '../../domain/use-cases/CreateCustomRouteReservation'
+import { GetCustomRoutePricing } from '../../domain/use-cases/GetCustomRoutePricing'
+import { UpdateCustomRoutePricing } from '../../domain/use-cases/UpdateCustomRoutePricing'
 import { SupabaseAvailabilityRepository } from '../../infrastructure/supabase/SupabaseAvailabilityRepository'
 import { SupabaseContactRepository } from '../../infrastructure/supabase/SupabaseContactRepository'
 import { SupabaseLeadRepository } from '../../infrastructure/supabase/SupabaseLeadRepository'
 import { SupabaseTravelPackageRepository } from '../../infrastructure/supabase/SupabaseTravelPackageRepository'
 import { SupabaseReservationRepository } from '../../infrastructure/supabase/SupabaseReservationRepository'
+import { SupabaseCustomRouteRepository } from '../../infrastructure/supabase/SupabaseCustomRouteRepository'
+import { SupabaseCustomRoutePricingRepository } from '../../infrastructure/supabase/SupabaseCustomRoutePricingRepository'
 
 export function buildContainer() {
   const travelPackageRepository = new SupabaseTravelPackageRepository()
@@ -20,6 +26,8 @@ export function buildContainer() {
   const availabilityRepository = new SupabaseAvailabilityRepository()
   const reservationRepository = new SupabaseReservationRepository()
   const contactRepository = new SupabaseContactRepository()
+  const customRouteRepository = new SupabaseCustomRouteRepository()
+  const customRoutePricingRepository = new SupabaseCustomRoutePricingRepository()
 
   return {
     getFeaturedPackages: new GetFeaturedPackages(travelPackageRepository),
@@ -32,5 +40,9 @@ export function buildContainer() {
     createPendingReservation: new CreatePendingReservation(reservationRepository),
     getTilopaySdkToken: new GetTilopaySdkToken(reservationRepository),
     verifyTilopayPayment: new VerifyTilopayPayment(reservationRepository),
+    getCustomRouteQuote: new GetCustomRouteQuote(customRouteRepository),
+    createCustomRouteReservation: new CreateCustomRouteReservation(customRouteRepository),
+    getCustomRoutePricing: new GetCustomRoutePricing(customRoutePricingRepository),
+    updateCustomRoutePricing: new UpdateCustomRoutePricing(customRoutePricingRepository),
   }
 }

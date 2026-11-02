@@ -10,7 +10,8 @@ export interface Reservation {
   pickupTime?: string
   pickupLocation?: string
   dropoffLocation?: string
-  packageId: string
+  // Absent for custom (km-priced) routes, which are not tied to a package.
+  packageId?: string
   amount: number
   currency: string
   status: ReservationStatus
