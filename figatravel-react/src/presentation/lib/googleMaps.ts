@@ -63,7 +63,7 @@ export function loadPlacesLibrary(): Promise<PlacesLibrary> {
 
   const apiKey = env.googleMapsApiKey
   if (!apiKey) {
-    return Promise.reject(new Error('Address search is not configured (missing VITE_GOOGLE_MAPS_API_KEY).'))
+    return Promise.reject(new Error('Address search is not configured (missing G_M_A_K).'))
   }
 
   placesPromise = new Promise<PlacesLibrary>((resolve, reject) => {
