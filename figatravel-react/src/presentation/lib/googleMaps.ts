@@ -8,7 +8,7 @@ interface FormattableText {
   text: string
 }
 
-interface PlacePrediction {
+interface PlacePrediction { 
   placeId: string
   text: FormattableText
   mainText?: FormattableText | null
