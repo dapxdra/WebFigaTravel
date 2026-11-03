@@ -3,7 +3,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 const tilopaySdkScriptUrl = import.meta.env.VITE_TILOPAY_SDK_URL
 // Browser key for Places autocomplete. It is public by design: restrict it in
 // Google Cloud to your site's HTTP referrers and to "Places API (New)" only.
-const googleMapsApiKey = import.meta.env.GOOGLE_MAPS_API_KEY
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 export const env = {
   supabaseUrl,
