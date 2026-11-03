@@ -12,6 +12,7 @@ export const env = {
   googleMapsApiKey,
 }
 
+
 export const hasSupabaseConfig =
   typeof supabaseUrl === 'string' &&
   supabaseUrl.length > 0 &&

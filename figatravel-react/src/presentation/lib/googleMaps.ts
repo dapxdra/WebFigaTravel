@@ -60,6 +60,7 @@ export function loadPlacesLibrary(): Promise<PlacesLibrary> {
   if (placesPromise) {
     return placesPromise
   }
+  
 
   const apiKey = env.googleMapsApiKey
   if (!apiKey) {
