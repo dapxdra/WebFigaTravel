@@ -54,6 +54,7 @@ Routing is composed in `src/App.tsx` (`react-router-dom`, `BrowserRouter`). Shar
 - `CreatePendingReservation`, `GetTilopaySdkToken`, `VerifyTilopayPayment` use-cases + `SupabaseReservationRepository` implement the flow; SDK loading lives in `presentation/lib/tilopaySdk.ts`, checkout UI in `presentation/components/payment/`.
 - The redirect URL passed to `Tilopay.InitTokenize` is built at runtime as `window.location.origin + '/pago/respuesta'`, so it works unmodified on localhost, Vercel previews, and production.
 - Only the service role (used by Edge Functions) can mark a reservation `paid`/`failed`; the anon/authenticated insert policy only allows `status = 'pending'`.
+- Package bookings: the `amount`/`currency` the browser sends are ignored — a `before insert` trigger on `lead_requests` (migration `20261109000000_enforce_package_reservation_amount.sql`) overwrites them from `travel_packages`.
 - Frontend needs a non-secret `VITE_TILOPAY_SDK_URL` env var. jQuery (required by the Tilopay SDK) is loaded from a pinned CDN URL hardcoded in `presentation/lib/tilopaySdk.ts`, not an env var.
 - `lead_requests` also carries `pickup_time`, `pickup_location`, `dropoff_location` (added by `supabase/migrations/20260825000000_add_pickup_dropoff_time_fields.sql`); `dropoff_location` is auto-filled from the selected package's `destination`, `pickup_time` from the booking form's time-grid slot, and `pickup_location` is a free-text field the customer fills in (hotel/address).
 
