@@ -94,16 +94,14 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
           <dt>Drop-off</dt>
           <dd data-cy="custom-route-quote-destination">{search.destination.label}</dd>
         </div>
-        <div className="route-quote-row">
-          <dt>Distance</dt>
-          <dd data-cy="custom-route-quote-distance">{quote.distanceKm.toFixed(1)} km</dd>
-        </div>
         {quote.durationMinutes > 0 ? (
           <div className="route-quote-row">
             <dt>Approx. drive</dt>
             <dd data-cy="custom-route-quote-duration">{formatDuration(quote.durationMinutes)}</dd>
           </div>
         ) : null}
+        <div className="route-quote-row">
+        </div>
         <div className="route-quote-row">
           <dt>Passengers</dt>
           <dd data-cy="custom-route-quote-passengers">
@@ -112,10 +110,6 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
           </dd>
         </div>
         <div className="route-quote-row">
-          <dt>Average rate</dt>
-          <dd data-cy="custom-route-quote-rate">
-            {quote.currency} {quote.ratePerKm.toFixed(2)} / km
-          </dd>
         </div>
         <div className="route-quote-total">
           <dt>Total price</dt>

@@ -1,56 +1,25 @@
 import type { SyntheticEvent } from "react";
 import { useEffect } from "react";
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { faqItems, priorities, featuredReviews, fleet } from "../data/siteContent";
+import {
+  faqItems,
+  priorities,
+  featuredReviews,
+  fleet,
+  topDestinations,
+} from "../data/siteContent";
 import { ReviewsCarousel } from "../components/ReviewsCarousel";
+import { HomeHeroMedia } from "../components/HomeHeroMedia";
 import { RouteSearchCard } from "../components/route-search/RouteSearchCard";
 import { usePageMeta } from "../hooks/usePageMeta";
 
-const HERO_STATIC_FALLBACK = "/assets/home/hero-header.png";
-const HERO_MEDIA_CANDIDATES = [
-  "/assets/home/portada-mar.gif",
-  "/assets/home/portada-mar.webp",
-  "/assets/home/portada-mar.jpg",
-  "/assets/home/portada-mar.png",
-  "/assets/home/home-hero.gif",
-  "/assets/home/home-hero.webp",
-  "/assets/home/home-hero.jpg",
-  "/assets/home/home-hero.png",
-  HERO_STATIC_FALLBACK,
-];
+const WHATSAPP_URL =
+  "https://api.whatsapp.com/send/?phone=%2B50672271058&text=Hello%20Figa%20Travel%2C%20I%20want%20to%20book%20a%20transfer&type=phone_number&app_absent=0";
 
-const featuredDestinations = [
-  {
-    title: "La Fortuna",
-    image: "/assets/home/dest-la-fortuna.png",
-    to: "/destinations/la-fortuna",
-  },
-  {
-    title: "Manuel Antonio",
-    image: "/assets/home/dest-manuel-antonio.png",
-    to: "/destinations/manuel-antonio",
-  },
-  {
-    title: "Papagayo",
-    image: "/assets/home/dest-papagayo.jpg",
-    to: "/destinations/papagayo",
-  },
-  {
-    title: "Tamarindo",
-    image: "/assets/home/dest-tamarindo.jpg",
-    to: "/destinations/tamarindo",
-  },
-  {
-    title: "Puerto Viejo",
-    image: "/assets/home/dest-puerto-viejo.jpg",
-    to: "/destinations/puerto-viejo",
-  },
-  {
-    title: "San Jose City",
-    image: "/assets/home/dest-san-jose-city.jpg",
-    to: "/destinations/san-jose-city",
-  },
+const heroHighlights = [
+  "Flight tracking",
+  "Bilingual licensed drivers",
+  "Fixed price, tolls included",
 ];
 
 const serviceStrip = [
@@ -69,6 +38,24 @@ const serviceStrip = [
   {
     icon: "/assets/home/icon-vehicle.png",
     label: "Well-maintained vehicles",
+  },
+];
+
+const bookingSteps = [
+  {
+    title: "Tell us your route",
+    description:
+      "Enter your pickup and drop-off: the airport, your hotel, or any address in Costa Rica. Your fixed price appears in seconds.",
+  },
+  {
+    title: "Book and pay securely",
+    description:
+      "Reserve online with an encrypted card payment, or message us on WhatsApp. No meter and no hidden fees.",
+  },
+  {
+    title: "Meet your driver",
+    description:
+      "Your bilingual driver tracks your flight, meets you at pickup, and takes you door to door in an air-conditioned vehicle.",
   },
 ];
 
@@ -114,9 +101,6 @@ export function HomePage() {
         "private shuttle Costa Rica, private driver Costa Rica, hotel transfer Costa Rica, tourist transfer Costa Rica, SJO to La Fortuna shuttle, San Jose to Arenal transfer, Manuel Antonio shuttle, Tamarindo shuttle",
     },
   );
-
-  const [heroMediaIndex, setHeroMediaIndex] = useState(0);
-  const heroMediaSrc = HERO_MEDIA_CANDIDATES[Math.min(heroMediaIndex, HERO_MEDIA_CANDIDATES.length - 1)];
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -165,26 +149,25 @@ export function HomePage() {
       >
         {/* Media is clipped in its own layer so the hero itself can stay
             overflow-visible and the address suggestions are never cut off. */}
-        <div className="home-hero-media" aria-hidden="true">
-          <img
-            src={heroMediaSrc}
-            alt=""
-            className="home-hero-image"
-            loading="eager"
-            onError={() => {
-              setHeroMediaIndex((current) =>
-                current < HERO_MEDIA_CANDIDATES.length - 1 ? current + 1 : current,
-              );
-            }}
-          />
-        </div>
+        <HomeHeroMedia />
 
         <div className="home-hero-overlay">
+          <p className="home-hero-badge" data-cy="home-hero-badge">
+            <span className="home-hero-badge__stars" aria-hidden="true">
+              ★★★★★
+            </span>
+            Rated 4.9/5 by travelers on Google and Tripadvisor
+          </p>
           <h1>Discover the Beauty of Costa Rica with FIGA TRAVEL</h1>
           <p className="home-hero-subtitle">
             Private transfers, local guidance, and curated routes from volcanoes
             to beaches.
           </p>
+          <ul className="home-hero-highlights" data-cy="home-hero-highlights">
+            {heroHighlights.map((highlight) => (
+              <li key={highlight}>{highlight}</li>
+            ))}
+          </ul>
         </div>
 
         <div className="home-hero-search" data-cy="home-route-search">
@@ -196,7 +179,11 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-trust-strip" aria-label="Trust indicators">
+      <section
+        className="home-trust-strip home-reveal"
+        aria-label="Trust indicators"
+        data-cy="home-trust-strip"
+      >
         <article>
           <h2>500+</h2>
           <p>successful transfers every season</p>
@@ -211,7 +198,11 @@ export function HomePage() {
         </article>
       </section>
 
-      <section className="home-services" aria-label="Service highlights">
+      <section
+        className="home-services home-reveal"
+        aria-label="Service highlights"
+        data-cy="home-services"
+      >
         {serviceStrip.map((service) => (
           <article key={service.label} className="home-service-item">
             <img src={service.icon} alt="" aria-hidden="true" loading="lazy" />
@@ -221,48 +212,78 @@ export function HomePage() {
       </section>
 
       <section
-        className="home-top-destinations"
-        aria-labelledby="home-destinations-title"
+        className="home-steps home-reveal"
+        aria-labelledby="home-steps-title"
+        data-cy="home-steps"
       >
-        <h2 id="home-destinations-title">TOP DESTINATIONS IN COSTA RICA</h2>
+        <div className="home-section-head">
+          <p className="eyebrow">Book in minutes</p>
+          <h2 id="home-steps-title">How your private transfer works</h2>
+        </div>
 
-        <div className="home-destinations-layout">
-          <div className="home-map-wrap">
-            <img
-              src="/assets/home/mapa-costa-rica.png"
-              alt="Costa Rica destinations map"
-              className="home-map-image"
-              loading="lazy"
-            />
-          </div>
+        <ol className="home-steps-list">
+          {bookingSteps.map((step, index) => (
+            <li key={step.title} className="home-step" data-cy="home-step">
+              <span className="home-step__number" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-          <div className="home-destination-grid">
-            {featuredDestinations.map((destination) => (
-              <Link
-                key={destination.title}
-                to={destination.to}
-                className="home-destination-tile"
-              >
-                <img
-                  src={destination.image}
-                  alt={destination.title}
-                  loading="lazy"
-                />
-                <span>{destination.title}</span>
-              </Link>
-            ))}
+      <section
+        className="home-top-destinations home-reveal"
+        aria-labelledby="home-destinations-title"
+        data-cy="home-destinations"
+      >
+        <div className="home-split-head">
+          <div>
+            <p className="eyebrow">Where we drive</p>
+            <h2 id="home-destinations-title">Top destinations in Costa Rica</h2>
           </div>
+          <Link to="/destinations" className="home-inline-link">
+            All destinations
+          </Link>
+        </div>
+
+        {/* Bento grid: the first destination gets the large tile. Uses the
+            high-resolution gallery photo when available. */}
+        <div className="home-destination-grid">
+          {topDestinations.map((destination) => (
+            <Link
+              key={destination.slug}
+              to={`/destinations/${destination.slug}`}
+              className="home-destination-tile"
+              data-cy="home-destination-tile"
+            >
+              <img
+                src={destination.gallery[0] ?? destination.cardImage}
+                alt={destination.name}
+                loading="lazy"
+              />
+              <div className="home-destination-tile__body">
+                <h3>{destination.name}</h3>
+                <p>{destination.transferTime}</p>
+              </div>
+              <span className="home-destination-tile__arrow" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
-      <div className="home-highlight-band">
+      <div className="home-highlight-band home-reveal">
         <section
           className="home-priority-section"
           aria-labelledby="home-priority-title"
         >
           <div className="home-section-head">
             <p className="eyebrow">Why travelers pick Figa</p>
-            <h2 id="home-priority-title">WHAT EVERY TRANSFER INCLUDES</h2>
+            <h2 id="home-priority-title">What every transfer includes</h2>
           </div>
 
           <div className="priority-grid home-priority-grid">
@@ -289,7 +310,7 @@ export function HomePage() {
       </div>
 
       <section
-        className="home-fleet-section"
+        className="home-fleet-section home-reveal"
         aria-labelledby="home-fleet-title"
         data-cy="home-fleet"
       >
@@ -326,10 +347,14 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-faq-teaser" aria-labelledby="home-faq-title">
+      <section
+        className="home-faq-teaser home-reveal"
+        aria-labelledby="home-faq-title"
+        data-cy="home-faq"
+      >
         <div className="home-faq-copy">
           <p className="eyebrow">Have any questions?</p>
-          <h2 id="home-faq-title">Frequently Asked Questions section</h2>
+          <h2 id="home-faq-title">Frequently Asked Questions</h2>
           <p>
             If you have any other questions, please contact us by WhatsApp,
             email or our contact form. Or check out our{" "}
@@ -363,23 +388,41 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* <section
-        className="home-discount-section"
-        aria-labelledby="home-discount-title"
+      <section
+        className="home-final-cta home-reveal"
+        aria-labelledby="home-final-cta-title"
+        data-cy="home-final-cta"
       >
-        <div>
-          <p className="eyebrow">10% DISCOUNT</p>
-          <h2 id="home-discount-title">Book online and use code FIGA10</h2>
+        <div className="home-final-cta__copy">
+          <p className="eyebrow">Ready when you land</p>
+          <h2 id="home-final-cta-title">
+            Your private ride across Costa Rica starts here
+          </h2>
           <p>
-            Get 10% discount when you book online 2 or more transfers around
-            Costa Rica.
+            Get a fixed door-to-door price in seconds. Tolls, taxes, and fuel
+            included, no surprises.
           </p>
         </div>
 
-        <Link to="/book-online" className="home-book-now home-discount-link">
-          BOOK NOW
-        </Link>
-      </section> */}
+        <div className="home-final-cta__actions">
+          <Link
+            to="/book-online"
+            className="home-book-now"
+            data-cy="home-final-cta-book"
+          >
+            Get my price
+          </Link>
+          <a
+            href={WHATSAPP_URL}
+            className="hero-cta hero-cta--outline-light"
+            target="_blank"
+            rel="noreferrer"
+            data-cy="home-final-cta-whatsapp"
+          >
+            Chat on WhatsApp
+          </a>
+        </div>
+      </section>
     </main>
   );
 }

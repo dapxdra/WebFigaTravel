@@ -4,12 +4,16 @@ const tilopaySdkScriptUrl = import.meta.env.VITE_TILOPAY_SDK_URL
 // Browser key for Places autocomplete. It is public by design: restrict it in
 // Google Cloud to your site's HTTP referrers and to "Places API (New)" only.
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+// Optional, non-secret: URL of the home hero POV video (e.g. a CDN-hosted MP4).
+// When empty, the hero uses /assets/home/hero-pov.mp4 if that file exists.
+const homeHeroVideoUrl = import.meta.env.VITE_HOME_HERO_VIDEO_URL
 
 export const env = {
   supabaseUrl,
   supabaseAnonKey,
   tilopaySdkScriptUrl,
   googleMapsApiKey,
+  homeHeroVideoUrl,
 }
 
 
