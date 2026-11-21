@@ -18,16 +18,50 @@
   --sky: #cdebf0;
   --error: #b43535;
   --ok: #196448;
-  --shadow-soft: 0 16px 35px rgba(18, 43, 35, 0.1);
-  --shadow-card: 0 10px 24px rgba(22, 47, 39, 0.08);
+  /* Layered shadows: a tight contact shadow plus a wide ambient one read as
+     more natural (and more "premium") than a single blurry drop shadow. */
+  --shadow-soft: 0 1px 2px rgba(18, 43, 35, 0.06), 0 18px 40px -12px rgba(18, 43, 35, 0.18);
+  --shadow-card: 0 1px 2px rgba(22, 47, 39, 0.05), 0 10px 26px -10px rgba(22, 47, 39, 0.16);
+  --shadow-lift: 0 2px 4px rgba(22, 47, 39, 0.06), 0 24px 48px -16px rgba(22, 47, 39, 0.28);
   --forest-deep: #0c2e23;
   --forest-night: #08201a;
   --amber-glow: #f4b860;
+  --heading: #15362b;
+  --line-strong: #b9d0c3;
+  /* Form field border: ~3.2:1 against white, meeting WCAG 1.4.11. */
+  --input-border: #7b9386;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--forest) 28%, transparent);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+  accent-color: var(--forest);
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+::selection {
+  background: color-mix(in oklab, var(--amber-glow) 55%, white);
+  color: var(--forest-night);
+}
+
+p {
+  text-wrap: pretty;
 }
 
 html,
@@ -51,6 +85,8 @@ body {
     radial-gradient(circle at 90% 12%, rgba(209, 239, 246, 0.6), transparent 28%),
     var(--bg);
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a,
@@ -70,9 +106,10 @@ h2,
 h3 {
   margin: 0;
   font-family: 'Fraunces', serif;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   line-height: 1.1;
   text-wrap: balance;
+  font-optical-sizing: auto;
 }
 
 .page-shell {
@@ -105,23 +142,24 @@ h3 {
   z-index: 50;
   width: min(var(--content-max), 100%);
   margin-inline: auto;
-  margin-top: 18px;
-  min-height: 84px;
-  border: 1px solid rgba(16, 59, 44, 0.15);
-  border-radius: 20px;
-  padding: 10px 20px;
+  margin-top: 14px;
+  min-height: 76px;
+  border: 1px solid rgba(16, 59, 44, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 8px 12px 8px 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-soft);
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: saturate(1.6) blur(14px);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  box-shadow: var(--shadow-card);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, min-height 0.25s var(--ease-out);
 }
 
 .top-nav-scrolled {
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 10px 24px rgba(16, 59, 44, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-soft);
 }
 
 .logo-link {
@@ -146,7 +184,54 @@ h3 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  min-height: 40px;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
+}
+
+/* Three-bar icon drawn with one element: the middle bar is the element
+   itself, top/bottom bars are its pseudo-elements. Turns into an X when the
+   menu is open (aria-expanded="true"). */
+.nav-toggle-icon {
+  position: relative;
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: background-color 0.2s ease;
+}
+
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.nav-toggle-icon::before {
+  transform: translateY(-5px);
+}
+
+.nav-toggle-icon::after {
+  transform: translateY(5px);
+}
+
+.nav-toggle[aria-expanded='true'] .nav-toggle-icon {
+  background: transparent;
+}
+
+.nav-toggle[aria-expanded='true'] .nav-toggle-icon::before {
+  transform: rotate(45deg);
+}
+
+.nav-toggle[aria-expanded='true'] .nav-toggle-icon::after {
+  transform: rotate(-45deg);
 }
 
 .nav-right {
@@ -178,25 +263,32 @@ h3 {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  padding: 7px 10px;
+  min-height: 38px;
+  padding: 8px 12px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   color: #29443a;
   border: 1px solid transparent;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-link:hover {
-  border-color: rgba(24, 103, 74, 0.25);
-  background: rgba(224, 241, 233, 0.7);
+  color: var(--forest);
+  background: rgba(224, 241, 233, 0.75);
 }
 
 .nav-link.active {
-  background: var(--forest);
+  background: linear-gradient(135deg, var(--forest), var(--forest-deep));
   color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(12, 46, 35, 0.55);
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
 }
 
 .auth-block {
@@ -218,11 +310,14 @@ h3 {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  padding: 9px 12px;
+  min-height: 38px;
+  padding: 9px 14px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .quick-whatsapp:hover {
   background: #dff2e6;
+  border-color: rgba(23, 93, 66, 0.4);
 }
 
 .home-search-input {
@@ -273,8 +368,15 @@ h3 {
   font-weight: 700;
   font-size: 0.78rem;
   white-space: nowrap;
-  padding: 8px 12px;
+  min-height: 38px;
+  padding: 8px 14px;
   cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.auth-button:hover {
+  background: var(--forest-soft);
+  border-color: rgba(26, 97, 70, 0.4);
 }
 
 .login-like {
@@ -342,14 +444,6 @@ h3 {
   color: #2b4a3f;
 }
 
-.auth-local-form input {
-  height: 42px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--paper);
-  padding: 0 12px;
-  color: var(--text);
-}
 
 .auth-form-note {
   margin: 2px 0 0;
@@ -710,22 +804,41 @@ h3 {
   font-weight: 800;
   color: #fff;
   background: linear-gradient(120deg, var(--brand), var(--brand-deep));
-  box-shadow: 0 10px 18px rgba(185, 100, 18, 0.35);
+  /* Inset top highlight + warm ambient glow give the CTA a subtle "pressable" depth. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 22px -8px rgba(165, 99, 24, 0.6);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s ease, background-color 0.2s ease;
 }
 
 .home-book-now:hover,
 .destination-book-button:hover,
 .hero-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 24px rgba(173, 94, 19, 0.36);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 16px 30px -10px rgba(165, 99, 24, 0.7);
 }
 
+.home-book-now:active,
+.destination-book-button:active,
+.hero-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Secondary button for light backgrounds (FAQ / Fleet CTA rows). The old
+   mint text color failed contrast on white, so it now uses the forest tone. */
 .hero-cta.ghost {
-  background: transparent;
-  color: #80e9c3;
-  border: 1px solid rgba(19, 101, 71, 0.25);
+  background: var(--paper);
+  color: var(--forest);
+  border: 1px solid var(--line-strong);
+  box-shadow: none;
+}
+
+.hero-cta.ghost:hover {
+  background: var(--forest-soft);
+  border-color: var(--forest);
   box-shadow: none;
 }
 
@@ -1325,12 +1438,25 @@ h3 {
 }
 
 .eyebrow {
-  margin: 0 0 7px;
+  margin: 0 0 10px;
   color: var(--forest);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   font-size: 0.74rem;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+/* Short amber rule before the eyebrow label. Inline-block (not flex) so the
+   eyebrow still follows the parent's text-align (left or centered). */
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 22px;
+  height: 2px;
+  margin-right: 10px;
+  vertical-align: middle;
+  border-radius: 2px;
+  background: var(--amber-glow);
 }
 
 .home-section-head h2,
@@ -1338,7 +1464,18 @@ h3 {
 .destination-intro-copy h1,
 .destinations-header h1,
 .book-header h1 {
-  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.1rem);
+  color: var(--heading);
+}
+
+.section-head {
+  max-width: 68ch;
+  margin-bottom: 18px;
+}
+
+.section-head p {
+  margin: 8px 0 0;
+  font-size: 1.02rem;
 }
 
 .home-faq-copy h2,
@@ -1370,9 +1507,33 @@ h3 {
 .destination-card,
 .package-card {
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   background: var(--paper);
   box-shadow: var(--shadow-card);
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Gentle lift on standalone info cards (About / Contact / Admin). Scoped to
+   .section so cards inside the dark home band keep their own hover rule. */
+.section .priority-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-lift);
+}
+
+.section .priority-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Thin forest-to-amber accent along the top edge of info cards. */
+.section .priority-card::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--forest), var(--amber-glow));
+  opacity: 0.85;
 }
 
 .home-priority-grid .priority-card,
@@ -1677,28 +1838,124 @@ h3 {
   gap: 12px;
 }
 
+/* Destination catalog card: image on top, then title, summary and transfer
+   time. The title link is stretched over the whole card (see ::after below). */
 .destinations-catalog-card {
-  border-radius: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-card);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .destinations-catalog-card img {
   width: 100%;
-  height: 280px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.destinations-catalog-card h3 {
+  margin: 18px 20px 0;
+  font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.6rem);
+  color: var(--heading);
 }
 
 .destinations-card-link {
-  display: block;
   text-decoration: none;
-  text-align: center;
-  color: #17352b;
-  font-weight: 700;
-  padding: 12px;
+  color: inherit;
+}
+
+/* Stretched link: makes the entire card one click target. */
+.destinations-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.destinations-card-link:focus-visible {
+  outline: none;
+}
+
+.destinations-catalog-card:has(.destinations-card-link:focus-visible) {
+  outline: 3px solid var(--forest);
+  outline-offset: 3px;
+}
+
+.destinations-card-summary {
+  margin: 6px 20px 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.destinations-card-meta {
+  margin: auto 0 0;
+  padding: 16px 20px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--forest);
+}
+
+.destinations-card-arrow {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--forest-soft);
+  color: var(--forest);
+  font-size: 1rem;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s var(--ease-out);
+}
+
+.destinations-catalog-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-lift);
+}
+
+.destinations-catalog-card:hover img {
+  transform: scale(1.05);
+}
+
+.destinations-catalog-card:hover .destinations-card-arrow {
+  background: var(--amber-glow);
+  color: var(--forest-night);
+  transform: translateX(3px);
+}
+
+/* Shared header for inner pages (Destinations, Book online): eyebrow, big
+   serif title and lead paragraph on a soft tinted band. */
+.page-header {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  padding: clamp(28px, 5vw, 56px) clamp(18px, 4vw, 40px);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 92% 0%, rgba(244, 184, 96, 0.22), transparent 42%),
+    radial-gradient(circle at 0% 100%, rgba(31, 106, 79, 0.12), transparent 50%),
+    linear-gradient(160deg, var(--paper), var(--paper-soft));
+  box-shadow: var(--shadow-card);
+}
+
+.page-header > p:not(.eyebrow) {
+  max-width: 60ch;
+  margin: 10px auto 0;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
 }
 
 /* Fleet: shared card, home strip, and the /fleet catalog */
@@ -1868,6 +2125,12 @@ a.fleet-card:focus-visible {
   text-align: center;
 }
 
+/* Centered heroes: center the width-capped lead paragraph too. */
+.fleet-hero .hero-copy,
+.admin-page .page-hero .hero-copy {
+  margin-inline: auto;
+}
+
 .fleet-page .faq-cta-row .hero-cta {
   margin: 20px;
 }
@@ -1875,62 +2138,79 @@ a.fleet-card:focus-visible {
 .destination-intro-block {
   display: grid;
   grid-template-columns: minmax(280px, 420px) 1fr;
-  gap: 14px;
+  gap: 16px;
   align-items: stretch;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .destination-intro-copy,
 .destination-text-card {
-  padding: 20px;
+  padding: clamp(20px, 2.4vw, 28px);
 }
 
 .destination-intro-copy {
   border: 1px solid var(--line);
-  border-radius: 18px;
-  background: var(--paper);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(244, 184, 96, 0.16), transparent 45%),
+    var(--paper);
   box-shadow: var(--shadow-card);
 }
 
+.destination-intro-copy p {
+  max-width: 60ch;
+}
+
 .destination-book-button {
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 .destination-hero-main {
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 320px;
   object-fit: cover;
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-soft);
 }
 
 .destination-gallery {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .destination-gallery-item {
   width: 100%;
   height: 220px;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-card);
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s ease;
+}
+
+.destination-gallery-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
 }
 
 .destination-text-columns {
-  margin-top: 14px;
+  margin-top: 16px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
 .destination-text-card h3 {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 1.45rem;
+  color: var(--heading);
+}
+
+.destination-text-card li::marker {
+  color: var(--forest);
 }
 
 .destination-text-card ul,
@@ -1958,8 +2238,13 @@ a.fleet-card:focus-visible {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 12px;
-  padding: 12px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--line);
+  transition: background-color 0.2s ease;
+}
+
+.book-option-row:hover {
+  background: var(--paper-soft);
 }
 
 .book-option-row:last-child {
@@ -1979,21 +2264,43 @@ a.fleet-card:focus-visible {
 }
 
 .section {
-  margin-top: 16px;
-  padding: clamp(18px, 2.1vw, 28px);
+  margin-top: 18px;
+  padding: clamp(20px, 2.6vw, 36px);
+  border-radius: var(--radius-lg);
 }
 
+/* Inner-page hero (About, Contact, FAQ, Fleet, Admin): a tinted card with a
+   warm amber glow in the corner, echoing the home hero without the video. */
 .page-hero {
-  margin-top: 10px;
+  margin-top: 16px;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(26px, 4.5vw, 56px);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at 95% 0%, rgba(244, 184, 96, 0.22), transparent 40%),
+    radial-gradient(circle at 0% 100%, rgba(31, 106, 79, 0.12), transparent 50%),
+    linear-gradient(160deg, var(--paper), var(--paper-soft));
 }
 
-.about-hero,
-.contact-hero,
-.faq-hero,
-.destination-hero {
+.page-hero h1 {
+  font-size: clamp(2rem, 1.3rem + 2.6vw, 3.4rem);
+  line-height: 1.05;
+  color: var(--heading);
+}
+
+.page-hero .hero-copy {
+  max-width: 62ch;
+  margin: 12px 0 0;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.12rem);
+}
+
+/* Two columns only when the hero actually has an image (About); text-only
+   heroes (Contact, FAQ) stay a single readable column. */
+.page-hero:has(> .page-hero-image) {
   display: grid;
-  grid-template-columns: minmax(240px, 420px) 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(240px, 440px) 1fr;
+  gap: clamp(18px, 3vw, 40px);
   align-items: center;
 }
 
@@ -2001,8 +2308,9 @@ a.fleet-card:focus-visible {
 .detail-image {
   width: 100%;
   min-height: 260px;
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   object-fit: cover;
+  box-shadow: var(--shadow-soft);
 }
 
 .legal-content h2 {
@@ -2049,16 +2357,53 @@ a.fleet-card:focus-visible {
   flex-direction: column;
   gap: 6px;
   font-size: 0.86rem;
-  color: var(--muted);
+  font-weight: 600;
+  color: #2b4a3f;
 }
 
+/* Shared text-field look for every form on the site. The border color
+   (--input-border) keeps the 3:1 non-text contrast required for field
+   boundaries; min-height (not height) lets text grow with user settings. */
 .lead-form input,
 .lead-form select,
-.lead-form textarea {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--paper-soft);
-  padding: 10px 12px;
+.lead-form textarea,
+.auth-local-form input,
+.tilopay-select,
+.tilopay-field input {
+  min-height: 46px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  padding: 10px 14px;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.lead-form input:hover,
+.lead-form select:hover,
+.lead-form textarea:hover,
+.auth-local-form input:hover,
+.tilopay-select:hover:not(:disabled),
+.tilopay-field input:hover {
+  border-color: var(--forest);
+}
+
+.lead-form input:focus-visible,
+.lead-form select:focus-visible,
+.lead-form textarea:focus-visible,
+.auth-local-form input:focus-visible,
+.tilopay-select:focus-visible,
+.tilopay-field input:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 1px;
+  border-color: var(--forest);
+  box-shadow: var(--focus-ring);
+}
+
+.lead-form input::placeholder,
+.lead-form textarea::placeholder,
+.auth-local-form input::placeholder {
+  color: #6b7f76;
 }
 
 .lead-form textarea {
@@ -2079,6 +2424,21 @@ a.fleet-card:focus-visible {
   font-weight: 700;
   background: linear-gradient(115deg, var(--forest), #134f3a);
   cursor: pointer;
+}
+
+.lead-form button[type='submit'] {
+  min-height: 50px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 22px -10px rgba(12, 46, 35, 0.7);
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s ease, filter 0.2s ease;
+}
+
+/* Only the submit button: time slots / segment tabs inside the form have
+   their own hover styles. */
+.lead-form button[type='submit']:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 .lead-form button:disabled {
@@ -2128,15 +2488,11 @@ a.fleet-card:focus-visible {
   letter-spacing: 0.02em;
 }
 
+/* Border, radius, padding and states come from the shared text-field rule. */
 .tilopay-select,
 .tilopay-field input {
   width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--paper-soft);
-  padding: 11px 14px;
   font-size: 0.95rem;
-  color: var(--text);
 }
 
 .tilopay-select {
@@ -2911,6 +3267,7 @@ a.fleet-card:focus-visible {
   .contact-hero,
   .faq-hero,
   .destination-hero,
+  .page-hero:has(> .page-hero-image),
   .home-faq-teaser {
     grid-template-columns: 1fr;
   }
@@ -3844,6 +4201,29 @@ a.fleet-card:focus-visible {
     flex: 1;
     padding: 10px 8px;
     font-size: 0.86rem;
+  }
+}
+
+/* Windows High Contrast / forced colors: shadows and gradients disappear, so
+   give cards and the active nav item real borders using system colors. */
+@media (forced-colors: active) {
+  .top-nav,
+  .section,
+  .page-header,
+  .priority-card,
+  .destinations-catalog-card,
+  .fleet-card,
+  .site-footer {
+    border: 1px solid CanvasText;
+  }
+
+  .nav-link.active {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+  }
+
+  .destinations-catalog-card:has(.destinations-card-link:focus-visible) {
+    outline-color: Highlight;
   }
 }
 

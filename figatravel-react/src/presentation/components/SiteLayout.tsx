@@ -43,9 +43,10 @@ export function SiteLayout() {
       <nav
         className={isNavScrolled ? 'top-nav top-nav-scrolled w-full' : 'top-nav w-full'}
         aria-label="Principal"
+        data-cy="site-nav"
       >
         <div className="home-logo-wrap">
-          <NavLink to="/" className="logo-link" aria-label="Figa Travel Home">
+          <NavLink to="/" className="logo-link" aria-label="Figa Travel Home" data-cy="nav-logo">
             <img src="/assets/home/logo-figa.png" alt="Figa Travel Costa Rica" className="home-logo" />
           </NavLink>
         </div>
@@ -55,10 +56,13 @@ export function SiteLayout() {
           className="nav-toggle"
           aria-expanded={isNavOpen}
           aria-controls="main-nav-list"
+          data-cy="nav-toggle"
           onClick={() => {
             setIsNavOpen((previous) => !previous)
           }}
         >
+          {/* Decorative hamburger icon; the visible "Menu" text is the accessible name. */}
+          <span className="nav-toggle-icon" aria-hidden="true" />
           Menu
         </button>
 
@@ -69,7 +73,7 @@ export function SiteLayout() {
               : 'nav-right home-nav-right'
           }
         >
-          <ul id="main-nav-list">
+          <ul id="main-nav-list" data-cy="nav-list">
             {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink
@@ -77,6 +81,7 @@ export function SiteLayout() {
                   className={({ isActive }) =>
                     isActive ? 'nav-link active' : 'nav-link'
                   }
+                  data-cy={`nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                   onClick={() => {
                     setIsNavOpen(false)
                   }}
@@ -106,6 +111,7 @@ export function SiteLayout() {
             <a
               href="https://api.whatsapp.com/send/?phone=%2B50672271058&text=Hello%20Figa%20Travel%2C%20I%20want%20to%20book%20a%20transfer&type=phone_number&app_absent=0"
               className="quick-whatsapp"
+              data-cy="nav-whatsapp"
               target="_blank"
               rel="noreferrer"
             >
@@ -120,6 +126,7 @@ export function SiteLayout() {
                 <button
                   type="button"
                   className="auth-button"
+                  data-cy="nav-logout"
                   onClick={() => void signOut()}
                 >
                   Log Out
@@ -129,6 +136,7 @@ export function SiteLayout() {
               <NavLink
                 to="/admin"
                 className="auth-button login-like"
+                data-cy="nav-login"
                 onClick={() => {
                   setIsNavOpen(false)
                 }}
@@ -149,7 +157,7 @@ export function SiteLayout() {
         <Outlet />
       </div>
 
-      <footer className="site-footer w-full" aria-label="Footer">
+      <footer className="site-footer w-full" aria-label="Footer" data-cy="site-footer">
         <div className="footer-grid">
           <section className="footer-block">
             <h2>Additional Links</h2>

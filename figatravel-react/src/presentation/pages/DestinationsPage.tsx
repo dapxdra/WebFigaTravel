@@ -13,9 +13,10 @@ export function DestinationsPage() {
   )
 
   return (
-    <main className="destinations-page">
-      <header className="destinations-header">
-        <h1>DESTINATIONS</h1>
+    <main className="destinations-page" data-cy="destinations-page">
+      <header className="destinations-header page-header" data-cy="destinations-header">
+        <p className="eyebrow">Costa Rica</p>
+        <h1>Destinations</h1>
         <p>Check out our most popular destinations in Costa Rica</p>
       </header>
 
@@ -23,13 +24,32 @@ export function DestinationsPage() {
         <h2 id="destination-list-title" className="sr-only">
           Destinations catalog
         </h2>
-        <div className="destinations-catalog-grid">
+        <div className="destinations-catalog-grid" data-cy="destinations-grid">
           {topDestinations.map((destination) => (
-            <article key={destination.slug} className="destinations-catalog-card">
-              <img src={destination.cardImage} alt={destination.name} loading="lazy" />
-              <Link to={`/destinations/${destination.slug}`} className="destinations-card-link">
-                {destination.name}
-              </Link>
+            // The heading link is stretched over the whole card via CSS, so the
+            // card is clickable while keeping a single, short link name.
+            <article
+              key={destination.slug}
+              className="destinations-catalog-card"
+              data-cy={`destination-card-${destination.slug}`}
+            >
+              <img src={destination.cardImage} alt="" loading="lazy" />
+              <h3>
+                <Link
+                  to={`/destinations/${destination.slug}`}
+                  className="destinations-card-link"
+                  data-cy={`destination-link-${destination.slug}`}
+                >
+                  {destination.name}
+                </Link>
+              </h3>
+              <p className="destinations-card-summary">{destination.summary}</p>
+              <p className="destinations-card-meta">
+                <span>{destination.transferTime}</span>
+                <span className="destinations-card-arrow" aria-hidden="true">
+                  →
+                </span>
+              </p>
             </article>
           ))}
         </div>

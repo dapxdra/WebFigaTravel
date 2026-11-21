@@ -94,8 +94,9 @@ export function BookOnlinePage() {
   }, [quotedRoute])
 
   return (
-    <main className="book-page">
-      <header className="book-header">
+    <main className="book-page" data-cy="book-page">
+      <header className="book-header page-header" data-cy="book-header">
+        <p className="eyebrow">Private transfers</p>
         <h1>Book Online</h1>
         <p>Get an instant price for any route in Costa Rica, or choose one of our fixed-price transfers.</p>
       </header>
