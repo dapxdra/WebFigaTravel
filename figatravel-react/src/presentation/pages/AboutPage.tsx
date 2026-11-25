@@ -1,7 +1,12 @@
-import { priorities } from '../data/siteContent'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n/useI18n'
+import { useSiteContent } from '../i18n/useSiteContent'
 
 export function AboutPage() {
+  const { m } = useI18n()
+  const t = m.about
+  const { priorities } = useSiteContent()
+
   usePageMeta(
     'About Us',
     'Learn about Figa Travel, our mission, and our commitment to safe and memorable transportation across Costa Rica.',
@@ -9,41 +14,32 @@ export function AboutPage() {
   )
 
   return (
-    <main className="info-page about-page">
+    <main className="info-page about-page" data-cy="about-page">
       <header className="section page-hero about-hero">
         <img
           src="/assets/home/hero-header.png"
-          alt="Costa Rica volcano landscape"
+          alt={t.heroAlt}
           className="page-hero-image"
           loading="lazy"
         />
 
         <div className="page-hero-copy">
-          <p className="eyebrow">ABOUT US</p>
-          <h1>Your Journey, Our Passion!</h1>
-          <p className="hero-copy">
-            Our mission is simple: to enhance your travel experience in Costa Rica.
-            We are here to enrich your journey with comfort, safety, and memorable service.
-          </p>
-          <p className="hero-copy">
-            We are more than a transportation company. We are your travel partner for
-            adventure, nature, culture, and relaxation across the country.
-          </p>
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1>{t.title}</h1>
+          <p className="hero-copy">{t.paragraph1}</p>
+          <p className="hero-copy">{t.paragraph2}</p>
         </div>
       </header>
 
       <section className="section about-story" aria-labelledby="about-story-title">
         <div className="section-head">
-          <h2 id="about-story-title">Our Commitment to Excellence</h2>
-          <p>
-            From the moment you book with us until we drop you off at your destination,
-            our team is dedicated to comfort, safety, and satisfaction.
-          </p>
+          <h2 id="about-story-title">{t.commitmentTitle}</h2>
+          <p>{t.commitmentText}</p>
         </div>
 
         <div className="priority-grid">
           {priorities.map((priority) => (
-            <article key={priority.title} className="priority-card">
+            <article key={priority.title} className="priority-card" data-cy="about-priority-card">
               <h3>{priority.title}</h3>
               <p>{priority.description}</p>
             </article>
@@ -53,10 +49,8 @@ export function AboutPage() {
 
       <section className="section about-closing" aria-labelledby="about-closing-title">
         <div className="section-head">
-          <h2 id="about-closing-title">Thank you for considering Figa Travel Costa Rica</h2>
-          <p>
-            We look forward to being part of your adventure and helping you discover the beauty of Costa Rica.
-          </p>
+          <h2 id="about-closing-title">{t.closingTitle}</h2>
+          <p>{t.closingText}</p>
         </div>
       </section>
     </main>

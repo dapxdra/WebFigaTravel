@@ -5,6 +5,7 @@ import type {
   CustomRouteReservationRequest,
   CustomRouteSearch,
 } from '../../../domain/entities/CustomRoute'
+import { useI18n } from '../../i18n/useI18n'
 import { PickupTimePicker } from './PickupTimePicker'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -28,6 +29,8 @@ interface CustomRouteBookingFormProps {
 
 export function CustomRouteBookingForm({ search, quote, submitting, error, onSubmit }: CustomRouteBookingFormProps) {
   const todayIso = new Date().toISOString().slice(0, 10)
+  const { m } = useI18n()
+  const t = m.customRouteForm
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [emailTouched, setEmailTouched] = useState(false)
@@ -81,38 +84,35 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
   return (
     <section className="section payment-form" aria-labelledby="custom-route-form-title" data-cy="custom-route-booking">
       <div className="section-head">
-        <h2 id="custom-route-form-title">Your private transfer</h2>
-        <p>Review your price and add your trip details to continue to secure payment.</p>
+        <h2 id="custom-route-form-title">{t.title}</h2>
+        <p>{t.intro}</p>
       </div>
 
       <dl className="route-quote-summary" data-cy="custom-route-quote">
         <div className="route-quote-row route-quote-row-wide">
-          <dt>Pickup</dt>
+          <dt>{t.pickup}</dt>
           <dd data-cy="custom-route-quote-origin">{search.origin.label}</dd>
         </div>
         <div className="route-quote-row route-quote-row-wide">
-          <dt>Drop-off</dt>
+          <dt>{t.dropoff}</dt>
           <dd data-cy="custom-route-quote-destination">{search.destination.label}</dd>
         </div>
         {quote.durationMinutes > 0 ? (
           <div className="route-quote-row">
-            <dt>Approx. drive</dt>
+            <dt>{t.approxDrive}</dt>
             <dd data-cy="custom-route-quote-duration">{formatDuration(quote.durationMinutes)}</dd>
           </div>
         ) : null}
         <div className="route-quote-row">
         </div>
         <div className="route-quote-row">
-          <dt>Passengers</dt>
-          <dd data-cy="custom-route-quote-passengers">
-            {adults} {adults === 1 ? 'adult' : 'adults'}
-            {children > 0 ? `, ${children} ${children === 1 ? 'child' : 'children'}` : ''}
-          </dd>
+          <dt>{t.passengers}</dt>
+          <dd data-cy="custom-route-quote-passengers">{t.passengerSummary(adults, children)}</dd>
         </div>
         <div className="route-quote-row">
         </div>
         <div className="route-quote-total">
-          <dt>Total price</dt>
+          <dt>{t.totalPrice}</dt>
           <dd data-cy="custom-route-quote-total">
             {quote.currency} {quote.amount.toFixed(2)}
           </dd>
@@ -127,7 +127,7 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
 
       <form className="lead-form" onSubmit={handleSubmit} data-cy="custom-route-form">
         <label>
-          Full name
+          {m.common.fullName}
           <input
             type="text"
             value={fullName}
@@ -140,7 +140,7 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
         </label>
 
         <label>
-          Email
+          {m.common.email}
           <input
             type="email"
             value={email}
@@ -156,13 +156,13 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
           />
           {emailTouched && emailIsInvalid ? (
             <small className="error-text" data-cy="custom-route-email-error">
-              Enter a valid email address.
+              {m.common.invalidEmail}
             </small>
           ) : null}
         </label>
 
         <label>
-          Phone / WhatsApp
+          {m.common.phoneWhatsApp}
           <input
             type="tel"
             value={phone}
@@ -174,7 +174,7 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
         </label>
 
         <label>
-          Date
+          {m.common.date}
           <input
             type="date"
             value={travelDate}
@@ -189,12 +189,12 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
         </label>
 
         <label className="full-width">
-          Notes (optional)
+          {m.common.notesOptional}
           <textarea
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             maxLength={1000}
-            placeholder="Flight number, luggage, child seats, stops..."
+            placeholder={t.notesPlaceholder}
             data-cy="custom-route-notes"
           />
         </label>
@@ -213,27 +213,27 @@ export function CustomRouteBookingForm({ search, quote, submitting, error, onSub
 
         <div className="time-grid-wrap full-width">
           <p className="time-grid-label">
-            Pickup time
+            {t.pickupTime}
             {pickupTime ? <span className="time-grid-selected-badge">{pickupTime}</span> : null}
           </p>
           {!travelDate ? (
-            <p className="time-grid-hint">Select a date first</p>
+            <p className="time-grid-hint">{m.common.selectDateFirst}</p>
           ) : !hasFutureDate ? (
-            <p className="time-grid-hint">Online booking starts tomorrow. Select a future date.</p>
+            <p className="time-grid-hint">{t.futureDateHint}</p>
           ) : (
             <PickupTimePicker value={pickupTime} onChange={setPickupTime} dataCy="custom-route-time-picker" />
           )}
         </div>
 
         <p className="payment-amount">
-          Amount to pay:{' '}
+          {m.common.amountToPay}{' '}
           <strong>
             {quote.currency} {quote.amount.toFixed(2)}
           </strong>
         </p>
 
         <button type="submit" disabled={!canSubmit} data-cy="custom-route-submit">
-          {submitting ? 'Creating reservation...' : 'Continue to payment'}
+          {submitting ? m.common.creatingReservation : m.common.continueToPayment}
         </button>
       </form>
     </section>

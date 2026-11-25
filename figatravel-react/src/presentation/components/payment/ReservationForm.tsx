@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useAuth } from '../../auth/useAuth'
+import { useI18n } from '../../i18n/useI18n'
 import type { AvailabilitySlot } from '../../../domain/entities/AvailabilitySlot'
 import type { TravelPackage } from '../../../domain/entities/TravelPackage'
 import type { ReservationRequest } from '../../../domain/entities/Reservation'
@@ -43,6 +44,8 @@ export function ReservationForm({
 }: ReservationFormProps) {
   const todayIso = new Date().toISOString().slice(0, 10)
   const { isAuthenticated, session } = useAuth()
+  const { m } = useI18n()
+  const t = m.reservationForm
 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -210,18 +213,18 @@ export function ReservationForm({
   return (
     <section className="section payment-form" aria-labelledby="payment-form-title">
       <div className="section-head">
-        <h2 id="payment-form-title">Reservation details</h2>
-        <p>Fill in your details to continue to secure payment.</p>
+        <h2 id="payment-form-title">{t.title}</h2>
+        <p>{t.intro}</p>
       </div>
 
-      {loadingPackages ? <p>Loading services...</p> : null}
+      {loadingPackages ? <p data-cy="reservation-loading-services">{t.loadingServices}</p> : null}
       {packagesError ? <p className="error-text">{packagesError}</p> : null}
       {availabilityError ? <p className="error-text">{availabilityError}</p> : null}
       {error ? <p className="error-text">{error}</p> : null}
 
       <form className="lead-form" onSubmit={handleSubmit} data-cy="reservation-form">
         <label>
-          Full name
+          {m.common.fullName}
           <input
             type="text"
             value={fullName}
@@ -235,7 +238,7 @@ export function ReservationForm({
         </label>
 
         <label>
-          Email
+          {m.common.email}
           <input
             type="email"
             value={email}
@@ -249,13 +252,13 @@ export function ReservationForm({
           />
           {emailTouched && emailIsInvalid ? (
             <small className="error-text" data-cy="reservation-email-error">
-              Enter a valid email address.
+              {m.common.invalidEmail}
             </small>
           ) : null}
         </label>
 
         <label>
-          Phone
+          {m.common.phone}
           <input
             type="tel"
             value={phone}
@@ -268,7 +271,7 @@ export function ReservationForm({
         </label>
 
         <label>
-          Service
+          {t.service}
           <select
             value={packageId}
             onChange={(event) => {
@@ -281,7 +284,7 @@ export function ReservationForm({
             required
             data-cy="reservation-package"
           >
-            <option value="">Select a service</option>
+            <option value="">{t.selectService}</option>
             {packages.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.title} - {item.currency} {item.price.toFixed(2)}
@@ -291,7 +294,7 @@ export function ReservationForm({
         </label>
 
         <label>
-          Date
+          {m.common.date}
           <input
             type="date"
             value={travelDate}
@@ -305,13 +308,13 @@ export function ReservationForm({
           />
           {packageId !== '' && availableDateList.length > 0 ? (
             <small className="availability-hint">
-              Dates with availability: {availableDateList.join(', ')}
+              {t.availableDates} {availableDateList.join(', ')}
             </small>
           ) : null}
         </label>
 
         <label>
-          Travelers
+          {t.travelers}
           <input
             type="number"
             value={travelers}
@@ -323,19 +326,19 @@ export function ReservationForm({
         </label>
 
         <label>
-          Pickup location
+          {t.pickupLocation}
           <input
             type="text"
             value={pickupLocation}
             onChange={(event) => setPickupLocation(event.target.value)}
-            placeholder="Hotel name or address in La Fortuna"
+            placeholder={t.pickupPlaceholder}
             required
             data-cy="reservation-pickup-location"
           />
         </label>
 
         <label>
-          Notes (optional)
+          {m.common.notesOptional}
           <textarea
             value={message}
             onChange={(event) => setMessage(event.target.value)}
@@ -357,17 +360,17 @@ export function ReservationForm({
 
         <div className="time-grid-wrap full-width">
           <p className="time-grid-label">
-            Available time
+            {t.availableTime}
             {selectedTime ? <span className="time-grid-selected-badge">{selectedTime}</span> : null}
           </p>
           {!packageId ? (
-            <p className="time-grid-hint">Select a service first</p>
+            <p className="time-grid-hint">{t.selectServiceFirst}</p>
           ) : loadingAvailability ? (
-            <p className="time-grid-hint">Loading availability...</p>
+            <p className="time-grid-hint">{t.loadingAvailability}</p>
           ) : !travelDate ? (
-            <p className="time-grid-hint">Select a date first</p>
+            <p className="time-grid-hint">{m.common.selectDateFirst}</p>
           ) : !hasTimesForSelectedDate ? (
-            <p className="time-grid-hint">No availability for today or past dates. Select a future date.</p>
+            <p className="time-grid-hint">{t.noAvailability}</p>
           ) : (
             <PickupTimePicker
               value={selectedTime}
@@ -379,12 +382,12 @@ export function ReservationForm({
 
         {selectedPackage ? (
           <p className="payment-amount">
-            Amount to pay: <strong>{selectedPackage.currency} {selectedPackage.price.toFixed(2)}</strong>
+            {m.common.amountToPay} <strong>{selectedPackage.currency} {selectedPackage.price.toFixed(2)}</strong>
           </p>
         ) : null}
 
         <button type="submit" disabled={!canSubmit} data-cy="reservation-submit">
-          {submitting ? 'Creating reservation...' : 'Continue to payment'}
+          {submitting ? m.common.creatingReservation : m.common.continueToPayment}
         </button>
       </form>
     </section>

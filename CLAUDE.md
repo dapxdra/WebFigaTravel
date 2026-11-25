@@ -74,7 +74,15 @@ Routing is composed in `src/App.tsx` (`react-router-dom`, `BrowserRouter`). Shar
 ## Conventions
 
 - TypeScript strict mode is enabled; keep type-only imports where applicable.
-- Keep all user-facing copy (labels, placeholders, errors, success messages) in English — the site is a visual clone of the Figa Travel marketing site.
+- Public UI copy is translated (see "Languages (i18n)" below): never hardcode visible text in public pages/components; add it to `presentation/i18n/messages/en.ts` and to every other language file. The admin panel, `/auth/reset-password` and errors thrown by repositories/use-cases stay English-only.
+
+### Languages (i18n)
+
+- Languages: en (source), es, fr, pt, it, de, ru — listed in `presentation/i18n/locales.ts`. No i18n library: `I18nProvider` (wraps the app in `App.tsx`) + `useI18n()` returns `m` (the typed message catalog), `locale` and `setLocale`. The selector is `components/LanguageSwitcher.tsx` in the nav.
+- `messages/en.ts` defines the `Messages` type; every other file is typed `Messages`, so a missing key fails `tsc`. Strings needing values/plurals are functions (Russian uses `Intl.PluralRules`). Non-English files are lazy-loaded chunks; the choice is stored in `localStorage` (`figa-locale`), else the browser language is used.
+- Content from `data/siteContent.ts` (destinations, fleet, priorities, FAQ) is translated via `messages.content` and merged by `useSiteContent()` (`i18n/localizeContent.ts`). Keep translated `attractions`/`travelTips` in the same order as English. Reviews stay in their original language; package titles/descriptions come from Supabase untranslated.
+- SEO stays English: the prerender always renders English, and `usePageMeta`/`useJsonLd` keep using the English data. The first client render is English too; the saved language is applied after mount.
+- Adding a language: add it to `SUPPORTED_LOCALES`, create `messages/<code>.ts` typed `Messages`, and register its loader in `I18nProvider.tsx`.
 - Reuse existing CSS classes/patterns in `src/index.css` before adding new ones; avoid CSS-in-JS or new styling systems. Preserve existing breakpoints.
 - Prefer small, local, minimal-diff edits over broad rewrites or unrelated refactors.
 - Never hardcode secrets or service-role keys in source.

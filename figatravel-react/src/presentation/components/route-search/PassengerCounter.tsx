@@ -1,3 +1,4 @@
+import { useI18n } from '../../i18n/useI18n'
 import { MinusIcon, PlusIcon } from './RouteIcons'
 
 interface PassengerCounterProps {
@@ -11,6 +12,7 @@ interface PassengerCounterProps {
 }
 
 export function PassengerCounter({ label, hint, value, min, max, onChange, dataCy }: PassengerCounterProps) {
+  const { m } = useI18n()
   return (
     <div className="passenger-counter" data-cy={dataCy}>
       <span className="passenger-counter-label">
@@ -22,7 +24,7 @@ export function PassengerCounter({ label, hint, value, min, max, onChange, dataC
         className="passenger-counter-button"
         onClick={() => onChange(value - 1)}
         disabled={value <= min}
-        aria-label={`Remove one ${label.toLowerCase()}`}
+        aria-label={m.routeSearch.removeOne(label)}
         data-cy={`${dataCy}-decrement`}
       >
         <MinusIcon />
@@ -35,7 +37,7 @@ export function PassengerCounter({ label, hint, value, min, max, onChange, dataC
         className="passenger-counter-button"
         onClick={() => onChange(value + 1)}
         disabled={value >= max}
-        aria-label={`Add one ${label.toLowerCase()}`}
+        aria-label={m.routeSearch.addOne(label)}
         data-cy={`${dataCy}-increment`}
       >
         <PlusIcon />

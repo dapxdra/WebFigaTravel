@@ -2,6 +2,8 @@ import { Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AdminGuard } from './presentation/auth/AdminGuard'
 import { AuthProvider } from './presentation/auth/AuthProvider'
+import { I18nProvider } from './presentation/i18n/I18nProvider'
+import { useI18n } from './presentation/i18n/useI18n'
 import { SiteLayout } from './presentation/components/SiteLayout'
 import { AboutPage } from './presentation/pages/AboutPage'
 import { ContactPage } from './presentation/pages/ContactPage'
@@ -30,12 +32,21 @@ const PaymentResponsePage = lazy(() =>
   })),
 )
 
+function RouteLoading() {
+  const { m } = useI18n()
+  return (
+    <div className="route-loading" aria-live="polite" data-cy="route-loading">
+      {m.common.loading}
+    </div>
+  )
+}
+
 // Route tree without a router, so the same routes render in the browser
 // (BrowserRouter, below) and in the build-time prerender (StaticRouter, see
 // entry-server.tsx).
 export function AppRoutes() {
   return (
-    <Suspense fallback={<div className="route-loading" aria-live="polite">Loading...</div>}>
+    <Suspense fallback={<RouteLoading />}>
       <Routes>
         <Route element={<ResetPasswordPage />} path="auth/reset-password" />
         <Route element={<SiteLayout />} path="/">
@@ -70,11 +81,13 @@ export function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </AuthProvider>
+    <I18nProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
+    </I18nProvider>
   )
 }
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import type { CustomRouteSearch, RoutePlace } from '../../../domain/entities/CustomRoute'
 import { MAX_ROUTE_PASSENGERS } from '../../../domain/entities/CustomRoute'
+import { useI18n } from '../../i18n/useI18n'
 import { PassengerCounter } from './PassengerCounter'
 import { PlaceAutocompleteInput } from './PlaceAutocompleteInput'
 import { BoltIcon, CheckCircleIcon, DoorIcon, SwapIcon, UsersIcon } from './RouteIcons'
@@ -14,6 +15,8 @@ interface RouteSearchCardProps {
 }
 
 export function RouteSearchCard({ initialSearch, submitLabel, busy = false, onSubmit }: RouteSearchCardProps) {
+  const { m } = useI18n()
+  const t = m.routeSearch
   const [origin, setOrigin] = useState<RoutePlace | null>(initialSearch?.origin ?? null)
   const [destination, setDestination] = useState<RoutePlace | null>(initialSearch?.destination ?? null)
   const [adults, setAdults] = useState(initialSearch?.passengers.adults ?? 2)
@@ -31,12 +34,12 @@ export function RouteSearchCard({ initialSearch, submitLabel, busy = false, onSu
 
   return (
     <form className="route-search-card" onSubmit={handleSubmit} data-cy="route-search-card">
-      <h2 className="route-search-title">Where are you headed?</h2>
+      <h2 className="route-search-title">{t.title}</h2>
 
       <div className="route-search-places">
         <PlaceAutocompleteInput
-          label="Pickup location"
-          placeholder="Where from?"
+          label={t.pickupLabel}
+          placeholder={t.pickupPlaceholder}
           value={origin}
           onChange={setOrigin}
           dataCy="route-search-origin"
@@ -48,15 +51,15 @@ export function RouteSearchCard({ initialSearch, submitLabel, busy = false, onSu
             setOrigin(destination)
             setDestination(origin)
           }}
-          aria-label="Swap pickup and drop-off"
-          title="Swap pickup and drop-off"
+          aria-label={t.swap}
+          title={t.swap}
           data-cy="route-search-swap"
         >
           <SwapIcon />
         </button>
         <PlaceAutocompleteInput
-          label="Drop-off location"
-          placeholder="Where to?"
+          label={t.dropoffLabel}
+          placeholder={t.dropoffPlaceholder}
           value={destination}
           onChange={setDestination}
           dataCy="route-search-destination"
@@ -64,15 +67,15 @@ export function RouteSearchCard({ initialSearch, submitLabel, busy = false, onSu
       </div>
 
       <fieldset className="route-passengers" data-cy="route-search-passengers">
-        <legend className="sr-only">Passengers</legend>
+        <legend className="sr-only">{t.passengersLegend}</legend>
         <span className="route-passengers-title">
           <UsersIcon className="route-icon route-icon-accent" />
-          How many passengers?
+          {t.passengersTitle}
         </span>
         <div className="route-passengers-counters">
           {/* Adults + children share the fleet's seat limit. */}
           <PassengerCounter
-            label="Adults"
+            label={t.adults}
             hint="12+"
             value={adults}
             min={1}
@@ -81,7 +84,7 @@ export function RouteSearchCard({ initialSearch, submitLabel, busy = false, onSu
             dataCy="route-search-adults"
           />
           <PassengerCounter
-            label="Children"
+            label={t.children}
             hint="0-11"
             value={children}
             min={0}
@@ -93,18 +96,18 @@ export function RouteSearchCard({ initialSearch, submitLabel, busy = false, onSu
       </fieldset>
 
       <button type="submit" className="home-book-now route-search-submit" disabled={!canSubmit} data-cy="route-search-submit">
-        {busy ? 'Calculating price...' : submitLabel}
+        {busy ? t.calculating : submitLabel}
       </button>
 
-      <ul className="route-search-perks" aria-label="Booking benefits">
+      <ul className="route-search-perks" aria-label={t.perksAria}>
         <li>
-          <BoltIcon className="route-icon route-icon-accent" /> Instant pricing
+          <BoltIcon className="route-icon route-icon-accent" /> {t.perkInstant}
         </li>
         <li>
-          <DoorIcon className="route-icon route-icon-accent" /> Door-to-door
+          <DoorIcon className="route-icon route-icon-accent" /> {t.perkDoor}
         </li>
         <li>
-          <CheckCircleIcon className="route-icon route-icon-accent" /> No hidden fees
+          <CheckCircleIcon className="route-icon route-icon-accent" /> {t.perkNoFees}
         </li>
       </ul>
     </form>

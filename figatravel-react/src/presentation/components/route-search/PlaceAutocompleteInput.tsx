@@ -3,6 +3,7 @@ import type { KeyboardEvent } from 'react'
 import type { RoutePlace } from '../../../domain/entities/CustomRoute'
 import type { AutocompleteSessionToken, PlaceSuggestion } from '../../lib/googleMaps'
 import { createSessionToken, fetchPlaceSuggestions } from '../../lib/googleMaps'
+import { useI18n } from '../../i18n/useI18n'
 import { PinIcon } from './RouteIcons'
 
 // Wait for a short pause in typing before asking Google, and only once there
@@ -26,6 +27,8 @@ export function PlaceAutocompleteInput({
   dataCy,
 }: PlaceAutocompleteInputProps) {
   const listboxId = useId()
+  const { m } = useI18n()
+  const unavailableMessage = m.routeSearch.addressUnavailable
   const [text, setText] = useState(value?.label ?? '')
   // Only text the user typed triggers a search; picking a suggestion or a
   // parent update (e.g. the swap button) must not reopen the dropdown.
@@ -67,13 +70,13 @@ export function PlaceAutocompleteInput({
       } catch (caught) {
         if (requestId === requestIdRef.current) {
           setSuggestions([])
-          setError(caught instanceof Error ? caught.message : 'Address search is unavailable.')
+          setError(caught instanceof Error ? caught.message : unavailableMessage)
         }
       }
     }, DEBOUNCE_MS)
 
     return () => window.clearTimeout(timer)
-  }, [query])
+  }, [query, unavailableMessage])
 
   const selectSuggestion = (suggestion: PlaceSuggestion) => {
     // A selection closes the Google billing session; the next search starts a new one.

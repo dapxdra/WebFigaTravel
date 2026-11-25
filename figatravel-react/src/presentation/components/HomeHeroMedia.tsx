@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { env } from '../../shared/config/env'
+import { useI18n } from '../i18n/useI18n'
 
 /** Drop a real POV clip here (or set VITE_HOME_HERO_VIDEO_URL) to replace the GIF. */
 const DEFAULT_HERO_VIDEO = '/assets/home/hero-pov.mp4'
@@ -21,6 +22,7 @@ const HERO_IMAGE_FALLBACKS = ['/assets/home/home-hero.gif', HERO_POSTER]
  * users who prefer reduced motion; a pause button satisfies WCAG 2.2.2.
  */
 export function HomeHeroMedia() {
+  const { m } = useI18n()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [videoFailed, setVideoFailed] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -105,13 +107,13 @@ export function HomeHeroMedia() {
         <div className="home-hero-video-controls">
           <span className="home-hero-pov-tag" data-cy="home-hero-pov-tag">
             <span className="home-hero-pov-dot" aria-hidden="true" />
-            POV · A real ride with Figa
+            {m.heroMedia.povTag}
           </span>
           <button
             type="button"
             className="home-hero-video-toggle"
             onClick={togglePlayback}
-            aria-label={isPlaying ? 'Pause background video' : 'Play background video'}
+            aria-label={isPlaying ? m.heroMedia.pause : m.heroMedia.play}
             data-cy="home-hero-video-toggle"
           >
             {isPlaying ? (

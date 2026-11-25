@@ -4,13 +4,26 @@ import { SITE_NAME, SITE_URL } from '../../shared/config/seo'
 import { buildDestinationFaq, findDestinationBySlug } from '../data/siteContent'
 import { useJsonLd } from '../hooks/useJsonLd'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n/useI18n'
+import { useSiteContent } from '../i18n/useSiteContent'
 
 export function DestinationDetailPage() {
   const { slug } = useParams()
+  const { m } = useI18n()
+  const t = m.destinationDetail
+  const content = useSiteContent()
+
+  // SEO tags and JSON-LD always use the English source (it is what the
+  // prerendered HTML carries); the visible page uses the chosen language.
   const destination = slug ? findDestinationBySlug(slug) : undefined
   const destinationFaq = useMemo(
     () => (destination ? buildDestinationFaq(destination) : []),
     [destination],
+  )
+  const localized = slug ? content.findDestination(slug) : undefined
+  const localizedFaq = useMemo(
+    () => (localized ? content.buildDestinationFaq(localized) : []),
+    [content, localized],
   )
 
   usePageMeta(
@@ -70,16 +83,14 @@ export function DestinationDetailPage() {
 
   useJsonLd('destination-json-ld', destinationJsonLd)
 
-  if (!destination) {
+  if (!localized) {
     return (
-      <main>
+      <main data-cy="destination-not-found">
         <section className="section page-hero">
-          <h1>Destino no encontrado</h1>
-          <p className="hero-copy">
-            El destino solicitado no existe o fue removido del catalogo.
-          </p>
-          <Link className="hero-cta" to="/destinations">
-            Volver a destinos
+          <h1>{t.notFoundTitle}</h1>
+          <p className="hero-copy">{t.notFoundText}</p>
+          <Link className="hero-cta" to="/destinations" data-cy="destination-back-link">
+            {t.backToDestinations}
           </Link>
         </section>
       </main>
@@ -90,27 +101,27 @@ export function DestinationDetailPage() {
     <main className="destination-detail-page" data-cy="destination-detail-page">
       <section className="destination-intro-block">
         <div className="destination-intro-copy">
-          <h1>{destination.name}</h1>
-          <p>{destination.intro}</p>
+          <h1>{localized.name}</h1>
+          <p>{localized.intro}</p>
           <Link className="destination-book-button" to="/book-online" data-cy="destination-book-button">
-            {destination.bookLabel}
+            {localized.bookLabel}
           </Link>
         </div>
 
         <img
-          src={destination.heroImage}
-          alt={`${destination.name}, Costa Rica`}
+          src={localized.heroImage}
+          alt={t.heroAlt(localized.name)}
           className="destination-hero-main"
           loading="eager"
         />
       </section>
 
-      <section className="destination-gallery" aria-label="Destination gallery">
-        {destination.gallery.map((item, index) => (
+      <section className="destination-gallery" aria-label={t.galleryAria} data-cy="destination-gallery">
+        {localized.gallery.map((item, index) => (
           <img
             key={item}
             src={item}
-            alt={`${destination.name}, Costa Rica, photo ${index + 1}`}
+            alt={t.photoAlt(localized.name, index + 1)}
             className="destination-gallery-item"
             loading="lazy"
           />
@@ -122,22 +133,22 @@ export function DestinationDetailPage() {
         aria-labelledby="destination-info-title"
       >
         <h2 id="destination-info-title" className="sr-only">
-          Destination information
+          {t.infoTitle}
         </h2>
 
-        <div className="destination-text-card">
-          <h3>TOP ATTRACTIONS</h3>
+        <div className="destination-text-card" data-cy="destination-attractions">
+          <h3>{t.topAttractions}</h3>
           <ul>
-            {destination.attractions.map((item) => (
+            {localized.attractions.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </div>
 
-        <div className="destination-text-card">
-          <h3>TRAVEL TIPS</h3>
+        <div className="destination-text-card" data-cy="destination-travel-tips">
+          <h3>{t.travelTips}</h3>
           <ul>
-            {destination.travelTips.map((item) => (
+            {localized.travelTips.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
@@ -150,11 +161,11 @@ export function DestinationDetailPage() {
         data-cy="destination-faq"
       >
         <div className="section-head">
-          <h2 id="destination-faq-title">{destination.name} transfer FAQ</h2>
+          <h2 id="destination-faq-title">{t.faqTitle(localized.name)}</h2>
         </div>
 
         <div className="faq-list">
-          {destinationFaq.map((item, index) => (
+          {localizedFaq.map((item, index) => (
             <div key={item.question} className="faq-item" data-cy={`destination-faq-item-${index}`}>
               <h3>{item.question}</h3>
               <p>{item.answer}</p>

@@ -6,6 +6,7 @@ import { TilopayCheckout } from '../components/payment/TilopayCheckout'
 import { CustomRouteBookingForm } from '../components/payment/CustomRouteBookingForm'
 import { RouteSearchCard } from '../components/route-search/RouteSearchCard'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n/useI18n'
 import type { TravelPackage } from '../../domain/entities/TravelPackage'
 import type { CustomRouteSearch, RoutePlace } from '../../domain/entities/CustomRoute'
 
@@ -32,12 +33,15 @@ function readRouteSearchState(state: unknown): CustomRouteSearch | null {
 
 type BookingMode = 'custom' | 'packages'
 
-const BOOKING_MODES: { key: BookingMode; label: string }[] = [
-  { key: 'custom', label: 'Any route - instant price' },
-  { key: 'packages', label: 'Fixed-price routes' },
+const BOOKING_MODES: { key: BookingMode; labelKey: 'modeCustom' | 'modePackages' }[] = [
+  { key: 'custom', labelKey: 'modeCustom' },
+  { key: 'packages', labelKey: 'modePackages' },
 ]
 
 export function BookOnlinePage() {
+  const { m } = useI18n()
+  const t = m.bookOnline
+
   usePageMeta(
     'Book Online',
     'Book private transportation across Costa Rica: get an instant door-to-door price for any route, or choose one of our fixed-price transfers.',
@@ -96,9 +100,9 @@ export function BookOnlinePage() {
   return (
     <main className="book-page" data-cy="book-page">
       <header className="book-header page-header" data-cy="book-header">
-        <p className="eyebrow">Private transfers</p>
-        <h1>Book Online</h1>
-        <p>Get an instant price for any route in Costa Rica, or choose one of our fixed-price transfers.</p>
+        <p className="eyebrow">{t.eyebrow}</p>
+        <h1>{t.title}</h1>
+        <p>{t.intro}</p>
       </header>
 
       {reservation ? (
@@ -115,7 +119,7 @@ export function BookOnlinePage() {
         <>
           {/* One booking mode at a time keeps the page short: no scrolling past
               the whole package list to reach the custom route form. */}
-          <div className="book-mode-tabs" role="tablist" aria-label="How do you want to book?" data-cy="book-mode-tabs">
+          <div className="book-mode-tabs" role="tablist" aria-label={t.modeTabsAria} data-cy="book-mode-tabs">
             {BOOKING_MODES.map((mode) => (
               <button
                 key={mode.key}
@@ -128,17 +132,17 @@ export function BookOnlinePage() {
                 onClick={() => setBookingMode(mode.key)}
                 data-cy={`book-mode-tab-${mode.key}`}
               >
-                {mode.label}
+                {t[mode.labelKey]}
               </button>
             ))}
           </div>
 
           {bookingMode === 'custom' ? (
             <div role="tabpanel" id="book-mode-panel-custom" aria-labelledby="book-mode-tab-custom">
-              <section className="route-search-section" aria-label="Instant route price" data-cy="book-custom-route">
+              <section className="route-search-section" aria-label={t.instantPriceAria} data-cy="book-custom-route">
                 <RouteSearchCard
                   initialSearch={quotedRoute?.search ?? initialRouteSearch}
-                  submitLabel="See my price"
+                  submitLabel={m.home.seeMyPrice}
                   busy={quoteState.loading}
                   onSubmit={quoteCustomRoute}
                 />
@@ -168,8 +172,8 @@ export function BookOnlinePage() {
             </div>
           ) : (
             <div role="tabpanel" id="book-mode-panel-packages" aria-labelledby="book-mode-tab-packages">
-              <section className="book-options" aria-label="Fixed-price routes" data-cy="book-options">
-                {loadingPackages ? <p>Loading packages...</p> : null}
+              <section className="book-options" aria-label={t.modePackages} data-cy="book-options">
+                {loadingPackages ? <p data-cy="book-loading-packages">{t.loadingPackages}</p> : null}
                 {packagesError ? <p className="error-text">{packagesError}</p> : null}
 
                 <div className="book-option-grid">
@@ -198,7 +202,7 @@ export function BookOnlinePage() {
                           }}
                           data-cy="book-option-link"
                         >
-                          Book now
+                          {t.bookNow}
                         </a>
                       </div>
                     </article>

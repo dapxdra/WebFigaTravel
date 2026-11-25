@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { REVIEW_PROFILE_URL } from '../data/siteContent'
 import type { Review, ReviewSource } from '../data/siteContent'
+import { useI18n } from '../i18n/useI18n'
 
 interface ReviewsCarouselProps {
   reviews: Review[]
@@ -38,9 +39,10 @@ function TripadvisorMark() {
 }
 
 function Stars({ rating }: { rating: number }) {
+  const { m } = useI18n()
   const rounded = Math.max(0, Math.min(5, Math.round(rating)))
   return (
-    <span className="review-stars" role="img" aria-label={`${rounded} out of 5 stars`}>
+    <span className="review-stars" role="img" aria-label={m.reviews.stars(rounded)}>
       {[1, 2, 3, 4, 5].map((star) => (
         <span key={star} className={star <= rounded ? 'is-full' : ''} aria-hidden="true">
           ★
@@ -67,6 +69,7 @@ const EMPTY_METRICS: TrackMetrics = { step: 0, perView: 1, pageCount: 1, maxScro
 // arrows and dots driving it via scrollTo. Navigation is page-based (one full
 // row of visible cards per dot) so the last dots never land on the same view.
 export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
+  const { m } = useI18n()
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
   const [pageCount, setPageCount] = useState(1)
@@ -193,7 +196,7 @@ export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
       className="reviews-carousel"
       role="group"
       aria-roledescription="carousel"
-      aria-label="Traveler reviews from Google and Tripadvisor"
+      aria-label={m.reviews.carouselAria}
       onMouseEnter={pause}
       onMouseLeave={resume}
       onFocusCapture={pause}
@@ -209,7 +212,7 @@ export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
             target="_blank"
             rel="noreferrer"
             aria-roledescription="slide"
-            aria-label={`Review ${index + 1} of ${reviews.length} by ${review.author} on ${SOURCE_LABEL[review.source]} — opens in a new tab`}
+            aria-label={m.reviews.cardAria(index + 1, reviews.length, review.author, SOURCE_LABEL[review.source])}
             data-cy="review-card"
           >
             <div className="review-card__head">
@@ -228,7 +231,7 @@ export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
             </footer>
 
             <span className="review-card__open" aria-hidden="true">
-              Read on {SOURCE_LABEL[review.source]}
+              {m.reviews.readOn(SOURCE_LABEL[review.source])}
               <svg viewBox="0 0 24 24" focusable="false">
                 <path
                   fill="none"
@@ -251,19 +254,20 @@ export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
             className="reviews-nav"
             onClick={() => goToPage(active - 1)}
             disabled={active === 0}
-            aria-label="Previous reviews"
+            aria-label={m.reviews.previous}
             data-cy="reviews-prev"
           >
             <span aria-hidden="true">‹</span>
           </button>
 
-          <div className="reviews-dots" role="tablist" aria-label="Choose a set of reviews">
+          <div className="reviews-dots" role="tablist" aria-label={m.reviews.dotsAria}>
             {Array.from({ length: pageCount }, (_, index) => (
               <button
                 key={`dot-${index}`}
                 type="button"
                 className={index === active ? 'reviews-dot is-active' : 'reviews-dot'}
-                aria-label={`Go to reviews ${index + 1} of ${pageCount}`}
+                aria-label={m.reviews.goTo(index + 1, pageCount)}
+                data-cy={`reviews-dot-${index}`}
                 aria-current={index === active}
                 onClick={() => goToPage(index)}
               />
@@ -275,7 +279,7 @@ export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
             className="reviews-nav"
             onClick={() => goToPage(active + 1)}
             disabled={active === pageCount - 1}
-            aria-label="Next reviews"
+            aria-label={m.reviews.next}
             data-cy="reviews-next"
           >
             <span aria-hidden="true">›</span>

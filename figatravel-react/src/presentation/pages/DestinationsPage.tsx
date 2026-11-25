@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom'
-import { topDestinations } from '../data/siteContent'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n/useI18n'
+import { useSiteContent } from '../i18n/useSiteContent'
 
 export function DestinationsPage() {
+  const { m } = useI18n()
+  const t = m.destinationsPage
+  const { destinations } = useSiteContent()
+
   usePageMeta(
     'Top Destinations',
     'Explore Costa Rica destinations including La Fortuna, Manuel Antonio, Tamarindo, and more with Figa Travel.',
@@ -15,17 +20,17 @@ export function DestinationsPage() {
   return (
     <main className="destinations-page" data-cy="destinations-page">
       <header className="destinations-header page-header" data-cy="destinations-header">
-        <p className="eyebrow">Costa Rica</p>
-        <h1>Destinations</h1>
-        <p>Check out our most popular destinations in Costa Rica</p>
+        <p className="eyebrow">{t.eyebrow}</p>
+        <h1>{t.title}</h1>
+        <p>{t.subtitle}</p>
       </header>
 
       <section className="destinations-catalog" aria-labelledby="destination-list-title">
         <h2 id="destination-list-title" className="sr-only">
-          Destinations catalog
+          {t.catalogTitle}
         </h2>
         <div className="destinations-catalog-grid" data-cy="destinations-grid">
-          {topDestinations.map((destination) => (
+          {destinations.map((destination) => (
             // The heading link is stretched over the whole card via CSS, so the
             // card is clickable while keeping a single, short link name.
             <article

@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
-import { fleet } from '../data/siteContent'
 import { usePageMeta } from '../hooks/usePageMeta'
-
-const WHATSAPP_URL =
-  'https://api.whatsapp.com/send/?phone=%2B50672271058&text=Hello%20Figa%20Travel%2C%20I%20have%20a%20question%20about%20your%20fleet&type=phone_number&app_absent=0'
+import { whatsappUrl } from '../i18n/format'
+import { useI18n } from '../i18n/useI18n'
+import { useSiteContent } from '../i18n/useSiteContent'
 
 export function FleetPage() {
+  const { m } = useI18n()
+  const t = m.fleetPage
+  const { fleet } = useSiteContent()
+
   usePageMeta(
     'Our Fleet',
     'See the vehicles Figa Travel uses for private transfers in Costa Rica, from a premium SUV to an 18-seat minibus.',
@@ -17,21 +20,15 @@ export function FleetPage() {
   return (
     <main className="info-page fleet-page" data-cy="fleet-page">
       <header className="section page-hero fleet-hero">
-        <p className="eyebrow">OUR FLEET</p>
-        <h1>A vehicle for every group size</h1>
-        <p className="hero-copy">
-          From a premium SUV for two to an 18-seat minibus, every vehicle is air-conditioned,
-          insured, and driven by a licensed local driver.
-        </p>
+        <p className="eyebrow">{t.eyebrow}</p>
+        <h1>{t.title}</h1>
+        <p className="hero-copy">{t.intro}</p>
       </header>
 
       <section className="section" aria-labelledby="fleet-list-title">
         <div className="section-head">
-          <h2 id="fleet-list-title">Choose the right vehicle</h2>
-          <p>
-            Not sure which one fits? Tell us your group size and route and we will recommend the
-            best option.
-          </p>
+          <h2 id="fleet-list-title">{t.listTitle}</h2>
+          <p>{t.listIntro}</p>
         </div>
 
         <div className="fleet-catalog-grid">
@@ -44,7 +41,7 @@ export function FleetPage() {
               <div className="fleet-card__media">
                 <img src={vehicle.image} alt={vehicle.name} loading="lazy" />
                 {vehicle.premium ? (
-                  <span className="fleet-card__badge">Premium</span>
+                  <span className="fleet-card__badge">{m.common.premium}</span>
                 ) : null}
               </div>
 
@@ -61,7 +58,7 @@ export function FleetPage() {
                 </ul>
 
                 <Link to="/book-online" className="fleet-card__cta" data-cy="fleet-card-book">
-                  Book this vehicle
+                  {t.bookVehicle}
                 </Link>
               </div>
             </article>
@@ -69,11 +66,17 @@ export function FleetPage() {
         </div>
 
         <div className="faq-cta-row" >
-          <a href={WHATSAPP_URL} className="hero-cta" target="_blank" rel="noreferrer">
-            Ask on WhatsApp
+          <a
+            href={whatsappUrl(m.common.whatsappFleetText)}
+            className="hero-cta"
+            target="_blank"
+            rel="noreferrer"
+            data-cy="fleet-whatsapp"
+          >
+            {t.askWhatsApp}
           </a>
-          <Link to="/book-online" className="hero-cta ghost">
-            Book a transfer
+          <Link to="/book-online" className="hero-cta ghost" data-cy="fleet-book-transfer">
+            {t.bookTransfer}
           </Link>
         </div>
       </section>

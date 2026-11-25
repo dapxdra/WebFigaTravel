@@ -320,6 +320,72 @@ h3 {
   border-color: rgba(23, 93, 66, 0.4);
 }
 
+/* Language picker in the top nav: a small pill showing only the 3-letter
+   code. The native <select> sits on top, invisible, and receives the clicks. */
+.language-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 46px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid rgba(26, 97, 70, 0.24);
+  border-radius: 999px;
+  background: var(--paper);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.language-switcher:hover {
+  background: var(--forest-soft);
+  border-color: rgba(26, 97, 70, 0.4);
+}
+
+.language-switcher:focus-within {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+.language-switcher-code {
+  color: var(--forest);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+
+.language-switcher-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Tablet widths (before the hamburger menu kicks in at 840px): longer
+   translated labels don't fit on one row, so the logo keeps its size, the
+   links get tighter and the action buttons wrap under the links. */
+@media (min-width: 841px) and (max-width: 1120px) {
+  .home-logo-wrap {
+    flex-shrink: 0;
+  }
+
+  .home-nav-right {
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    row-gap: 6px;
+  }
+
+  .home-nav-right .nav-link {
+    padding: 8px 8px;
+    letter-spacing: 0.03em;
+  }
+}
+
 .home-search-input {
   width: 170px;
   height: 36px;

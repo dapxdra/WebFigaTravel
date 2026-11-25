@@ -4,12 +4,21 @@ import { Link } from 'react-router-dom'
 import { faqItems } from '../data/siteContent'
 import { useJsonLd } from '../hooks/useJsonLd'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { formatIsoDate, whatsappUrl } from '../i18n/format'
+import { useI18n } from '../i18n/useI18n'
+import { useSiteContent } from '../i18n/useSiteContent'
 
 // Shown on the page as a freshness signal for search engines and AI answers.
 // Update it whenever the FAQ answers change.
-const LAST_UPDATED = 'September 28, 2026'
+const LAST_UPDATED = '2026-09-28'
 
 export function FaqPage() {
+  const { m, locale } = useI18n()
+  const t = m.faqPage
+  // Visible answers follow the chosen language; the JSON-LD below stays in
+  // English to match the prerendered HTML crawlers read.
+  const { faqItems: visibleFaqItems } = useSiteContent()
+
   const handleAccordionToggle = (event: SyntheticEvent<HTMLDetailsElement>) => {
     const currentItem = event.currentTarget
 
@@ -107,24 +116,22 @@ export function FaqPage() {
   return (
     <main className="info-page faq-page" data-cy="faq-page">
       <header className="section page-hero faq-hero" data-cy="faq-hero">
-        <p className="eyebrow">HAVE ANY QUESTIONS?</p>
-        <h1>Costa Rica Private Transfer FAQ</h1>
-        <p className="hero-copy">
-          Quick answers to help you plan your trip with complete clarity.
-        </p>
+        <p className="eyebrow">{t.eyebrow}</p>
+        <h1>{t.title}</h1>
+        <p className="hero-copy">{t.intro}</p>
         <p className="hero-copy" data-cy="faq-last-updated">
-          Last updated: <time dateTime="2026-09-28">{LAST_UPDATED}</time>
+          {m.common.lastUpdated} <time dateTime={LAST_UPDATED}>{formatIsoDate(LAST_UPDATED, locale)}</time>
         </p>
       </header>
 
       <section className="section" aria-labelledby="faq-list-title">
         <div className="section-head">
-          <h2 id="faq-list-title">Frequently Asked Questions</h2>
-          <p>If you need anything else, contact us via WhatsApp, email, or the contact form.</p>
+          <h2 id="faq-list-title">{t.listTitle}</h2>
+          <p>{t.listIntro}</p>
         </div>
 
         <div className="faq-list" data-cy="faq-list">
-          {faqItems.map((item, index) => (
+          {visibleFaqItems.map((item, index) => (
             <details
               key={item.question}
               className="faq-item faq-accordion-item"
@@ -142,15 +149,16 @@ export function FaqPage() {
 
         <div className="faq-cta-row" data-cy="faq-cta-row">
           <a
-            href="https://api.whatsapp.com/send/?phone=%2B50672271058&text&type=phone_number&app_absent=0"
+            href={whatsappUrl()}
             className="hero-cta"
             target="_blank"
             rel="noreferrer"
+            data-cy="faq-whatsapp"
           >
-            Chat on WhatsApp
+            {m.common.chatOnWhatsApp}
           </a>
-          <Link to="/contact" className="hero-cta ghost">
-            Go to contact
+          <Link to="/contact" className="hero-cta ghost" data-cy="faq-go-to-contact">
+            {t.goToContact}
           </Link>
         </div>
       </section>

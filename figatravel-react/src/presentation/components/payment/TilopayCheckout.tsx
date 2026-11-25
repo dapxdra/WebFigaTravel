@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Reservation, TilopaySdkSession } from '../../../domain/entities/Reservation'
 import type { TilopayMethod, TilopaySavedCard } from '../../lib/tilopaySdk'
 import { loadTilopaySdk } from '../../lib/tilopaySdk'
+import { useI18n } from '../../i18n/useI18n'
 
 interface TilopayCheckoutProps {
   reservation: Reservation
@@ -28,6 +29,14 @@ export function TilopayCheckout({
   fetchSdkToken,
 }: TilopayCheckoutProps) {
   const requestedTokenRef = useRef(false)
+  const { m } = useI18n()
+  const t = m.checkout
+  // Read inside the SDK effect without re-initializing Tilopay on a language change.
+  const checkoutTextRef = useRef(t)
+  useEffect(() => {
+    checkoutTextRef.current = t
+  }, [t])
+  const amountText = `${reservation.currency} ${reservation.amount.toFixed(2)}`
   const [initState, setInitState] = useState<InitState>('idle')
   const [initError, setInitError] = useState<string | null>(null)
   const [paying, setPaying] = useState(false)
@@ -87,7 +96,7 @@ export function TilopayCheckout({
         // Tilopay resolves (does not reject) with an empty methods list and a
         // message when the merchant/session can't be initialized.
         if (response.methods.length === 0) {
-          throw new Error(response.message || 'Tilopay did not return any payment methods.')
+          throw new Error(response.message || checkoutTextRef.current.noMethods)
         }
 
         if (!cancelled) {
@@ -100,7 +109,7 @@ export function TilopayCheckout({
         if (!cancelled) {
           setInitState('error')
           setInitError(
-            error instanceof Error ? error.message : 'Unable to load the payment form.',
+            error instanceof Error ? error.message : checkoutTextRef.current.loadError,
           )
         }
       }
@@ -115,7 +124,7 @@ export function TilopayCheckout({
 
   const handlePay = async () => {
     if (!window.Tilopay) {
-      setPayError('Payment form is not ready yet.')
+      setPayError(t.notReady)
       return
     }
 
@@ -127,35 +136,33 @@ export function TilopayCheckout({
       // (including any 3DS step); this only resolves for local failures.
       const result = await window.Tilopay.startPayment()
       if (result?.code && result.code !== '1') {
-        setPayError(result.message ?? 'Payment was rejected. Please try again.')
+        setPayError(result.message ?? t.rejected)
       }
     } catch (error) {
-      setPayError(error instanceof Error ? error.message : 'Payment was rejected. Please try again.')
+      setPayError(error instanceof Error ? error.message : t.rejected)
     } finally {
       setPaying(false)
     }
   }
 
   return (
-    <section className="section payment-checkout" aria-labelledby="payment-checkout-title">
+    <section className="section payment-checkout" aria-labelledby="payment-checkout-title" data-cy="tilopay-checkout">
       <div className="section-head">
-        <h2 id="payment-checkout-title">Secure payment</h2>
-        <p>
-          Order #{reservation.orderNumber} - {reservation.currency} {reservation.amount.toFixed(2)}
-        </p>
+        <h2 id="payment-checkout-title">{t.title}</h2>
+        <p data-cy="tilopay-order">{t.order(reservation.orderNumber, amountText)}</p>
       </div>
 
       <div className="tilopay-status-stack">
-        {tokenLoading ? <p className="tilopay-status">Starting secure session...</p> : null}
+        {tokenLoading ? <p className="tilopay-status">{t.startingSession}</p> : null}
         {tokenError ? <p className="error-text">{tokenError}</p> : null}
-        {initState === 'loading' ? <p className="tilopay-status">Loading payment form...</p> : null}
+        {initState === 'loading' ? <p className="tilopay-status">{t.loadingForm}</p> : null}
         {initError ? <p className="error-text">{initError}</p> : null}
         {payError ? <p className="error-text">{payError}</p> : null}
       </div>
 
       <div className="payFormTilopay tilopay-card-form">
         <label className="tilopay-field">
-          <span className="tilopay-field-label">Payment method</span>
+          <span className="tilopay-field-label">{t.paymentMethod}</span>
           <select
             name="tlpy_payment_method"
             id="tlpy_payment_method"
@@ -164,7 +171,7 @@ export function TilopayCheckout({
             disabled={methods.length <= 1}
             onChange={(event) => setSelectedMethod(event.target.value)}
           >
-            <option value="">Select payment method</option>
+            <option value="">{t.selectMethod}</option>
             {methods.map((method) => (
               <option key={method.id} value={method.id}>
                 {method.name}
@@ -179,9 +186,9 @@ export function TilopayCheckout({
         <div id="tlpy_card_payment_div" className="tilopay-card-panel">
           {savedCards.length > 0 ? (
             <label className="tilopay-field">
-              <span className="tilopay-field-label">Saved cards</span>
+              <span className="tilopay-field-label">{t.savedCards}</span>
               <select name="tlpy_saved_cards" id="tlpy_saved_cards" className="tilopay-select">
-                <option value="">Select card</option>
+                <option value="">{t.selectCard}</option>
                 {savedCards.map((card) => (
                   <option key={card.id} value={card.id}>
                     {card.name}
@@ -194,7 +201,7 @@ export function TilopayCheckout({
           )}
 
           <label className="tilopay-field">
-            <span className="tilopay-field-label">Card number</span>
+            <span className="tilopay-field-label">{t.cardNumber}</span>
             <span className="tilopay-input-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <rect x="2" y="5" width="20" height="14" rx="2.5" />
@@ -213,7 +220,7 @@ export function TilopayCheckout({
 
           <div className="tilopay-row-2">
             <label className="tilopay-field">
-              <span className="tilopay-field-label">Expiration date</span>
+              <span className="tilopay-field-label">{t.expiration}</span>
               <input
                 type="text"
                 id="tlpy_cc_expiration_date"
@@ -226,7 +233,7 @@ export function TilopayCheckout({
             </label>
 
             <label className="tilopay-field">
-              <span className="tilopay-field-label">CVV</span>
+              <span className="tilopay-field-label">{t.cvv}</span>
               <input
                 type="text"
                 id="tlpy_cvv"
@@ -242,7 +249,7 @@ export function TilopayCheckout({
 
         <div id="tlpy_phone_number_div" style={{ display: 'none' }}>
           <label className="tilopay-field">
-            <span className="tilopay-field-label">Phone number</span>
+            <span className="tilopay-field-label">{t.phoneNumber}</span>
             <input type="text" id="tlpy_phone_number" name="tlpy_phone_number" />
           </label>
         </div>
@@ -257,8 +264,9 @@ export function TilopayCheckout({
         className="tilopay-pay-button"
         onClick={() => void handlePay()}
         disabled={initState !== 'ready' || paying}
+        data-cy="tilopay-pay-button"
       >
-        {paying ? 'Processing...' : `Pay ${reservation.currency} ${reservation.amount.toFixed(2)}`}
+        {paying ? t.processing : t.pay(amountText)}
       </button>
 
       <p className="tilopay-security-note">
@@ -266,7 +274,7 @@ export function TilopayCheckout({
           <rect x="5" y="11" width="14" height="9" rx="2" />
           <path d="M8 11V8a4 4 0 0 1 8 0v3" />
         </svg>
-        Your card details are encrypted and processed securely by Tilopay.
+        {t.securityNote}
       </p>
     </section>
   )

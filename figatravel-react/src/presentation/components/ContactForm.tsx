@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useContactFormViewModel } from '../hooks/useContactFormViewModel'
+import { useI18n } from '../i18n/useI18n'
 
 interface ContactFormProps {
   title: string
@@ -17,6 +18,8 @@ const MIN_FILL_TIME_MS = 2000
 // inbox via the send-contact-email Edge Function.
 export function ContactForm({ title, subtitle }: ContactFormProps) {
   const { submit, submitState } = useContactFormViewModel()
+  const { m } = useI18n()
+  const t = m.contactForm
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -81,7 +84,7 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
 
       <form className="lead-form" onSubmit={onSubmit} data-cy="contact-form">
         <label>
-          Full name
+          {m.common.fullName}
           <input
             type="text"
             value={name}
@@ -92,7 +95,7 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
         </label>
 
         <label>
-          Email
+          {m.common.email}
           <input
             type="email"
             value={email}
@@ -104,13 +107,13 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
           />
           {emailTouched && emailIsInvalid ? (
             <small className="error-text" data-cy="contact-email-error">
-              Enter a valid email address.
+              {m.common.invalidEmail}
             </small>
           ) : null}
         </label>
 
         <label>
-          Phone
+          {m.common.phone}
           <input
             type="tel"
             value={phone}
@@ -120,7 +123,7 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
         </label>
 
         <label>
-          Subject
+          {t.subject}
           <input
             type="text"
             value={subject}
@@ -131,13 +134,13 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
         </label>
 
         <label className="full-width">
-          Message
+          {t.message}
           <textarea
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             rows={5}
             required
-            placeholder="Tell us how we can help you."
+            placeholder={t.messagePlaceholder}
             data-cy="contact-message"
           />
         </label>
@@ -155,7 +158,7 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
         </label>
 
         <button disabled={!canSubmit || submitState.loading} type="submit" data-cy="contact-submit">
-          {submitState.loading ? 'Sending...' : 'Send message'}
+          {submitState.loading ? t.sending : t.send}
         </button>
 
         {submitState.error ? (
@@ -165,7 +168,7 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
         ) : null}
         {submitState.success ? (
           <p className="success-text" data-cy="contact-success">
-            Thanks for reaching out. We will reply by email soon.
+            {t.success}
           </p>
         ) : null}
       </form>

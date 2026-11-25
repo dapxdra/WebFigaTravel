@@ -1,8 +1,12 @@
 import { useSearchParams } from 'react-router-dom'
 import { usePageMeta } from '../hooks/usePageMeta'
 import { usePaymentVerification } from '../hooks/usePaymentVerification'
+import { useI18n } from '../i18n/useI18n'
 
 export function PaymentResponsePage() {
+  const { m } = useI18n()
+  const t = m.paymentResponse
+
   usePageMeta(
     'Payment result',
     'Check the result of your Tilopay payment.',
@@ -19,30 +23,30 @@ export function PaymentResponsePage() {
   const { loading, result, error } = usePaymentVerification(orderNumber, transactionId)
 
   return (
-    <main className="payment-response-page">
+    <main className="payment-response-page" data-cy="payment-response-page">
       <header className="book-header">
-        <h1>Payment result</h1>
+        <h1>{t.title}</h1>
       </header>
 
-      {loading ? <p className="tilopay-status">Verifying your payment with Tilopay...</p> : null}
+      {loading ? <p className="tilopay-status" data-cy="payment-verifying">{t.verifying}</p> : null}
 
       {error ? (
-        <div className="payment-result payment-result-error">
+        <div className="payment-result payment-result-error" data-cy="payment-result-error">
           <p className="error-text">{error}</p>
         </div>
       ) : null}
 
       {result?.status === 'paid' ? (
-        <div className="payment-result payment-result-success">
-          <h2>Payment approved</h2>
-          <p>{result.message || 'Your reservation has been confirmed.'}</p>
+        <div className="payment-result payment-result-success" data-cy="payment-result-paid">
+          <h2>{t.approvedTitle}</h2>
+          <p>{result.message || t.approvedText}</p>
         </div>
       ) : null}
 
       {result?.status === 'failed' ? (
-        <div className="payment-result payment-result-failed">
-          <h2>Payment not approved</h2>
-          <p>{result.message || 'The payment was declined. Please try again.'}</p>
+        <div className="payment-result payment-result-failed" data-cy="payment-result-failed">
+          <h2>{t.failedTitle}</h2>
+          <p>{result.message || t.failedText}</p>
         </div>
       ) : null}
     </main>

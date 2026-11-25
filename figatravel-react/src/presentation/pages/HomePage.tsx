@@ -1,66 +1,28 @@
 import type { SyntheticEvent } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  faqItems,
-  priorities,
-  featuredReviews,
-  fleet,
-  topDestinations,
-} from "../data/siteContent";
+import { featuredReviews } from "../data/siteContent";
 import { ReviewsCarousel } from "../components/ReviewsCarousel";
 import { HomeHeroMedia } from "../components/HomeHeroMedia";
 import { RouteSearchCard } from "../components/route-search/RouteSearchCard";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { whatsappUrl } from "../i18n/format";
+import { useI18n } from "../i18n/useI18n";
+import { useSiteContent } from "../i18n/useSiteContent";
 
-const WHATSAPP_URL =
-  "https://api.whatsapp.com/send/?phone=%2B50672271058&text=Hello%20Figa%20Travel%2C%20I%20want%20to%20book%20a%20transfer&type=phone_number&app_absent=0";
-
-const heroHighlights = [
-  "Flight tracking",
-  "Bilingual licensed drivers",
-  "Fixed price, tolls included",
-];
-
-const serviceStrip = [
-  {
-    icon: "/assets/home/icon-wifi.png",
-    label: "WI-FI",
-  },
-  {
-    icon: "/assets/home/icon-customer-service.png",
-    label: "Customer Service",
-  },
-  {
-    icon: "/assets/home/icon-eco.png",
-    label: "Eco-conscious",
-  },
-  {
-    icon: "/assets/home/icon-vehicle.png",
-    label: "Well-maintained vehicles",
-  },
-];
-
-const bookingSteps = [
-  {
-    title: "Tell us your route",
-    description:
-      "Enter your pickup and drop-off: the airport, your hotel, or any address in Costa Rica. Your fixed price appears in seconds.",
-  },
-  {
-    title: "Book and pay securely",
-    description:
-      "Reserve online with an encrypted card payment, or message us on WhatsApp. No meter and no hidden fees.",
-  },
-  {
-    title: "Meet your driver",
-    description:
-      "Your bilingual driver tracks your flight, meets you at pickup, and takes you door to door in an air-conditioned vehicle.",
-  },
+// Icons in the same order as the translated labels in m.home.services.
+const serviceIcons = [
+  "/assets/home/icon-wifi.png",
+  "/assets/home/icon-customer-service.png",
+  "/assets/home/icon-eco.png",
+  "/assets/home/icon-vehicle.png",
 ];
 
 export function HomePage() {
   const navigate = useNavigate();
+  const { m } = useI18n();
+  const t = m.home;
+  const { destinations, fleet, priorities, faqItems } = useSiteContent();
 
   const handleAccordionToggle = (event: SyntheticEvent<HTMLDetailsElement>) => {
     const currentItem = event.currentTarget;
@@ -144,7 +106,7 @@ export function HomePage() {
     <main className="home-page">
       <section
         className="home-hero"
-        aria-label="Discover the Beauty of Costa Rica"
+        aria-label={t.heroAria}
         data-cy="home-hero"
       >
         {/* Media is clipped in its own layer so the hero itself can stay
@@ -156,15 +118,12 @@ export function HomePage() {
             <span className="home-hero-badge__stars" aria-hidden="true">
               ★★★★★
             </span>
-            Rated 4.9/5 by travelers on Google and Tripadvisor
+            {t.heroBadge}
           </p>
-          <h1>Discover the Beauty of Costa Rica with FIGA TRAVEL</h1>
-          <p className="home-hero-subtitle">
-            Private transfers, local guidance, and curated routes from volcanoes
-            to beaches.
-          </p>
+          <h1>{t.heroTitle}</h1>
+          <p className="home-hero-subtitle">{t.heroSubtitle}</p>
           <ul className="home-hero-highlights" data-cy="home-hero-highlights">
-            {heroHighlights.map((highlight) => (
+            {t.heroHighlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
             ))}
           </ul>
@@ -173,7 +132,7 @@ export function HomePage() {
         <div className="home-hero-search" data-cy="home-route-search">
           {/* Pricing happens on /book-online; the search is handed over in router state. */}
           <RouteSearchCard
-            submitLabel="See my price"
+            submitLabel={t.seeMyPrice}
             onSubmit={(search) => navigate("/book-online", { state: { routeSearch: search } })}
           />
         </div>
@@ -181,32 +140,32 @@ export function HomePage() {
 
       <section
         className="home-trust-strip home-reveal"
-        aria-label="Trust indicators"
+        aria-label={t.trustAria}
         data-cy="home-trust-strip"
       >
         <article>
           <h2>500+</h2>
-          <p>successful transfers every season</p>
+          <p>{t.trustTransfers}</p>
         </article>
         <article>
           <h2>24/7</h2>
-          <p>trip support by WhatsApp and email</p>
+          <p>{t.trustSupport}</p>
         </article>
         <article>
           <h2>4.9/5</h2>
-          <p>average traveler satisfaction score</p>
+          <p>{t.trustRating}</p>
         </article>
       </section>
 
       <section
         className="home-services home-reveal"
-        aria-label="Service highlights"
+        aria-label={t.servicesAria}
         data-cy="home-services"
       >
-        {serviceStrip.map((service) => (
-          <article key={service.label} className="home-service-item">
-            <img src={service.icon} alt="" aria-hidden="true" loading="lazy" />
-            <span>{service.label}</span>
+        {serviceIcons.map((icon, index) => (
+          <article key={icon} className="home-service-item" data-cy="home-service-item">
+            <img src={icon} alt="" aria-hidden="true" loading="lazy" />
+            <span>{t.services[index]}</span>
           </article>
         ))}
       </section>
@@ -217,12 +176,12 @@ export function HomePage() {
         data-cy="home-steps"
       >
         <div className="home-section-head">
-          <p className="eyebrow">Book in minutes</p>
-          <h2 id="home-steps-title">How your private transfer works</h2>
+          <p className="eyebrow">{t.stepsEyebrow}</p>
+          <h2 id="home-steps-title">{t.stepsTitle}</h2>
         </div>
 
         <ol className="home-steps-list">
-          {bookingSteps.map((step, index) => (
+          {t.steps.map((step, index) => (
             <li key={step.title} className="home-step" data-cy="home-step">
               <span className="home-step__number" aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
@@ -241,18 +200,18 @@ export function HomePage() {
       >
         <div className="home-split-head">
           <div>
-            <p className="eyebrow">Where we drive</p>
-            <h2 id="home-destinations-title">Top destinations in Costa Rica</h2>
+            <p className="eyebrow">{t.destinationsEyebrow}</p>
+            <h2 id="home-destinations-title">{t.destinationsTitle}</h2>
           </div>
-          <Link to="/destinations" className="home-inline-link">
-            All destinations
+          <Link to="/destinations" className="home-inline-link" data-cy="home-all-destinations">
+            {t.allDestinations}
           </Link>
         </div>
 
         {/* Bento grid: the first destination gets the large tile. Uses the
             high-resolution gallery photo when available. */}
         <div className="home-destination-grid">
-          {topDestinations.map((destination) => (
+          {destinations.map((destination) => (
             <Link
               key={destination.slug}
               to={`/destinations/${destination.slug}`}
@@ -282,8 +241,8 @@ export function HomePage() {
           aria-labelledby="home-priority-title"
         >
           <div className="home-section-head">
-            <p className="eyebrow">Why travelers pick Figa</p>
-            <h2 id="home-priority-title">What every transfer includes</h2>
+            <p className="eyebrow">{t.prioritiesEyebrow}</p>
+            <h2 id="home-priority-title">{t.prioritiesTitle}</h2>
           </div>
 
           <div className="priority-grid home-priority-grid">
@@ -301,8 +260,8 @@ export function HomePage() {
           aria-labelledby="home-testimonials-title"
         >
           <div className="home-section-head">
-            <p className="eyebrow">Rated 4.9/5 on Google and Tripadvisor</p>
-            <h2 id="home-testimonials-title">What travelers say</h2>
+            <p className="eyebrow">{t.testimonialsEyebrow}</p>
+            <h2 id="home-testimonials-title">{t.testimonialsTitle}</h2>
           </div>
 
           <ReviewsCarousel reviews={featuredReviews} />
@@ -316,11 +275,11 @@ export function HomePage() {
       >
         <div className="home-fleet-head">
           <div>
-            <p className="eyebrow">Our fleet</p>
-            <h2 id="home-fleet-title">A vehicle for every group size</h2>
+            <p className="eyebrow">{t.fleetEyebrow}</p>
+            <h2 id="home-fleet-title">{t.fleetTitle}</h2>
           </div>
-          <Link to="/fleet" className="home-inline-link">
-            View full fleet
+          <Link to="/fleet" className="home-inline-link" data-cy="home-view-fleet">
+            {t.viewFullFleet}
           </Link>
         </div>
 
@@ -335,7 +294,7 @@ export function HomePage() {
               <div className="fleet-card__media">
                 <img src={vehicle.image} alt={vehicle.name} loading="lazy" />
                 {vehicle.premium ? (
-                  <span className="fleet-card__badge">Premium</span>
+                  <span className="fleet-card__badge">{m.common.premium}</span>
                 ) : null}
               </div>
               <div className="fleet-card__body">
@@ -353,22 +312,21 @@ export function HomePage() {
         data-cy="home-faq"
       >
         <div className="home-faq-copy">
-          <p className="eyebrow">Have any questions?</p>
-          <h2 id="home-faq-title">Frequently Asked Questions</h2>
+          <p className="eyebrow">{t.faqEyebrow}</p>
+          <h2 id="home-faq-title">{t.faqTitle}</h2>
           <p>
-            If you have any other questions, please contact us by WhatsApp,
-            email or our contact form. Or check out our{" "}
-            <Link to="/faq" className="home-inline-link">
-              FAQ
+            {t.faqTextBefore}{" "}
+            <Link to="/faq" className="home-inline-link" data-cy="home-faq-link">
+              {t.faqLink}
             </Link>
           </p>
         </div>
 
         <div className="home-faq-preview">
           <div className="home-faq-preview-head">
-            <h3>Top Questions</h3>
-            <Link to="/faq" className="home-inline-link home-faq-preview-link">
-              View all
+            <h3>{t.topQuestions}</h3>
+            <Link to="/faq" className="home-inline-link home-faq-preview-link" data-cy="home-faq-view-all">
+              {t.viewAll}
             </Link>
           </div>
 
@@ -378,6 +336,7 @@ export function HomePage() {
               className="faq-item faq-accordion-item"
               onToggle={handleAccordionToggle}
               open={index === 0}
+              data-cy={`home-faq-item-${index}`}
             >
               <summary className="faq-question">{item.question}</summary>
               <div className="faq-answer">
@@ -394,14 +353,9 @@ export function HomePage() {
         data-cy="home-final-cta"
       >
         <div className="home-final-cta__copy">
-          <p className="eyebrow">Ready when you land</p>
-          <h2 id="home-final-cta-title">
-            Your private ride across Costa Rica starts here
-          </h2>
-          <p>
-            Get a fixed door-to-door price in seconds. Tolls, taxes, and fuel
-            included, no surprises.
-          </p>
+          <p className="eyebrow">{t.finalEyebrow}</p>
+          <h2 id="home-final-cta-title">{t.finalTitle}</h2>
+          <p>{t.finalText}</p>
         </div>
 
         <div className="home-final-cta__actions">
@@ -410,16 +364,16 @@ export function HomePage() {
             className="home-book-now"
             data-cy="home-final-cta-book"
           >
-            Get my price
+            {t.getMyPrice}
           </Link>
           <a
-            href={WHATSAPP_URL}
+            href={whatsappUrl(m.common.whatsappBookingText)}
             className="hero-cta hero-cta--outline-light"
             target="_blank"
             rel="noreferrer"
             data-cy="home-final-cta-whatsapp"
           >
-            Chat on WhatsApp
+            {m.common.chatOnWhatsApp}
           </a>
         </div>
       </section>

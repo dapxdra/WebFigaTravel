@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import type { Messages } from '../../i18n/messages/en'
+import { useI18n } from '../../i18n/useI18n'
 
 // 48 half-hour slots: 00:00 to 23:30
 const ALL_TIME_SLOTS: string[] = Array.from({ length: 48 }, (_, i) => {
@@ -10,17 +12,16 @@ const ALL_TIME_SLOTS: string[] = Array.from({ length: 48 }, (_, i) => {
 // Groups the 48 slots into 4 tabs of 12 so the picker shows a manageable
 // number of buttons at a time instead of all 48 at once.
 interface TimeSegment {
-  key: string
-  label: string
+  key: keyof Pick<Messages['timePicker'], 'night' | 'morning' | 'afternoon' | 'evening'>
   hourFrom: number
   hourTo: number
 }
 
 const TIME_SEGMENTS: TimeSegment[] = [
-  { key: 'night', label: 'Night', hourFrom: 0, hourTo: 5 },
-  { key: 'morning', label: 'Morning', hourFrom: 6, hourTo: 11 },
-  { key: 'afternoon', label: 'Afternoon', hourFrom: 12, hourTo: 17 },
-  { key: 'evening', label: 'Evening', hourFrom: 18, hourTo: 23 },
+  { key: 'night', hourFrom: 0, hourTo: 5 },
+  { key: 'morning', hourFrom: 6, hourTo: 11 },
+  { key: 'afternoon', hourFrom: 12, hourTo: 17 },
+  { key: 'evening', hourFrom: 18, hourTo: 23 },
 ]
 
 function timesInSegment(segment: TimeSegment): string[] {
@@ -40,10 +41,11 @@ interface PickupTimePickerProps {
 // so every slot is selectable.
 export function PickupTimePicker({ value, onChange, dataCy = 'pickup-time-picker' }: PickupTimePickerProps) {
   const [activeSegment, setActiveSegment] = useState(TIME_SEGMENTS[1])
+  const { m } = useI18n()
 
   return (
     <div data-cy={dataCy}>
-      <div className="time-segment-tabs" role="tablist" aria-label="Time of day">
+      <div className="time-segment-tabs" role="tablist" aria-label={m.timePicker.tabsAria}>
         {TIME_SEGMENTS.map((segment) => (
           <button
             key={segment.key}
@@ -56,12 +58,12 @@ export function PickupTimePicker({ value, onChange, dataCy = 'pickup-time-picker
             onClick={() => setActiveSegment(segment)}
             data-cy={`${dataCy}-tab-${segment.key}`}
           >
-            {segment.label}
+            {m.timePicker[segment.key]}
           </button>
         ))}
       </div>
 
-      <div className="time-grid" role="group" aria-label="Available times">
+      <div className="time-grid" role="group" aria-label={m.timePicker.timesAria}>
         {timesInSegment(activeSegment).map((time) => (
           <button
             key={time}
